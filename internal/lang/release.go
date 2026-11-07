@@ -10,6 +10,7 @@ import (
 
 	"github.com/draxinar/teudogar/internal/packed"
 	"github.com/draxinar/teudogar/internal/pe"
+	"github.com/draxinar/teudogar/internal/table"
 )
 
 // A Release holds the files of the game that the build starts from: the
@@ -127,6 +128,16 @@ func (r *Release) Decoded(id int) ([]byte, error) {
 		return nil, fmt.Errorf("lang: entry %d decodes to %d bytes, the tables give %d", id, len(d), n)
 	}
 	return d, nil
+}
+
+// Types returns the type tables of entry 5000, which give each item
+// type its name.
+func (r *Release) Types() (*table.Types, error) {
+	b, err := r.Decoded(5000)
+	if err != nil {
+		return nil, err
+	}
+	return table.DecodeTypes(b)
 }
 
 // zlibDecode returns the decoded bytes of the zlib stream z.

@@ -32,10 +32,13 @@ type Build struct {
 	// hold for it, where they were checked.
 	Composed map[int][]Site
 	Room     map[int]int
-	Texts    []TextPatch
-	Gram     []GramPatch
-	Glyphs   []GlyphPatch
-	Widths   []WidthPatch
+	// FontW holds fontw (unpack.cpp), which measures the labels of
+	// buttons, or zeros to skip the check.
+	FontW  [256]int
+	Texts  []TextPatch
+	Gram   []GramPatch
+	Glyphs []GlyphPatch
+	Widths []WidthPatch
 }
 
 // An entry is an entry of a data file: its bytes as the file stores
@@ -104,8 +107,8 @@ func (b *Build) SetEntry(id int, d []byte) error {
 }
 
 // Fill makes d the decoded bytes of entry id, which holds a placeholder
-// in the release. langentry (datfile.cpp) reads a filled entry in its
-// own language.
+// in the release, as the French ids do. langentry (datfile.cpp) reads a
+// filled entry in its own language.
 func (b *Build) Fill(id int, d []byte) error {
 	old, err := b.r.Decoded(id)
 	if err != nil {

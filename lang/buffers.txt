@@ -1,10 +1,58 @@
-# The strings of strs that the errata make longer than the longest of
-# the release's German, English, and Italian, and that the game
-# composes into buffers: the string's index, a tab, the most bytes
+# The strings of strs that a translation or the errata make longer than
+# the longest of the release's German, English, and Italian, and that the
+# game composes into buffers: the string's index, a tab, the most bytes
 # (code page 1252, without the NUL) that the string may take, and a tab
 # and the reckoning, which names each buffer with its size and the
 # inserts. cmd/lang -r reads it, and reports a string longer than its
 # room.
+
+# The days of daytext (dialog.cpp), char daytext[32]: 31 bytes, and 29
+# where a %d of up to four digits fills in for its two bytes. daytext
+# then goes into speech (4,000 bytes, the healers' texts and listitems),
+# the expansion of a scene (2,000), and the messages of msgf (200).
+584	31	daytext[32]
+585	29	daytext[32], %d of up to four digits
+586	31	daytext[32]
+587	31	daytext[32]
+588	29	daytext[32], %d of up to four digits
+589	31	daytext[32]
+590	31	daytext[32]
+591	31	daytext[32]
+592	31	daytext[32]
+593	31	daytext[32]
+594	29	daytext[32], %d of up to four digits
+595	31	daytext[32]
+596	31	daytext[32]
+597	29	daytext[32], %d of up to four digits
+
+# The options of the menu (mainmenu.cpp), each a row of 100 bytes of scrbuf:
+# 60 for the format leaves 39 for its inserts, a number and a state.
+936	60	a row of scrbuf, char [100], options (mainmenu.cpp)
+984	60	a row of scrbuf, char [100], options (mainmenu.cpp)
+985	60	a row of scrbuf, char [100], options (mainmenu.cpp)
+999	60	a row of scrbuf, char [100], options (mainmenu.cpp)
+
+# The healers' texts and the scene's expansion: speech[4000] through
+# fmthealth (dialog.cpp), and the expansion of a scene (2,000).
+1087	200	speech[4000], fmthealth (dialog.cpp)
+1089	200	speech[4000], fmthealth (dialog.cpp)
+1092	200	speech[4000], fmthealth (dialog.cpp)
+
+# The character sheet: printbuf[4800] and textbuf[2500] hold its
+# parts, and packbuf[616000] the sheet of the skills from 20,000 on.
+# silvtext and protecttext (panel.cpp) fill printbuf, which boxline
+# copies into a line of an item's box, char boxtexts[20][40]: 39 bytes,
+# and for 1319 its %s takes the longest of armortext's strings 801 to
+# 809, 15 bytes in French.
+1160	39	boxtexts[20][40] through printbuf, valuetext and boxline (panel.cpp)
+1319	26	boxtexts[20][40] through printbuf, with an insert of 15 bytes, protecttext and boxline (panel.cpp)
+1323	1000	packbuf + 20000, packbuf[616000]
+
+# The names that itembuf[32] and sheetshield[32] hold: 31 bytes.
+1302	31	sheetshield[32]
+1417	31	itembuf[32]
+1418	31	itembuf[32]
+1424	31	itembuf[32]
 
 # The strings that the errata of the English and the Italian make
 # longer than the release's. printbuf, picbuf, packbuf, and workbuf hold
@@ -24,23 +72,194 @@
 1821	1000	printbuf[4800], then workbuf, aboutfull (mainmenu.cpp)
 1839	5000	packbuf[616000], aboutgame (mainmenu.cpp)
 
-# The texts that a choice of the options menu or an ending inserts. A
-# choice of the options (mainmenu.cpp) fills a row of 100 bytes of
-# scrbuf, where string 973 takes at most 26 bytes beside its state.
-# fatetext (texts.cpp) writes the endings into scrbuf (char [309700]) or
-# workbuf (char [616000]).
+# The name of the autosave slot, alone in slottext[88] before slotmenu
+# (mainmenu.cpp) composes the slot's line into workbuf.
+1149	87	slottext[88], slotmenu (mainmenu.cpp)
+
+# The endings of fatetext (texts.cpp), which writes into scrbuf
+# (char [309700]) or workbuf (char [616000]), for blackout and endgame
+# (mainmenu.cpp).
+1508	2000	scrbuf or workbuf, with string 1545, fatetext (texts.cpp)
+
+# The states of statustext (texts.cpp), which fills sheetstatus[256] of
+# the character sheet, textbuf[2500] of the status bar, and workbuf for
+# an item's box, where boxline (panel.cpp) gives each state a line of
+# boxtexts[20][40]. In sheetstatus the health with texts b0f0 takes 20
+# bytes at most, and the 13 states 229 at these rooms and at the
+# release's longest of 527, 529, 532, 538, and 555: 249 of 255.
+528	26	sheetstatus[256], with the health and the other states
+530	24	sheetstatus[256], with the health and the other states
+531	21	sheetstatus[256], with the health and the other states
+533	19	sheetstatus[256], with the health and the other states
+534	14	sheetstatus[256], with the health and the other states
+535	24	sheetstatus[256], with the health and the other states
+536	19	sheetstatus[256], with the health and the other states
+537	24	sheetstatus[256], with the health and the other states
+539	39	boxtexts[20][40] through workbuf, alone, statustext (texts.cpp)
+
+# The state of a broken item, which describe (panel.cpp) writes into
+# workbuf and boxline copies into a line of boxtexts[20][40].
+467	39	boxtexts[20][40] through workbuf, describe (panel.cpp)
+
+# The tiredness and the hunger of the character sheet, which charsheet
+# (mainmenu.cpp) joins as %s, %s (texts b072) in sheettired[40]: the
+# longest of tiredtext's strings 518 to 526, 2 bytes, and the longest
+# of hungertext's 509 to 517 take 39 bytes at most at these rooms.
+509	19	sheettired[40], after a tiredness of 18 bytes and texts b072
+510	19	sheettired[40], after a tiredness of 18 bytes and texts b072
+511	19	sheettired[40], after a tiredness of 18 bytes and texts b072
+512	19	sheettired[40], after a tiredness of 18 bytes and texts b072
+513	19	sheettired[40], after a tiredness of 18 bytes and texts b072
+514	19	sheettired[40], after a tiredness of 18 bytes and texts b072
+515	19	sheettired[40], after a tiredness of 18 bytes and texts b072
+516	19	sheettired[40], after a tiredness of 18 bytes and texts b072
+517	19	sheettired[40], after a tiredness of 18 bytes and texts b072
+518	18	sheettired[40], before a hunger of 19 bytes and texts b072
+519	18	sheettired[40], before a hunger of 19 bytes and texts b072
+520	18	sheettired[40], before a hunger of 19 bytes and texts b072
+521	18	sheettired[40], before a hunger of 19 bytes and texts b072
+522	18	sheettired[40], before a hunger of 19 bytes and texts b072
+523	18	sheettired[40], before a hunger of 19 bytes and texts b072
+524	18	sheettired[40], before a hunger of 19 bytes and texts b072
+525	18	sheettired[40], before a hunger of 19 bytes and texts b072
+526	18	sheettired[40], before a hunger of 19 bytes and texts b072
+
+# The texts that a reply or a choice of the options menu inserts. The
+# replies of replyno and replydeal (dialog.cpp) go into speech[4000]
+# through texts b23b. The titles of the options' submenus (mainmenu.cpp)
+# fill a row of 100 bytes of scrbuf: the French texts b062 and its texts
+# b49f, b3ff, and string 552 take 28 bytes, and string 973 takes at most
+# 26 bytes beside its state.
+441	200	speech[4000], replyno (dialog.cpp)
+449	200	speech[4000], replyno (dialog.cpp)
+450	200	speech[4000], replydeal (dialog.cpp)
+932	71	a row of scrbuf, char [100], with texts b062, options (mainmenu.cpp)
+952	71	a row of scrbuf, char [100], with texts b062, options (mainmenu.cpp)
 974	73	a row of scrbuf, char [100], with string 973, options (mainmenu.cpp)
+1413	200	speech[4000] through fmthealth (dialog.cpp), with strings 1087 to 1090
+1414	200	speech[4000] through fmthealth (dialog.cpp), with strings 1087 to 1090
 1545	2000	scrbuf or workbuf, fatetext (texts.cpp)
+
+# The skills of the character sheet, which charsheet (mainmenu.cpp)
+# formats with string 1323 at packbuf + 20000, char packbuf[616000].
+1258	100	packbuf + 20000, charsheet (mainmenu.cpp)
+1260	100	packbuf + 20000, charsheet (mainmenu.cpp)
+1261	100	packbuf + 20000, charsheet (mainmenu.cpp)
+1264	100	packbuf + 20000, charsheet (mainmenu.cpp)
+1270	100	packbuf + 20000, charsheet (mainmenu.cpp)
 
 # The messages of msgf, msgcat, addmsg, denymsg, failmsg, askmsg,
 # nosuccess, notworking, and usefail (combat.cpp), which compose a
 # message in msgfmt[200] and copy it into a row of msgtext, as many
 # bytes. Each room leaves the worst message of the string, its inserts
-# at their longest in the three languages (an item's or a unit's name
-# 31 bytes, a string of strs its longest, or 60 where an expression
-# picks it, and any other insert 40), within 169 bytes: 199 less 30 for
-# an action's name that prependmsg puts before it.
+# at their longest in the four languages (an item's or a unit's name 31
+# bytes, a string of strs its longest, or 60 where an expression picks
+# it, and any other insert 40), within 169 bytes: 199 less 30 for an
+# action's name that prependmsg puts before it.
+242	93	msgfmt[200], 91 bytes at most with its inserts, consume (npc.cpp)
+245	131	msgfmt[200], 75 bytes at most with its inserts, passtime (actions.cpp)
+246	131	msgfmt[200], 54 bytes at most with its inserts, keycmd (input.cpp)
+267	169	msgfmt[200], 152 bytes at most with its inserts, travel (npc.cpp)
+271	140	msgfmt[200], 52 bytes at most with its inserts, opencontainer (world.cpp)
+272	140	msgfmt[200], 56 bytes at most with its inserts, useitem (actions.cpp)
+273	140	msgfmt[200], 66 bytes at most with its inserts, useitem (actions.cpp)
 274	140	msgfmt[200], 57 bytes at most with its inserts, useitem (actions.cpp)
+285	169	msgfmt[200], 20 bytes at most with its inserts, mixpotion (actions.cpp)
+292	169	msgfmt[200], 26 bytes at most with its inserts, usekey (actions.cpp)
+293	140	msgfmt[200], 52 bytes at most with its inserts, checklock (input.cpp)
+294	128	msgfmt[200], 59 bytes at most with its inserts, usekey (actions.cpp)
+295	128	msgfmt[200], 61 bytes at most with its inserts, forcelock (input.cpp)
+296	169	msgfmt[200], 17 bytes at most with its inserts, putheld (input.cpp)
+306	169	msgfmt[200], 28 bytes at most with its inserts, unconscious (world.cpp)
+313	169	msgfmt[200], 70 bytes at most with its inserts, denypractice (combat.cpp)
+314	169	msgfmt[200], 45 bytes at most with its inserts, denyfoes (combat.cpp)
+316	169	msgfmt[200], 21 bytes at most with its inserts, edgemenus (menus.cpp)
 317	169	msgfmt[200], 36 bytes at most with its inserts, useitem (actions.cpp)
-343	131	msgfmt[200], 69 bytes at most with its inserts, hurt (combat.cpp)
-1286	169	msgfmt[200], 61 bytes at most with its inserts, pickup (input.cpp)
+318	169	msgfmt[200], 32 bytes at most with its inserts, consume (npc.cpp)
+319	169	msgfmt[200], 65 bytes at most with its inserts, gosleep (actions.cpp)
+325	140	msgfmt[200], 46 bytes at most with its inserts, weargear (combat.cpp)
+326	140	msgfmt[200], 46 bytes at most with its inserts, weargear (combat.cpp)
+327	102	msgfmt[200], 94 bytes at most with its inserts, hurt (combat.cpp)
+328	111	msgfmt[200], 87 bytes at most with its inserts, hurt (combat.cpp)
+329	102	msgfmt[200], 94 bytes at most with its inserts, hurt (combat.cpp)
+330	111	msgfmt[200], 87 bytes at most with its inserts, hurt (combat.cpp)
+331	131	msgfmt[200], 82 bytes at most with its inserts, strike (combat.cpp)
+332	131	msgfmt[200], 83 bytes at most with its inserts, strike (combat.cpp)
+333	140	msgfmt[200], 50 bytes at most with its inserts, hurt (combat.cpp)
+335	140	msgfmt[200], 54 bytes at most with its inserts, hurt (combat.cpp)
+336	111	msgfmt[200], 88 bytes at most with its inserts, hurt (combat.cpp)
+343	131	msgfmt[200], 70 bytes at most with its inserts, hurt (combat.cpp)
+349	102	msgfmt[200], 95 bytes at most with its inserts, strike (combat.cpp)
+350	102	msgfmt[200], 94 bytes at most with its inserts, strike (combat.cpp)
+353	102	msgfmt[200], 97 bytes at most with its inserts, strike (combat.cpp)
+354	102	msgfmt[200], 89 bytes at most with its inserts, strike (combat.cpp)
+355	169	msgfmt[200], 53 bytes at most with its inserts, perform (npc.cpp)
+358	140	msgfmt[200], 58 bytes at most with its inserts, checklock (input.cpp)
+361	140	msgfmt[200], 56 bytes at most with its inserts, enchant (npc.cpp)
+364	140	msgfmt[200], 53 bytes at most with its inserts, sacrifice (npc.cpp)
+368	140	msgfmt[200], 57 bytes at most with its inserts, enchant (npc.cpp)
+376	140	msgfmt[200], 90 bytes at most with its inserts, consume (npc.cpp)
+382	119	msgfmt[200], 101 bytes at most with its inserts, perform (npc.cpp)
+383	140	msgfmt[200], 86 bytes at most with its inserts, perform (npc.cpp)
+386	169	msgfmt[200], 30 bytes at most with its inserts, protect (npc.cpp)
+387	169	msgfmt[200], 29 bytes at most with its inserts, consume (npc.cpp)
+388	169	msgfmt[200], 29 bytes at most with its inserts, nexthour (world.cpp)
+389	169	msgfmt[200], 42 bytes at most with its inserts, consume (npc.cpp)
+391	169	msgfmt[200], 55 bytes at most with its inserts, consume (npc.cpp)
+392	169	msgfmt[200], 48 bytes at most with its inserts, consume (npc.cpp)
+394	169	msgfmt[200], 40 bytes at most with its inserts, consume (npc.cpp)
+395	169	msgfmt[200], 40 bytes at most with its inserts, goberserk (npc.cpp)
+426	169	msgfmt[200], 12 bytes at most with its inserts, useitem (actions.cpp)
+427	169	msgfmt[200], 20 bytes at most with its inserts, canperform (npc.cpp)
+428	169	msgfmt[200], 56 bytes at most with its inserts, perform (npc.cpp)
+437	169	msgfmt[200], 13 bytes at most with its inserts, attacktarget (input.cpp)
+544	169	msgfmt[200], 21 bytes at most with its inserts, usecorpse (world.cpp)
+561	169	msgfmt[200], 63 bytes at most with its inserts, WinMain (plt.cpp)
+606	140	msgfmt[200], 101 bytes at most with its inserts, askattack (combat.cpp)
+607	140	msgfmt[200], 106 bytes at most with its inserts, askattack (combat.cpp)
+611	169	msgfmt[200], 121 bytes at most with its inserts, askattack (combat.cpp)
+817	169	msgfmt[200], 16 bytes at most with its inserts, putheld (input.cpp)
+851	169	msgfmt[200], 40 bytes at most with its inserts, journal (mainmenu.cpp)
+912	169	msgfmt[200], 22 bytes at most with its inserts, begingame (mainmenu.cpp)
+1086	140	msgfmt[200], 45 bytes at most with its inserts, perform (npc.cpp)
+1101	169	msgfmt[200], 85 bytes at most with its inserts, staydays (dialog.cpp)
+1138	169	msgfmt[200], 33 bytes at most with its inserts, woulddie (combat.cpp)
+1179	126	msgfmt[200], 84 bytes at most with its inserts, useitem (actions.cpp)
+1184	169	msgfmt[200], 133 bytes at most with its inserts, weave (actions.cpp)
+1185	169	msgfmt[200], 96 bytes at most with its inserts, repair (actions.cpp)
+1186	169	msgfmt[200], 97 bytes at most with its inserts, repair (actions.cpp)
+1187	169	msgfmt[200], 94 bytes at most with its inserts, repair (actions.cpp)
+1190	140	msgfmt[200], 111 bytes at most with its inserts, repair (actions.cpp)
+1192	140	msgfmt[200], 119 bytes at most with its inserts, repair (actions.cpp)
+1193	140	msgfmt[200], 53 bytes at most with its inserts, repair (actions.cpp)
+1198	140	msgfmt[200], 78 bytes at most with its inserts, repair (actions.cpp)
+1200	169	msgfmt[200], 71 bytes at most with its inserts, usecorpse (world.cpp)
+1284	169	msgfmt[200], 32 bytes at most with its inserts, skillmsg (combat.cpp)
+1285	169	msgfmt[200], 73 bytes at most with its inserts, bleedmsg (combat.cpp)
+1286	169	msgfmt[200], 62 bytes at most with its inserts, pickup (input.cpp)
+1287	169	msgfmt[200], 25 bytes at most with its inserts, missmsg (combat.cpp)
+1288	131	msgfmt[200], 61 bytes at most with its inserts, missmsg (combat.cpp)
+1370	140	msgfmt[200], 64 bytes at most with its inserts, perform (npc.cpp)
+1373	169	msgfmt[200], 23 bytes at most with its inserts, canperform (npc.cpp)
+1374	169	msgfmt[200], 39 bytes at most with its inserts, perform (npc.cpp)
+1375	169	msgfmt[200], 30 bytes at most with its inserts, curepoison (npc.cpp)
+1384	169	msgfmt[200], 53 bytes at most with its inserts, WinMain (plt.cpp)
+1385	169	msgfmt[200], 39 bytes at most with its inserts, WinMain (plt.cpp)
+1386	169	msgfmt[200], 32 bytes at most with its inserts, perform (npc.cpp)
+1390	169	msgfmt[200], 31 bytes at most with its inserts, useitem (actions.cpp)
+1391	169	msgfmt[200], 44 bytes at most with its inserts, useitem (actions.cpp)
+1392	140	msgfmt[200], 73 bytes at most with its inserts, forcelock (input.cpp)
+1394	140	msgfmt[200], 52 bytes at most with its inserts, forcelock (input.cpp)
+1407	140	msgfmt[200], 59 bytes at most with its inserts, anger (npc.cpp)
+1408	111	msgfmt[200], 88 bytes at most with its inserts, anger (npc.cpp)
+1445	169	msgfmt[200], 70 bytes at most with its inserts, perform (npc.cpp)
+1451	169	msgfmt[200], 30 bytes at most with its inserts, markers (mainmenu.cpp)
+1458	169	msgfmt[200], 28 bytes at most with its inserts, consume (npc.cpp)
+1560	102	msgfmt[200], 83 bytes at most with its inserts, usefail (combat.cpp)
+1566	140	msgfmt[200], 51 bytes at most with its inserts, grind (actions.cpp)
+1567	128	msgfmt[200], 113 bytes at most with its inserts, useitem (actions.cpp)
+1568	128	msgfmt[200], 89 bytes at most with its inserts, useitem (actions.cpp)
+1569	128	msgfmt[200], 89 bytes at most with its inserts, useitem (actions.cpp)
+1570	128	msgfmt[200], 97 bytes at most with its inserts, useitem (actions.cpp)
+1572	128	msgfmt[200], 78 bytes at most with its inserts, useitem (actions.cpp)
+1576	128	msgfmt[200], 119 bytes at most with its inserts, useitem (actions.cpp)

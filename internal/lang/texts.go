@@ -1,8 +1,10 @@
 package lang
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -10,6 +12,51 @@ import (
 	"strconv"
 	"strings"
 )
+
+// A TextLine is a line of texts.txt: a string of the program's texts
+// (packed.Block.Texts) that the build gives the French, at its offset.
+type TextLine struct {
+	Off  int    // the offset in the texts
+	Text string // the string, in UTF-8
+	Line int    // the line of texts.txt
+}
+
+// ReadTexts parses texts.txt: each line holds an offset in hex, a tab,
+// and a string, with the escapes of Escape. Blank lines and lines that
+// start with # are comments.
+func ReadTexts(r io.Reader) ([]TextLine, error) {
+	var lines []TextLine
+	seen := make(map[int]int)
+	sc := bufio.NewScanner(r)
+	sc.Buffer(nil, 1<<20)
+	for n := 1; sc.Scan(); n++ {
+		l := sc.Text()
+		if l == "" || l[0] == '#' {
+			continue
+		}
+		hex, s, ok := strings.Cut(l, "\t")
+		if !ok {
+			return nil, fmt.Errorf("line %d: want an offset, a tab, and a string", n)
+		}
+		off, err := strconv.ParseUint(hex, 16, 16)
+		if err != nil {
+			return nil, fmt.Errorf("line %d: offset %q, want hex from 0 to ffff", n, hex)
+		}
+		if prev, ok := seen[int(off)]; ok {
+			return nil, fmt.Errorf("line %d: offset %x already on line %d", n, off, prev)
+		}
+		seen[int(off)] = n
+		t, err := Unescape(s)
+		if err != nil {
+			return nil, fmt.Errorf("line %d: %v", n, err)
+		}
+		lines = append(lines, TextLine{Off: int(off), Text: t, Line: n})
+	}
+	if err := sc.Err(); err != nil {
+		return nil, err
+	}
+	return lines, nil
+}
 
 // Escape returns s with CR, LF, tab, and backslash written as \r, \n,
 // \t, and \\, and the other control characters as \x and two hex

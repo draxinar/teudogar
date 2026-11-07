@@ -1,0 +1,126 @@
+# The program's texts in French, a string to a line: the offset in hex,
+# a tab, and the string, with escapes for a carriage return, a line
+# feed, a tab, and a backslash. The offset is the French slot of a call
+# of pick, or the offset of the English string for the strings that the
+# code shows without pick.
+
+# The farewell of the dialogs, which byenode (actions.cpp) finds by its
+# first word in the labels of the choices.
+6bc9	Adieu
+
+# The dates of fmttime (system.cpp) and its months.
+9e01	%d %s %d, %02d:%02d:%02d
+9e1a	%d %s %d
+9e41	janv.
+9e45	févr.
+9e49	mars
+9e4d	avr.
+9e51	mai
+9e55	juin
+9e59	juil.
+9e5d	août
+9e61	sept.
+9e65	oct.
+9e69	nov.
+9e6d	déc.
+
+# A saved game in the list of slotmenu (mainmenu.cpp).
+b14c	%c) %s : %d %s %d, %02d:%02d:%02d.
+
+# The titles of the menus of options, slotmenu, and docmenu (mainmenu.cpp),
+# with their colon.
+b057	%s%s / %s :
+b062	%s%s / %s / %s :
+b087	%s%s :
+
+# The messages that join two texts with a colon: msgf, msgcat,
+# prependmsg, nosuccess, notworking, and denymsg (combat.cpp), and
+# text3greyn (graphics.cpp).
+b079	%s : %s
+b080	%s :\r%s
+b318	%s : %s.
+
+# An item and the state of its lock, which msgf shows for a key
+# (actions.cpp) and a picked lock (input.cpp).
+9dea	%s : %s
+
+# The French slots of the calls of pick, in the order of the calls in
+# src/teudogar.
+8995	\r\rDans la démo gratuite de « Teudogar et l'Alliance avec Rome », de nombreux chapitres ne sont pas disponibles.\r\r\rCliquez ici si vous souhaitez acquérir la{\r\r{228>,Version complète}{\r\rqui contient le texte intégral.
+8996	<br><br>Sur le site Web et dans la démo gratuite de <i>Teudogar et l'Alliance avec Rome</i>, de nombreux chapitres ne sont pas disponibles.<br><br><a href="order.htm">Cliquez ici si vous souhaitez acquérir la version complète, qui contient le texte intégral.</a><br>
+8997	<br><br>Sur le site Web et dans la démo gratuite de <i>Teudogar et l'Alliance avec Rome</i>, de nombreux chapitres ne sont pas disponibles.<br><br><a href="http://www.wolfmittag.com/shop">Cliquez ici si vous souhaitez acquérir la version complète, qui contient le texte intégral.</a><br>
+837c	\rMerci de l'intérêt que vous portez à ce texte !\r
+7208	Je crois que ce jeu doit être réinstallé.
+7d1a	Erreur de lecture du fichier de données.
+5905	Lecture :
+5942	Extraction :
+5921	Écriture :
+5963	Calcul :
+601d	Veuillez cliquer sur OK pour quitter le programme d'installation.
+0162	Erreur
+597a	Info
+0359	Voulez-vous vraiment annuler l'installation ?
+0399	Annuler l'installation
+02d2	Installation : Teudogar et l'Alliance avec Rome
+03cb	< &Retour
+03ec	&Suite >
+00e6	&Annuler
+54de	J'accepte. Poursuivre l'installation !
+0474	&Jouer
+0450	&Quitter
+5635	Autre dossier
+565c	Défaut
+0ad5	 (%d Mo requis)
+0b3b	&Installer le jeu sur le disque dur%s
+0ba6	&Lancer le jeu depuis le CD
+0bea	&Parcourir le CD
+0130	Veuillez choisir votre langue :\r
+00b2	Teudogar et l'Alliance avec Rome
+04ef	Version complète
+04c5	Démo
+050b	du
+0884	Jeu de rôle historique de Wolf Mittag\r\n\r\n12 av. J.-C. : les légions romaines conquièrent la Germanie barbare. Battez-vous pour la liberté de votre tribu - ou faites alliance avec Rome !\r\n\r\n- négociations, combats, intrigues, aventures\r\n- villages germains, salles royales, bois sacrés\r\n- plusieurs solutions possibles, éléments classiques du jeu de rôle\r\n- encyclopédie sur les Germains et les Romains\r\n\r\nConfiguration requise :\r\nDirectX 1.0 ou supérieur, %lu Mo d'espace disque.
+576d	Où voulez-vous enregistrer vos sauvegardes ?
+56da	Vos sauvegardes seront enregistrées dans le dossier suivant :
+5803	Le dossier suivant sera ajouté à votre menu Démarrer :
+58c4	Où voulez-vous créer le dossier des icônes de Teudogar ?
+59bd	Erreur lors de l'initialisation
+5dd5	\r\nCe lecteur n'est peut-être pas accessible en écriture (par exemple si vous avez choisi un lecteur de CD-ROM comme lecteur de destination). Dans ce cas, veuillez relancer le programme d'installation et choisir un autre lecteur.\r\n\r\nAutre cause d'erreur possible : vous n'avez peut-être pas le droit d'installer des programmes sur ce système. Dans ce cas, confiez l'installation à une personne disposant des droits d'administrateur.
+5a25	Erreur lors de la création des dossiers
+5f55	Erreur lors de l'écriture dans le menu Démarrer
+170e	Contrat de licence
+546b	Cette version complète est concédée sous licence à
+49f9	\r\nLa version complète est disponible EXCLUSIVEMENT auprès de l'auteur (Wolf Mittag) : commande sur www.wolfmittag.com/shop et paiement par PayPal, CK-Software ou Kagi. Si vous avez obtenu votre version complète par un autre moyen, veuillez nous en informer par notre formulaire de contact sur www.wolfmittag.com/contact - merci beaucoup !\r\n\r\n*\r\n\r\nI.\r\nCe logiciel est protégé par le droit d'auteur et par des traités internationaux.\r\n\r\nL'auteur, Wolf Mittag (Nollstraße 44, 53506 Rech, Allemagne, www.wolfmittag.com), détient et conserve tous les droits sur ce logiciel et sur l'ensemble de ses composants, y compris tous les textes et graphismes.\r\n\r\nII.\r\nL'auteur vous concède une licence non exclusive et non transférable pour installer et utiliser ce logiciel sur votre PC conformément aux conditions du présent contrat de licence.\r\n\r\nIII.\r\nIl vous est INTERDIT :\r\n\r\n- de copier, revendre, prêter, louer ou distribuer ce logiciel, ses composants ou des parties de ceux-ci, de les proposer au téléchargement, ou de les céder ou les mettre à la disposition de tiers de quelque autre manière que ce soit.\r\n\r\n- de modifier ce logiciel, d'en retirer ou d'y ajouter des composants, ou de diffuser ou mettre à disposition des versions modifiées de ce logiciel.\r\n\r\n- d'utiliser dans vos propres projets des composants de ce logiciel ou des parties de ceux-ci, tels que les textes, les graphismes ou toute autre donnée, ou de les exploiter, les adapter, les modifier, les traduire, les diffuser ou les publier sous quelque forme que ce soit.\r\n\r\nIV.\r\nCe logiciel vous est fourni à l'exclusion de toute garantie. Dans les limites autorisées par la loi, l'auteur (Wolf Mittag) n'accorde aucune garantie, ni expresse ni implicite.\r\n\r\nCe logiciel a été soigneusement testé. L'auteur ne peut toutefois garantir qu'il soit exempt d'erreurs ni qu'il fonctionne sur votre système. En acceptant le présent contrat de licence, vous consentez à utiliser ce logiciel à vos propres risques.\r\n\r\nV.\r\nEn aucun cas l'auteur ne pourra être tenu responsable de dommages de quelque nature que ce soit, y compris la perte de données, l'interruption d'activité ou les atteintes à la santé. (Si vous souffrez d'épilepsie ou d'une autre maladie, veuillez consulter votre médecin avant d'utiliser ce logiciel.)\r\n\r\nVI.\r\nSi certaines clauses du présent contrat de licence devaient être juridiquement nulles dans votre pays, elles seraient automatiquement remplacées par les dispositions dont le sens se rapproche le plus de celui de la formulation nulle. La validité des autres clauses n'en serait pas affectée.\r\n\r\nEn copiant, en installant ou en utilisant ce logiciel, ou en permettant à des tiers de le faire ou en les y autorisant, vous déclarez accepter toutes les conditions du présent contrat de licence.
+6171	Installation terminée.
+5fb3	Installation annulée par l'utilisateur.
+714d	%s semble endommagé et ne peut pas être utilisé.\r\n\r\nVeuillez essayer de réinstaller le jeu.\r\n\r\n
+7c8e	Fichier(s) %s : 
+7cb1	endommagé(s)
+7cce	manquant(s)
+73ef	Veuillez essayer de réinstaller le jeu.\r\r
+759f	Veuillez essayer de réinstaller le jeu.\r\r
+7b74	Cette application ne peut pas être exécutée plusieurs fois simultanément.\r\n\r\nVeuillez fermer toutes les autres fenêtres de Teudogar avant de relancer Teudogar.\r\n\r\n
+7c4f	Teudogar_*.Dat introuvable.\r\r%s
+773b	Ce jeu doit être installé sur un disque dur.\r\n\r\nSi vous ne voulez pas le copier manuellement,\r\ntéléchargez et lancez la version auto-extractible\r\ndisponible sur http://www.wolfmittag.com/download.\r\n\r\n
+7a1c	Impossible d'écrire le fichier :\rDisque dur plein ?
+78ee	Impossible d'allouer suffisamment de mémoire pour les graphismes.\r\n\r\nEssayez de fermer toutes les autres applications avant de lancer ce jeu.\r\n
+6ca0	Suite >
+0178	Terminé
+6cbe	< Retour
+6dea	[72,Oui]
+6e07	[72,Non]
+7da8	\r(Licence n° %s)
+7e0f	Licence accordée à\r  %s\r  (%s)\r  demeurant à %s (%s).
+8c3d	Incognito
+6e33	&Visiter le site
+6e5f	&Lire ReadMe
+79a3	Impossible d'initialiser le mode graphique :\r\n\r\n%s
+6bf4	[72<,< Retour]
+6c28	[72<,< Retour]
+6d7e	[72x,Annuler]
+6c58	[72>,Suite >]
+6d26	[72>.X,Suite >]
+6cf0	[72>.R%d,Suite >]
+6d52	[72>,Terminé]
+0012	TEUDOGAR
+0053	 ET L'ALLIANCE AVEC ROME

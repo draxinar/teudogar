@@ -802,6 +802,10 @@ extern char *months[14];
 int featlang(int c);
 char *feattext(char *s);
 #endif
+// FEATURE: french: the elision of French, in src/feature/french.c
+#ifdef FEATURE_FRENCH
+EXTERN_C void frelide(char *s);
+#endif
 extern char romanbuf[];
 extern short pagex;
 extern short pagemaxh;
@@ -5700,6 +5704,11 @@ charsheet(Unit *u, short mode)
 		}
 		menudraw = sheetface;
 		menuanim = 1;
+		// FEATURE: french: elide the articles before the names that the sheet inserts
+#ifdef FEATURE_FRENCH
+		if (lang == 2)
+			frelide((char *)((char (*)[100])scrbuf));
+#endif
 		sheetv = textwin((char *)((char (*)[100])scrbuf), 0, 0, 0xff, (void (*)(short))sheethover, &menu1, 0, mode ? 1 : pagefx < 2 ? 0 : 0xff);
 		menuanim = 0;
 		menudraw = 0;

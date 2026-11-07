@@ -22,12 +22,15 @@ ARCH = $(or $(ARCH_$(word 2,$(HOST))),amd64)
 CC = $(if $(filter macos,$(OS)),clang,gcc)
 SANITIZE =
 
-# FEATURES lists the features of the game that all builds: errata, the
-# fixes of the German, English, and Italian texts, faults, the fixes of
-# the code's faults, pace, the game's pace at any refresh, and fixes,
-# the fixes of the gameplay, which takes faults and pace with it. A
-# program on SDL3 takes faults and pace whatever the list holds.
-FEATURES = errata fixes
+# FEATURES lists the features of the game that all builds: french, the
+# French language, errata, the fixes of the German, English, and Italian
+# texts, faults, the fixes of the code's faults, pace, the game's pace
+# at any refresh, and fixes, the fixes of the gameplay, which takes
+# faults and pace with it. A program on SDL3 takes faults and pace
+# whatever the list holds. LANGFLAGS passes flags to cmd/lang: -p gives
+# French the English of the texts that lang/fr lacks.
+FEATURES = french errata fixes
+LANGFLAGS =
 
 # ZIP is the author's release, and PASSWORD the file whose first line is
 # its password.
@@ -78,12 +81,12 @@ PROGRAM = $(D)$(PROGDIR_$(OS))/teudogar$(EXE)
 unexport OS ARCH CC SANITIZE
 
 .DELETE_ON_ERROR:
-.PHONY: usage all dist test original ddraw check lint fetch tools text fmtref clean distclean FORCE
+.PHONY: usage all dist test original ddraw check lint spell fetch tools text fmtref clean distclean FORCE
 
 # usage lists the goals.
 usage::
 	@echo 'usage: make goal ... [OS=linux|macos|windows] [ARCH=386|amd64|arm64] [CC=gcc|clang|watcom]'
-	@echo "                     [FEATURES='errata fixes']"
+	@echo "                     [FEATURES='french errata fixes']"
 	@echo ''
 	@echo "the game, for the target that OS, ARCH, and CC name (the host's, with gcc,"
 	@echo 'or clang on macOS):'
@@ -101,6 +104,7 @@ usage::
 	@echo 'checks:'
 	@echo '  check      run lint, original, and test'
 	@echo '  lint       run shellcheck, gofmt, and go vet'
+	@echo '  spell      check the spelling of lang/fr with hunspell'
 	@echo ''
 	@echo 'inputs and tools:'
 	@echo '  fetch      download what the builds need into dl/'
@@ -125,16 +129,22 @@ FORCE:
 # tools builds every Go command.
 tools: $(patsubst cmd/%,$(BIN)/%,$(wildcard cmd/*))
 
-# build/features holds FEATURES, and changes only when it does, so that
-# a build with other features compiles again.
+# build/features holds FEATURES and LANGFLAGS, and changes only when
+# they do, so that a build with other features compiles again.
 build/features: FORCE
-	@mkdir -p build && echo 'FEATURES=$(FEATURES)' | cmp -s - $@ || echo 'FEATURES=$(FEATURES)' >$@
+	@mkdir -p build && echo 'FEATURES=$(FEATURES) LANGFLAGS=$(LANGFLAGS)' | cmp -s - $@ || \
+		echo 'FEATURES=$(FEATURES) LANGFLAGS=$(LANGFLAGS)' >$@
 
 # cmd/lang checks the sources of the features in lang/ and writes into
 # build/lang what the features change: data/, the files of the game's
-# folder, and include/, the headers of src/feature.
-build/lang/.ok: build/features build/zip/.ok $(shell find lang -type f) $(wildcard src/teudogar/*.cpp) $(BIN)/lang
-	rm -rf build/lang && $(BIN)/lang -o build/lang -f '$(filter errata,$(FEATURES))' -r lang/buffers.txt $(RELEASE) src/teudogar lang
+# folder, and include/, the headers of src/feature. internal/lang's copy
+# of french.c, through which it checks the elisions, must equal
+# src/feature's.
+build/lang/.ok: build/features build/zip/.ok $(shell find lang -type f) $(wildcard src/teudogar/*.cpp) \
+		internal/lang/french.c src/feature/french.c $(BIN)/lang
+	sed '1,4d' internal/lang/french.c | cmp -s - src/feature/french.c || \
+		{ echo 'make: internal/lang/french.c differs from src/feature/french.c: run go generate ./internal/lang' >&2; exit 1; }
+	rm -rf build/lang && $(BIN)/lang -o build/lang -f '$(filter french errata,$(FEATURES))' -r lang/buffers.txt $(LANGFLAGS) $(RELEASE) src/teudogar lang
 	touch $@
 
 # SWAP puts the folder $(D).new in the place of $(D) under the lock of
@@ -164,15 +174,27 @@ build/ddraw/test.exe: src/ddraw/test.c
 		-Wl,--no-insert-timestamp -o $@ $< -luser32
 
 # text writes the German, English, and Italian texts of the release into
-# build/text in the source forms that the errata quote:
-# build/text/<code>/<name>.txt for each text and readme, and the
+# build/text in the forms that lang/ keeps, as the translators'
+# reference: build/text/<code>/<name>.txt for each text and readme, the
 # language's strings of the program's texts by offset in
-# build/text/<code>/texts.txt (cmd/lang -x).
+# build/text/<code>/texts.txt, and the groups of pick by French slot in
+# build/text/texts.txt (cmd/lang -x).
 text: build/text/.ok
 
 build/text/.ok: build/zip/.ok $(wildcard src/teudogar/*.cpp) $(BIN)/lang
 	rm -rf build/text && $(BIN)/lang -x build/text $(RELEASE) src/teudogar
 	touch $@
+
+# spell checks the spelling of lang/fr with hunspell's fr_FR dictionary
+# and lang/fr/words.txt, the names, quotations, titles, and file names
+# that the French keeps. cmd/lang -s gives it the French free of the
+# game's marks and terms. hunspell reads its UTF-8 in the C.UTF-8
+# locale, whatever the caller's. spell prints each word that the two
+# reject, and fails when there is one or when hunspell fails.
+spell: build/zip/.ok $(BIN)/lang
+	$(BIN)/lang -s $(RELEASE) lang >build/spell.txt
+	LC_ALL=C.UTF-8 hunspell -d fr_FR -p lang/fr/words.txt -l build/spell.txt >build/spell.raw
+	sort -u build/spell.raw >build/spell.bad && cat build/spell.bad && test ! -s build/spell.bad
 
 # lint runs shellcheck on bin/, and gofmt and go vet on cmd/ and
 # internal/.

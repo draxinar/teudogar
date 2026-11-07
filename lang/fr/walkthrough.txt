@@ -1,0 +1,366 @@
+&&CUR0115 Documentation / Solution complète
+
+[Avant-propos
+Avant-propos
+
+Cette solution décrit les deux grandes intrigues du jeu (une ligue des tribus pour se défendre contre les Romains, ou une alliance avec Rome), qui mènent aux deux dénouements les plus spectaculaires.
+
+Mais rien ne vous oblige à suivre l'intrigue : si vous le souhaitez, vous pouvez aussi vous contenter de vendre les produits de votre domaine, de sortir vainqueur d'autant de combats que possible, de chercher des trésors ou de vous enrichir par le commerce, etc.
+
+Vous pouvez terminer la partie à tout moment (par le menu des actions, au bord gauche de l'écran). Selon ce que vous aurez accompli, vous obtiendrez le plus souvent une fin différente.
+
+Pour plus de clarté, de nombreux passages de cette solution donnent des positions précises sous forme de coordonnées (numéro de la carte, X, Y). (Si vous appuyez trois fois de suite sur la touche P en cours de partie, votre position actuelle s'affiche.)
+
+
+[-
+[Généralités
+Recommandations générales
+
+Il est sage de ne pas engager de combats inutiles dans les bourgades. Si l'on vous défie ou si vous avez une raison particulière de le faire, battez-vous - mais sinon, contentez-vous de combats d'entraînement.
+
+Écoutez les conseils que vous offrent les hommes liges et le barde du domaine de $N10, à $Ort1.
+
+Parlez à tous les gens des domaines où l'intrigue vous mène : souvent, une personne ne vous renseignera que si vous avez d'abord parlé à une autre.
+
+En revanche, il est inutile de parler à tous les paysans ou artisans qui vivent dans les fermes voisines. De même, les esclaves n'ont le plus souvent pas grand-chose à vous dire.
+
+Il vaut souvent la peine d'explorer les forêts autour des villages et des fermes : il y a presque partout des grottes, où vous pourrez fréquemment trouver des trésors.
+
+Les très grandes grottes souterraines, en revanche, sont le plus souvent (fidèles en cela à la réalité) à peu près vides : là où rien ne se prêtait particulièrement à servir d'abri, de réserve ou de cachette, ni les hommes ni les bêtes ne sont venus ; autrement dit, on n'y trouve le plus souvent rien d'autre que des lacs et des stalagmites.
+
+Vos compétences s'améliorent progressivement au fil du jeu, par la pratique (et non en terrassant des ennemis) : plus vous répétez une chose, plus vous y gagnez peu à peu en habileté.
+
+Au cours du jeu, vous pouvez apprendre de nombreux sortilèges et actions. (Mais le menu des actions ne sera jamais entièrement rempli. Certaines lignes ne contiennent vraiment qu'un ou deux sortilèges.)
+
+
+[-
+[Ligue des tribus contre Rome
+[-
+[Commentaire
+Ligue des tribus contre Rome : commentaire
+
+Si vous voulez être raisonnable, concluez une alliance avec Rome (deuxième voie, plus facile ; voir sa description plus loin).
+
+Mais si vous voulez être héroïque, alors tenez tête à la superpuissance romaine, et forgez une alliance défensive de toutes les tribus :
+
+Cette voie est la plus longue, la plus riche en événements, la plus risquée pour votre tribu et, pour vous personnellement, la plus profitable...
+
+[Début
+Ligue des tribus contre Rome : début - $Ort1
+
+Prenez le bouclier accroché au mur de votre maison (faites-le glisser sur votre inventaire). Avec lui, les combats à venir vous seront plus faciles.
+
+Rendez-vous au domaine de $N10, au nord-ouest de la bourgade (15,46,65), et parlez à $N10. (Si vous voulez savoir de quoi il retourne, parlez aussi à l'envoyé des $Stamm6g.)
+
+$N10 veut résister aux Romains et s'allier aux $Stamm6d. Mais il faut aussi convaincre les $Stamm2, vos voisins du sud, d'entrer dans cette ligue. Pour cela, $N10 veut dépêcher un envoyé à $Ort2, auprès des nobles les plus influents des $Stamm2 : portez-vous volontaire pour cette mission.
+
+Les hommes liges et le barde du domaine de $N10 vous apprendront d'ailleurs tout ce qu'il faut savoir sur le combat - n'hésitez pas à leur donner un peu d'argent pour cela.
+
+
+[$Ort2
+Ligue des tribus contre Rome : $Ort2
+
+Quand $N10 vous aura appris tout le nécessaire, partez pour $Ort2. Rendez-vous d'abord au domaine de $N20 (24,64,48), et parlez à $N20.
+
+$N20 est tout disposé à s'allier à votre tribu - mais la sienne est divisée : pour convaincre l'assemblée du peuple des $Stamm2, il vous faut l'approbation d'une autorité supérieure, le prêtre de Ziu. Acceptez de vous rendre au $Ort6.
+
+$N20 vous a déjà appris que ni $N21 ni $N22 n'approuveront votre projet de ligue des tribus. Si vous le voulez, vous pouvez tout de même leur parler à tous les deux (24,79,63 et environ 24,123,44).
+
+Dans la maison de $N21, son homme lige $N25 vous défiera alors en duel. Si vous le voulez, vous pouvez relever le défi et l'affronter (cela ne vous nuira pas, mais ne vous servira à rien non plus).
+
+Chez le marchand du domaine de $N20, vous pouvez d'ailleurs échanger sans peine contre de l'or ou des bijoux les grandes quantités d'armes encombrantes et autres objets que vous prendrez comme butin au fil du jeu. (D'autres vous en offriront certes de bien meilleurs prix, mais ils ont rarement de l'or.)
+
+
+[$Ort12
+Ligue des tribus contre Rome : intrigue secondaire facultative - $Ort12
+
+Avant de vous rendre au $Ort6, vous pouvez parler au barde de $Ort2 (dans la maison de $N20 ou dans celle de $N21) : il vous parlera de la prophétesse $N27, qui vit au $Ort12.
+
+Si vous avez envie de voyager un peu et d'explorer, rendez-vous au $Ort12. Là, le fils simple d'esprit de $N27 vous attaquera d'abord - prenez garde de ne pas le tuer, et surtout, accordez-lui la vie sauve.
+
+Les conseils de $N27 peuvent vous être utiles. Apprendre la magie auprès d'elle, en revanche, n'en vaut pas la peine - ces mêmes sortilèges, vous pourrez les apprendre gratuitement auprès de la femme de $N10, une fois de retour à $Ort1 (demandez d'abord conseil au barde).
+
+
+[$Ort6
+Ligue des tribus contre Rome : $Ort6
+
+Le grand prêtre de Ziu estime que le dieu de la guerre n'approuvera votre entreprise que si vous lui offrez un grand sacrifice. Faites-lui remarquer qu'une alliance avec les Romains coûterait moins cher à votre tribu que ses exigences démesurées - il se contentera alors de 100 pièces d'or.
+
+Si vous voulez apprendre le sortilège défensif « Briser un sortilège », fort utile, parlez aussi à l'autre prêtre (« Sacrifice à Ziu », « La faveur de Ziu »).
+
+Retournez ensuite à $Ort2, auprès de $N20, pour lui demander l'or - il vous en donnera au moins une partie. Le reste, c'est $N10 qui vous le donnera, à $Ort1.
+
+Si vous comptiez apporter les amphores de vin au prêtre auxiliaire, rendez-vous d'abord à $Ort2, chez le marchand du domaine de $N20.
+
+Retournez ensuite au $Ort6 et remettez l'or au grand prêtre. Il déclare alors que votre ligue ne pourra réussir que si la tribu des $Stamm7 y entre aussi, ou du moins les $Stamm3, une branche des $Stamm7.
+
+
+[$N30
+Ligue des tribus contre Rome : $Ort3 - négociation avec $N30
+
+Une fois que le grand prêtre de Ziu vous a indiqué le chemin, rendez-vous à la $Ort3 et parlez au roi $N30. $N30 pose des conditions assez dures à une alliance avec votre tribu.
+
+Si seule l'intrigue principale vous importe, vous pouvez dès maintenant retourner à $Ort2 et à $Ort1 pour y faire votre rapport à $N20 et à $N10.
+
+Si vous vous attardez pour l'instant à la $Ort3, gardez-vous bien de tuer $N36 - cela indisposerait fort $N30. ($N35, en revanche, vous pouvez le tuer.)
+
+
+[$N34
+Ligue des tribus contre Rome : intrigue secondaire facultative - $Ort3 : la vengeance de $N34
+
+Par $N36 (manteau vert) ou par le gros guerrier de la $Ort3, vous apprenez que les femmes de $N30 s'y entendent en magie.
+
+Parlez alors à $N34 (cheveux bruns) : si sa proposition ne vous semble pas trop barbare, vous pouvez chercher querelle à $N35 (tunique bleue). Une fois le duel gagné, $N34 vous enseignera « Bénir » et « Maudire ».
+
+(Plus tard, vous aurez encore l'occasion d'apprendre ces sortilèges sans verser de sang - mais selon la conception barbare du droit, il est tout à fait noble et chevaleresque d'accéder à la demande de $N34.)
+
+
+[$Ort9
+Ligue des tribus contre Rome : intrigue secondaire utile - $Ort3 : la femme de $N36, $Ort9
+
+Allez voir $N33 (blonde) à la $Ort3 (après avoir parlé à $N36 ou au gros guerrier). Elle vous apprend l'existence de $N39, la femme que $N36 a répudiée. Le père de $N30 (dans la grande salle) vous révélera (si $N36 n'est pas à portée de voix) où la trouver.
+
+Rendez-vous ensuite à la $Ort9. Là, continuez toujours vers le nord jusqu'à ce que vous tombiez sur un sentier, qui vous mène plus loin vers le nord-ouest, à l'entrée d'une grotte (35,28,44) : c'est là que vous trouverez $N39.
+
+$N39 veut une paire de bracelets ensorcelés qui reposent dans un tumulus. Pour les atteindre, il vous faudra une pioche : si vous n'en avez pas, retournez à la $Ort3 et demandez au forgeron de vous en faire une (au besoin, n'hésitez pas à le payer avec une partie de votre équipement - vous trouverez dans le tumulus quelques objets de valeur que vous pourrez échanger contre de nouvelles armes, etc.).
+
+Retournez ensuite à la $Ort9. Depuis l'entrée de la grotte de $N39, suivez le ruisseau vers l'est jusqu'à la rivière, puis la rivière vers le sud. Vous arriverez ainsi au tumulus (35,105,69). Creusez au milieu du tertre (double-cliquez sur votre pioche, puis cliquez au milieu du tertre), puis glissez-vous à l'intérieur (double-cliquez sur l'entrée que vous avez creusée).
+
+Prenez les bracelets et apportez-les à $N39. (Les bracelets sont fort utiles - mais remettez-les tout de même à $N39 comme promis, si vous ne voulez pas être maudit.) Le sortilège « Dominer », que $N39 vous enseignera alors, est très efficace.
+
+
+[$N37
+Ligue des tribus contre Rome : intrigue secondaire facultative - $Ort3 : $N37
+
+Si vous parlez de $N30 avec $N37 (le nain) à la $Ort3, et que vous lui donnez des objets d'une valeur de 300 pièces d'argent, il vous parlera d'un tumulus où il soupçonne la présence de nombreux trésors.
+
+Si vous n'avez pas assez d'argent, rendez-vous d'abord à $Ort1 ou à $Ort2 et parlez à $N10 et à $N20 : ils vous offriront quelques présents de valeur pour vous remercier de votre ambassade. D'ailleurs, si l'on vous attaque en chemin, vous aurez souvent l'occasion de dépouiller à votre tour les brigands de leur butin. (Leur camp se trouve près du lieu de l'attaque.)
+
+Dès que $N37 vous a révélé l'emplacement exact du tumulus, rendez-vous-y. Une fois arrivé à la bourgade abandonnée, il vous suffit de suivre vers le sud-est le sentier que $N37 a frayé.
+
+Arrivé au tumulus (37,124,118), creusez au milieu du tertre (double-cliquez sur votre pioche, puis cliquez au milieu du tertre), puis glissez-vous à l'intérieur (double-cliquez sur l'entrée que vous avez creusée).
+
+L'épée et la cotte de mailles du tumulus ont de la valeur, mais elles sont maudites - mieux vaut donc ne pas les revêtir, et vous en servir seulement comme marchandises de troc. Si vous en parlez à $N37, il vous recommandera la sorcière $N38, à la $Ort13 - mais vous pouvez vous en dispenser pour l'instant ; vous entendrez parler d'elle plus tard, sans bourse délier.
+
+Si vous lui donnez encore de l'argent, $N37 vous enseigne en outre le sortilège « Trouver ce qui est caché » (parlez-lui pour cela de $N30). Il vous parle aussi d'une grotte près de la $Ort3, où vous pourrez trouver un autre trésor, plus modeste (entrée : 32,78,96 ; cachette : 33,84,78).
+
+
+[$N31
+Ligue des tribus contre Rome : $Ort3 : $N31
+
+Quand vous aurez informé $N10 (à $Ort1) et $N20 (à $Ort2) des exigences de $N30, retournez à la $Ort3 et parlez de nouveau à $N30 : il ne veut toujours rien en rabattre.
+
+Parlez maintenant à $N31 (manteau jaune, dans la grande salle ou dans une petite hutte). La tribu de $N31 a été durement battue par les Romains. Seule une défaite romaine permettra aux siens de reconquérir leur territoire. Aussi $N31 est-il prêt à tout pour le succès de votre ligue des tribus.
+
+Acceptez son offre. Préparez-vous au voyage et au combat. Veillez à ne pas être trop chargé - déposez tout ce dont vous n'avez pas besoin dans les contenants de la salle de $N30 (la pioche, par exemple, ne vous servira à rien pour l'instant). Parlez ensuite de nouveau à $N31, et partez avec lui déterrer le trésor.
+
+En chemin, un détachement romain vous barre la route, et le combat s'engage. Comme $N31 se révèle un guerrier hors du commun, vous devriez l'emporter - mais vous serez le seul survivant.
+
+Profitez des précieuses armes et armures laissées sur le champ de bataille : revêtez une cuirasse segmentée et un casque de fer romains. Gardez votre épée longue germanique (pour les duels que vous livrez le plus souvent, elle vaut mieux que les épées courtes des Romains).
+
+Emportez ensuite comme marchandises de troc toutes les épées que vous pouvez porter, et peut-être quelques casques, voire d'autres cuirasses. Ce que vous ne pouvez plus porter, sacrifiez-le aux dieux. Vous pouvez maintenant passer d'abord par $Ort2 pour y déposer ou y vendre votre butin.
+
+
+[$Ort4
+Ligue des tribus contre Rome : $Ort4 : déterrer le trésor
+
+Lors de votre première tentative pour déterrer avec $N31 le trésor des $Stamm4, les Romains vous avaient barré la route.
+
+Comme $N31 vous a décrit l'endroit exact avant de mourir, rendez-vous seul au $Ort4 et suivez-y les indications de $N31 : d'abord jusqu'au point où commence le ruisseau (40,140,100), puis vers l'ouest jusqu'aux trois arbres tombés (40,75,64), puis vers le sud et le sud-ouest (jusqu'à 40,59,86), vers l'ouest (jusqu'à 40,29,86), puis vers le nord (jusqu'à 40,25,48), puis vers le nord-est (l'embranchement de droite), puis vers l'est (de 40,73,21 à 40,85,18), et ensuite vers le sud (jusqu'à 40,74,43).
+
+Enfin, poursuivez vers l'est (jusqu'à 40,102,42), puis vers le nord (40,113,28), vers le sud (jusqu'à 40,116,40), vers l'est, et pour finir vers le sud (jusqu'à 40,121,56) : avec la pioche que vous trouverez là, vous pourrez déterrer le trésor (40,121,54).
+
+Ce que vous avez trouvé là est une fortune colossale : si vous voulez garder l'or pour vous et êtes prêt à trahir votre tribu, terminez maintenant la partie (menu des actions, au bord gauche de l'écran - mais mieux vaut sauvegarder d'abord, pour pouvoir tout de même continuer à jouer).
+
+Sinon, rendez-vous sans tarder à la $Ort3, parlez à $N30, et achetez-lui avec cet or l'alliance des $Stamm3.
+
+L'alliance entre les principales tribus - les $Stamm6 à l'ouest, la vôtre, les $Stamm2 au sud et les $Stamm3 à l'extrême sud - est ainsi conclue. Il serait pourtant prématuré de terminer la partie maintenant (menu des actions, à gauche) : vous ne pourriez pas résister à l'attaque romaine.
+
+
+[$Ort10
+Ligue des tribus contre Rome : $Ort10
+
+Une fois que vous aurez acheté à $N30 l'alliance des $Stamm3, il mentionnera que des envoyés de la tribu des $Stamm5 sont venus le voir : les $Stamm5 aimeraient entrer dans votre ligue des tribus.
+
+Si vous vous rendez à $Ort10 et parlez à $N46 (45,95,96), vous apprendrez que $N45 tyrannise la tribu et empêche toute alliance contre les Romains. Déclarez-vous prêt à affronter $N45.
+
+$N48 vous met en garde contre la magie de $N45, et pense que $N38, à la $Ort13, connaît peut-être une parade. Rendez-vous là-bas.
+
+
+[$Ort13
+Ligue des tribus contre Rome : $Ort13
+
+$N38 vous parle d'un torque qui protège de la magie. Suivez le sentier qui part au nord de l'entrée de sa ferme (41,97,81), jusqu'à l'entrée de la grotte (41,17,84).
+
+À l'intérieur de la grotte, allez vers l'est, puis vers le nord. Là (42,39,64), vous trouverez une traînée de petits cailloux gris : manifestement, le chercheur de trésors dont vous suivez la trace a balisé son chemin pour retrouver la sortie de la grotte.
+
+Il vous suffit donc de suivre ces cailloux pour le retrouver, lui ou son cadavre (42,75,85, puis 42,92,83, et enfin 42,120,106). Le chercheur de trésors a péri dans une fosse piégée. Si vous écartez son cadavre, vous trouverez le torque qui protège de la magie.
+
+Prenez garde avant d'aller plus loin, car d'autres fosses piégées sont cachées ici. Si vous maîtrisez le sortilège « Trouver ce qui est caché », lancez-le : vous pourrez ensuite marcher sans danger sur les fosses piégées ainsi découvertes. À défaut, activez le mode combat et frappez le sol de votre arme partout où vous voulez aller : cela aussi vous fera découvrir les fosses piégées.
+
+Dans la partie sud-est de la grotte, vous pourrez trouver une caisse enterrée contenant une cotte de mailles et quelques autres objets (42,100,124).
+
+De retour à la surface, si vous avez assez d'or ou de marchandises de troc, vous pourrez apprendre auprès de $N38 à bénir vous-même armes et armures. C'est cher, mais cela en vaut largement la peine.
+
+
+[Contre $N45
+Ligue des tribus contre Rome : $Ort10
+
+Quand vous aurez rapporté de la grotte de la $Ort13 le torque qui protège de la magie, préparez-vous au combat contre $N45 et ses hommes liges : veillez à avoir casque, cuirasse, épée et bouclier. Déposez toutes les affaires superflues, pour ne pas être surchargé. Dormez et mangez. Faites-vous bénir encore une fois par $N48.
+
+Rendez-vous ensuite au domaine de $N45. Parlez d'abord à $N47 (45,50,18) : elle peut grandement vous faciliter la tâche, en incitant $N45 et ses hommes liges à boire.
+
+Attendez maintenant le soir, jusqu'à ce que $N47 entre dans la salle et que $N45 et ses hommes soient attablés à boire. Parlez alors à $N45, et défiez-le en duel. Une fois $N45 vaincu, essayez de ramasser son épée : avec cette arme, tous les combats à venir vous seront nettement plus faciles.
+
+Dès que le troisième homme lige de $N45 capitule, vous pouvez cesser le combat. En vainqueur, vous avez droit à tout ce que les vaincus portaient sur eux : prenez surtout les bracelets ensorcelés de $N45.
+
+Après votre victoire, $N46 vous offre en remerciement la main de sa fille : vous pouvez refuser ou accepter - cela n'aura aucune influence sur la suite du jeu.
+
+Maintenant que $N45 est mort, l'assemblée du peuple des $Stamm5 approuvera l'alliance avec votre tribu. Rendez-vous à $Ort2 pour annoncer votre succès à $N20.
+
+
+[$Ort2
+Ligue des tribus contre Rome : $Ort2
+
+Une révolution de palais a eu lieu dans la tribu des $Stamm2 : $N20 serait mort de maladie. $N21 a été élu pour lui succéder, et s'est empressé de conclure une alliance avec les Romains.
+
+Parlez à $N21, puis rendez-vous à la $Ort3 pour tout rapporter à $N30. $N30 vous apprend qu'il ne vous est plus possible de demander la paix aux Romains.
+
+Rendez-vous à $Ort1, et rapportez tout à $N10.
+
+
+[$Ort14
+Ligue des tribus contre Rome : $Ort14
+
+Après cette révolution de palais chez les $Stamm2, $N10 ne sait plus quel parti prendre. Il veut consulter une prophétesse, mais n'en connaît aucune qui convienne.
+
+Le barde de la salle de $N10 (ou $N11) vous orientera vers $N50, à la $Ort14 : rendez-vous-y, et parlez au frère de $N50 (43,42,71).
+
+Le frère de $N50 réclame des présents d'une valeur de 1000 pièces d'argent, destinés à $N50. Si vous n'avez pas autant, retournez à $Ort1 et parlez à $N10 : il vous révèle qu'il a enfoui un petit trésor dans une grotte au nord de son domaine (entrée : 15,79,10 ; cachette : 16,63,44).
+
+Retournez à la $Ort14, et remettez au frère de $N50 les présents qu'il exige. Il promet de vous transmettre la réponse de $N50 dans les trois jours.
+
+Pour occuper ce temps, vous pouvez entre autres fouiller la forêt au sud du domaine de $N50 : si vous portez une bonne armure, et si vous êtes assez fort pour vaincre deux ours qui vous attaquent à la fois, vous pourrez trouver dans une grotte (43,24,132) un torque ensorcelé, qui protège de la magie ennemie tout en accroissant votre propre puissance magique. Il se trouve dans le recoin le plus au sud-est de la grotte, sous un manteau, à demi caché par la paroi (44,39,121).
+
+Dans la même forêt, un peu plus à l'est, se trouve une autre grotte (43,100,109), où vous pourrez trouver un peu d'argent et quelques armes.
+
+Au bout de trois jours, parlez de nouveau au frère de $N50. Il vous proposera de renverser le roi $N21, et de mettre $N26 à sa place.
+
+
+[$Ort17
+Ligue des tribus contre Rome : $Ort17
+
+La tribu des $Stamm2 a dû livrer des otages aux Romains, en garantie du respect de l'alliance. Tant que ces otages seront aux mains des Romains, la tribu ne consentira pas à rompre son alliance avec eux.
+
+Comme $N50 vous a appris où se trouvent les otages, vous pouvez maintenant les libérer. Rendez-vous sans tarder à $Ort1, auprès de $N10, rapportez-lui tout, et partez avec lui et ses guerriers attaquer par surprise le détachement romain qui emmène les otages.
+
+Si vous êtes blessé, restez en retrait pendant la bataille, et laissez les autres guerriers mener le combat. (Prenez garde, en outre, à n'attaquer ni les otages ni vos propres guerriers.)
+
+Une fois la bataille gagnée, $N10 ramène les otages sur le territoire de votre tribu. Rendez-vous maintenant au $Ort16, pour convaincre $N26 de devenir roi des $Stamm2.
+
+
+[$Ort16
+Ligue des tribus contre Rome : $Ort16
+
+$N26 ne demande qu'à accepter votre offre. Mais pour renverser $N21, il lui faut la preuve que $N21 a bien assassiné $N20.
+
+Rendez-vous à $Ort2 pour trouver cette preuve. Profitez d'un moment où $N21 est hors de vue pour parler au barde, dans la salle de $N20 (ou sur le banc devant l'ancienne salle de $N21) : il a vu $N21 aller trouver $N20, deux coupes de vin à la main.
+
+Parlez ensuite à $N28 (la femme de $N21, dans l'ancienne salle de $N21) : ce qu'a vu le barde la convainc assez pour qu'elle vous conseille de fouiller le coffre que $N21 garde dans sa salle à manger romaine (24,82,60). Mais vous ne devez pas forcer le coffre.
+
+Pour cela, allez d'abord voir le forgeron (24,27,69), et demandez-lui de vous montrer comment ouvrir les serrures. Ouvrez ensuite le coffre de $N21 (24,82,60) (menu des actions, au bord gauche de l'écran, action « Ouvrir une serrure » - recommencez jusqu'à ce que vous réussissiez). (Si vous n'y parvenez pas, ôtez votre armure, et dormez un peu pour améliorer votre dextérité.)
+
+Prenez le récipient rempli de poison que vous trouverez dans le coffre. Rendez-vous au $Ort16, et faites part de cette preuve à $N26.
+
+$N26 se mettra alors en route pour venger sur $N21 le meurtre de $N20. Peu après, $N26 est élu nouveau roi par la tribu des $Stamm2 - et les $Stamm2 sont de nouveau de votre côté !
+
+
+[Conclusion
+Ligue des tribus contre Rome : $Ort3 : conclusion
+
+Une fois les $Stamm2 redevenus vos alliés, retournez à la $Ort3, et rapportez tout à $N30.
+
+Alors que $N10 entend rendre à toutes les tribus leur liberté d'antan, $N30 rêve de se servir de l'alliance défensive pour établir sa suprématie sur toutes les tribus : si vous l'y aidez, il vous aidera à devenir roi de votre propre tribu. (Si vous avez tué $N36, l'homme lige de $N30, sachez que $N30 vous en veut toujours, et ne vous fait _pas_ cette offre.)
+
+Si vous êtes noble et désintéressé, refusez l'offre de $N30, retournez à $Ort1, parlez à $N10, et attendez l'armée romaine. (L'inconvénient de ce choix, toutefois, c'est que $N30 avait raison : faute d'une direction ferme, votre ligue des tribus est moins efficace, et ses succès seront moindres.)
+
+Si, en revanche, les arguments de $N30 vous convainquent (ou si vous avez un faible pour le pouvoir et la gloire), acceptez sans hésiter : quand $N30 vous demande si vous tenez $N10 pour un roi à la hauteur, répondez « Non », et ne dites surtout pas que vous êtes contre les conquêtes. Dans les mois qui suivront, vous renverserez alors $N10 avec l'aide de $N30, et prendrez sa place. Peut-être, une fois roi, ferez-vous réellement plus pour votre tribu que ne le pourrait $N10. En tout cas, l'efficacité militaire de votre ligue des tribus ne pourra que gagner à ce que $N30 exerce une suprématie incontestée.
+
+Mais pour l'instant, il ne vous reste plus rien à faire : les autres tribus n'entreront dans votre alliance défensive que lorsque vous aurez prouvé que vous êtes capable de vaincre les Romains. Terminez donc la partie pour attendre l'armée romaine (menu des actions).
+
+Vous avez fait ce que vous pouviez pour défendre la liberté de votre tribu. Il vous aurait été impossible de vaincre véritablement l'Empire romain, maître du monde. Votre succès consiste à avoir tenu bon assez longtemps, jusqu'à ce que Rome ait un besoin plus pressant de ses troupes ailleurs, et soit donc prête à vous accorder la paix à des conditions supportables.
+
+Dans la réalité historique, les efforts des tribus germaniques pour repousser les Romains échouèrent faute d'unité et de concertation : les Romains purent vaincre les tribus une à une, et conquérir ainsi, pour finir, tout le pays. Ce n'est qu'au cours des 20 années suivantes, faites d'une occupation coûteuse, de soulèvements fréquents et de progrès laborieux, que les Romains comprirent que leur nouvelle province de Germanie ne leur rapportait pas grand-chose. Quand enfin, 20 ans après les événements de ce jeu, une nouvelle alliance des tribus infligea de lourdes pertes aux Romains par une embuscade habilement préparée, les Romains renoncèrent à ce coûteux projet, mirent fin à l'occupation, et se retirèrent pour de bon.
+
+
+[-
+[Alliance avec Rome
+[-
+[Commentaire
+Alliance avec Rome : commentaire
+
+Cette voie est la plus facile et la plus courte : au lieu de forger péniblement une alliance, il vous suffit d'accepter une offre d'alliance que Rome vous fait dès le départ.
+
+La seule chose que vous ayez à faire pour cela, c'est de surmonter l'opposition au sein de votre tribu...
+
+
+[Début
+Alliance avec Rome : début - $Ort1
+
+De votre domaine, à $Ort1, rendez-vous à celui de $N1, au sud-est de la bourgade. Parlez à $N1, et acceptez toutes ses propositions.
+
+Après tout ce que $N1 vous a appris, vous avez, selon la conception barbare du droit, le devoir moral de combattre $N10.
+
+Rendez-vous donc au domaine de $N10, au nord-ouest de la bourgade, et défiez $N10 en duel (n'acceptez pas le prix du sang). Mais ne le combattez pas encore - retournez d'abord voir $N1.
+
+
+[L'épée de $N3
+Alliance avec Rome : l'épée de $N3
+
+$N1 vous confie que vous pourrez vaincre $N10 avec l'épée de $N3. Partez sans tarder pour le $Ort18, et parlez à la mère de $N3. Elle acceptera de vous céder l'épée, et vous dira où la trouver.
+
+Quittez le domaine par la porte ouest. En allant alors vers le nord, vous tomberez sur un sentier (entre le champ abandonné et la clôture du domaine), qui vous mènera plus au nord, jusqu'à l'entrée de la grotte (58,92,13).
+
+À l'intérieur de la grotte, suivez la galerie de droite jusqu'à une grotte plus vaste, où s'étend un grand lac. L'épée se trouve au fond de cette grotte, du côté est, entre deux stalagmites (59,97,103). Prenez l'épée, et faites-la glisser sur votre fenêtre d'inventaire, pour la porter désormais à la ceinture ou à la main.
+
+
+[Contre $N10
+Alliance avec Rome : contre $N10
+
+Une fois l'épée de $N3 en votre possession, retournez à $Ort1, au domaine de $N1. Parlez-y à $N1, puis à $N2, l'homme lige de $N1 (celui qui porte une tunique de cuir, un casque de cuir et un bouclier), et enfin à la femme de $N1.
+
+Préparez-vous au combat : si vous êtes surchargé, déposez toutes les affaires superflues de votre sac. Au besoin, faites encore un bon somme, et mangez quelque chose. Assurez-vous de porter l'épée de $N3 à la main ou à la ceinture (et non dans votre sac).
+
+Allez alors au domaine de $N10, parlez-lui, et engagez le combat. La vue de l'épée démoralisera tant $N10 que vous devriez le vaincre très facilement. Après quoi, retournez auprès de $N1, et parlez-lui.
+
+
+[$Ort15
+Alliance avec Rome : $Ort15
+
+Avec $N10, c'est le principal ennemi des Romains qui est désormais hors d'état de nuire. Mais le danger demeure que l'envoyé des $Stamm6 n'excite l'assemblée du peuple de votre tribu à la guerre contre les Romains. $N1 propose de le soudoyer - et vous révèle aussitôt où trouver l'or nécessaire.
+
+Rendez-vous donc au $Ort15. Là, suivez le ruisseau toujours plus au nord, jusqu'à la clairière où s'ouvre l'entrée de la grotte (52,102,37). À l'intérieur de la grotte, allez vers le sud-ouest jusqu'à l'échelle qui descend (53,71,59), et descendez-la (double-cliquez sur l'échelle).
+
+Suivez maintenant les repères de $N1 : à chaque embranchement, prenez toujours la galerie où ne se trouve _aucun_ petit caillou gris. Vous irez ainsi d'abord vers l'ouest (54,20,58). De là, le seul chemin possible continue vers le sud, puis décrit une longue courbe vers l'est pour remonter enfin vers le nord. Suivez alors à nouveau les repères (prenez toujours l'embranchement où ne se trouve aucun caillou).
+
+Vous arrivez enfin à une fourche d'où ne partent plus que trois petites grottes (54,129,51). Prenez la pioche dans la grotte de droite, et creusez (double-cliquez sur la pioche) au centre de la grotte du milieu (54,130,46). Prenez l'or.
+
+100 pièces d'or, c'est une somme considérable (un simple paysan devrait travailler dix ans pour la gagner). Si vous voulez garder l'or pour vous, terminez immédiatement la partie (menu des actions, au bord gauche de l'écran - mais mieux vaut sauvegarder d'abord, pour pouvoir tout de même continuer à jouer).
+
+
+[Conclusion
+Alliance avec Rome : conclusion
+
+Une fois l'or de $N1 en votre possession, remontez à la surface, et retournez à $Ort1. Là, rendez-vous aussitôt au domaine de $N10, et parlez à l'envoyé des $Stamm6 (tunique bleue, manteau vert foncé). Donnez-lui l'or.
+
+La suite, c'est $N1 qui vous l'apprendra : après le discours injurieux de l'envoyé que vous avez soudoyé, l'assemblée du peuple de votre tribu ne veut plus entendre parler des $Stamm6d, et elle est prête à s'allier avec les Romains. Il ne vous reste plus qu'à en informer les Romains pour que l'alliance avec Rome soit conclue.
+
+$N1 vous indique le chemin du grand camp romain le plus proche : rendez-vous-y.
+
+Si le sort de votre tribu vous est indifférent, vous pouvez aussi vous faire tout simplement mercenaire. Parlez pour cela à l'officier romain posté juste à la porte du camp (mieux vaut sauvegarder la partie avant).
+
+Dans la tente du général, au centre du camp, vous trouverez le commandant en chef. Si vous lui parlez et acceptez ses conditions, l'alliance de votre tribu avec Rome est conclue !
+
+Beaucoup de membres de votre tribu seront mécontents de la domination romaine. Mais face à l'écrasante supériorité des Romains, vous avez choisi une solution plutôt raisonnable, et épargné à votre tribu bien des souffrances et des effusions de sang...
+
+

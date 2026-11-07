@@ -728,6 +728,11 @@ extern unsigned long curblinkat;
 extern unsigned short tipx;
 extern unsigned short tipy;
 extern char tiptext[200];
+// FEATURE: french: the elision of French, in src/feature/french.c
+#ifdef FEATURE_FRENCH
+EXTERN_C void frelide(char *s);
+extern int lang;
+#endif
 extern unsigned tipend;
 extern short headanim;
 extern short headstep;
@@ -803,6 +808,11 @@ showtip(int x, int y, char *fmt, ...)
 	va_start(ap, fmt);
 	wvsprintf(tiptext, fmt, ap);
 	va_end(ap);
+	// FEATURE: french: elide the articles of a tooltip
+#ifdef FEATURE_FRENCH
+	if (lang == 2)
+		frelide(tiptext);
+#endif
 	text3w(tiptext);
 	x -= text3width / 2;
 	if (x < 8)
@@ -3236,6 +3246,11 @@ void
 boxline(short k, short i, char *s)
 {
 	wsprintf(boxtexts[nboxtexts], s);
+	// FEATURE: french: elide the articles of a line of an item's box
+#ifdef FEATURE_FRENCH
+	if (lang == 2)
+		frelide(boxtexts[nboxtexts]);
+#endif
 	boxes[k].lines[i] = boxtexts[nboxtexts++];
 }
 

@@ -150,8 +150,8 @@ func ReadRooms(rd io.Reader) (map[int]int, error) {
 	return rooms, sc.Err()
 }
 
-// CheckLengths reports the strings of strs (those of a language that
-// errata fixes) that the game composes into buffers and that run
+// CheckLengths reports the strings of strs (the French, or a language
+// that errata fixes) that the game composes into buffers and that run
 // longer than the longest of the release's German, English, and
 // Italian, which the buffers hold: each needs its buffer checked, and
 // buffers lists the strings checked so, by index, with the bytes that

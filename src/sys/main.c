@@ -83,6 +83,7 @@ static const struct {
 } langs[] = {
 	{ "de", "deut" },
 	{ "en", "engl" },
+	{ "fr", "fran" },
 	{ "it", "ital" },
 };
 
@@ -96,7 +97,7 @@ static const char helptext[] =
 	"--nosound, --nomusic    no sound, no music\n"
 	"--quickstart            skip the titles\n"
 	"--newgame               start a new game\n"
-	"--lang de|en|it         the language\n"
+	"--lang de|en|fr|it      the language\n"
 	"-h, --help              this text\n"
 	"--                      the rest is the game's own words\n"
 	"\n"
@@ -217,7 +218,7 @@ addlang(const char *code)
 			addword(langs[i].word);
 			return;
 		}
-	usage("--lang wants de, en, or it, not ", code);
+	usage("--lang wants de, en, fr, or it, not ", code);
 }
 
 /* setsize takes the size of the window from s, WxH in decimal digits alone. */
@@ -285,7 +286,7 @@ args(int argc, char *argv[])
 			continue;
 		if (strcmp(s, "--lang") == 0) {
 			if (++a == argc)
-				usage("--lang wants de, en, or it", "");
+				usage("--lang wants de, en, fr, or it", "");
 			addlang(argv[a]);
 			continue;
 		}

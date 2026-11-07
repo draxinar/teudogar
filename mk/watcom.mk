@@ -108,14 +108,17 @@ ifneq ($(OS)-$(ARCH),windows-386)
 $(error CC=watcom builds OS=windows ARCH=386)
 endif
 
-# The game with FEATURES. wpp386 takes FEATURES and FEATURE_<NAME> for
-# each feature from its variable WPP386, since DOS holds a command line
-# to 127 characters. FEATURE_MODULES lists the modules of src/feature:
-# feature.cpp, the plumbing of the features.
+# The game with FEATURES. wpp386 and wcc386 take FEATURES and
+# FEATURE_<NAME> for each feature from their variables WPP386 and WCC386,
+# since DOS holds a command line to 127 characters, and wrc the one
+# macro that the blocks of src/feature/teudogar.rc test. FEATURE_MODULES
+# lists the modules of src/feature: feature.cpp, the plumbing, and the
+# features' own.
 GAME_FEATURES = $(sort $(FEATURES) $(if $(filter fixes,$(FEATURES)),faults pace))
 FEATURE_MACROS := -dFEATURES=1 $(patsubst %,-dFEATURE_%=1,$(shell echo $(GAME_FEATURES) | tr '[:lower:]' '[:upper:]'))
-FEATURE_ENV = -e 'WPP386=$(FEATURE_MACROS)'
-FEATURE_MODULES = feature
+FEATURE_ENV = -e 'WPP386=$(FEATURE_MACROS)' -e 'WCC386=$(FEATURE_MACROS)'
+RC_MACROS = $(if $(filter french,$(FEATURES)),-dFEATURE_FRENCH=1)
+FEATURE_MODULES = feature $(filter french,$(FEATURES))
 FEATURE_OBJS = $(patsubst %,$(O)/%.obj,$(BASE_MODULES) $(GAME_MODULES) $(FEATURE_MODULES))
 FEATURE_DEPS = src/base/base.h build/features build/dos/.ok bin/dos
 
@@ -130,16 +133,22 @@ $(O)/%.obj: src/teudogar/%.cpp $(FEATURE_DEPS)
 $(O)/%.obj: src/feature/%.cpp $(FEATURE_DEPS) build/lang/.ok
 	$(call WCC,wpp386,$(BASE_CFLAGS),feat/$*,src/base/*.h build/lang/include/*.h,$(FEATURE_ENV))
 
-# The game with FEATURES links in C:\WORK\GAME at DATE, with the
-# original's resources, in the order of teudogar.lnk with the modules of
-# src/feature after screen.
-$(WORK)/game/teudogar.exe: $(ZLIB_OBJS) $(FEATURE_OBJS) src/teudogar/teudogar.lnk src/teudogar/teudogar.rc \
+$(O)/%.obj: src/feature/%.c $(FEATURE_DEPS)
+	$(call WCC,wcc386,$(BASE_CFLAGS),feat/$*,src/base/*.h,$(FEATURE_ENV))
+
+# The game with FEATURES links in C:\WORK\GAME at DATE, in the order of
+# teudogar.lnk with the modules of src/feature after screen. Its
+# resources are those of src/feature/teudogar.rc, the original's with
+# the features' blocks, in code page 1252 as iconv writes it from the
+# UTF-8 of the repository.
+$(WORK)/game/teudogar.exe: $(ZLIB_OBJS) $(FEATURE_OBJS) src/teudogar/teudogar.lnk src/feature/teudogar.rc \
 		build/zip/.ok bin/dos bin/wlink $(BIN)/pe $(BIN)/rc
-	rm -rf $(@D) && mkdir -p $(@D) && cp $(filter %.obj %.rc,$^) $(@D)/
+	rm -rf $(@D) && mkdir -p $(@D) && cp $(filter %.obj,$^) $(@D)/
+	iconv -f UTF-8 -t CP1252 src/feature/teudogar.rc >$(@D)/teudogar.rc
 	awk -v mods='$(FEATURE_MODULES)' '{ print } $$0 == "file screen.obj" { n = split(mods, m, " "); for (i = 1; i <= n; i++) print "file " m[i] ".obj" }' \
 		src/teudogar/teudogar.lnk >$(@D)/game.lnk
 	$(BIN)/rc $(RELEASE)/teudogar.exe $(@D) >/dev/null
-	bin/dos -d 'C:\WORK\GAME' wrc -r -q -bt=nt teudogar.rc >/dev/null
+	bin/dos -d 'C:\WORK\GAME' wrc -r -q -bt=nt $(RC_MACROS) teudogar.rc >/dev/null
 	bin/wlink 'C:\WORK\GAME' game.lnk $@ '$(DATE)'
 
 # cmd/seal does what the author's release step did: it copies the

@@ -1,0 +1,2957 @@
+non déf.#
+porte#
+herse#
+arbre#
+souche#
+roseaux#
+récipient#
+fuseau#
+chandelle#
+brasero#
+bassin#
+foyer#
+torche#
+seau#
+viande#
+pain#
+fromage#
+saucisse#
+racine#
+herbes#
+champignons#
+pièces d'argent#
+ambre#
+rouleau de papyrus#
+papyrus#
+amphore#
+clé#
+tonneau#
+caisse#
+coffre#
+sac#
+bûches#
+levier#
+couverture#
+chaussures#
+braies#
+braies de cuir#
+cuirasse musclée#
+jambières#
+tunique#
+tunique matelassée#
+tunique de cuir#
+cotte de mailles#
+cuirasse d'écailles#
+cuirasse segmentée#
+robe#
+bouclier#
+bouclier romain#
+casque de cuir#
+casque de bronze#
+casque de fer#
+vaisselle#
+charrue#
+peau de bête#
+auge#
+toiles d'araignée#
+étagère#
+mortier#
+épée de bronze#
+masse d'armes#
+massue#
+poignard#
+épée courte#
+hache de guerre#
+épée de bronze#
+hache#
+épée#
+épée à deux mains#
+marteau de guerre#
+grande hache#
+pioche#
+lance#
+hache de jet#
+arc#
+arc long#
+tour de potier#
+faucille#
+enclume#
+tenailles#
+marteau#
+pelle#
+pierre à aiguiser#
+soufflet#
+marmite#
+poêle#
+cruche#
+assiette#
+gobelet#
+tenture#
+écriteau#
+tête d'animal#
+billot#
+chaudron#
+buste de l'empereur#
+pierre#
+tablette de pierre#
+squelette#
+échelle vers le bas#
+échelle vers le haut#
+table#
+chaise#
+poutre et scie#
+autel#
+métier à tisser#
+ligne de pêche#
+menhir#
+âtre#
+lit#
+colonne#
+dormeur#
+dormeurs#
+étagère garnie#
+outils#
+amphores#
+clôture#
+pont#
+meule#
+entrée de grotte#
+cadavre#
+buisson#
+stalagmite#
+palissade#
+toit de chaume#
+crâne#
+écuelle#
+lierre#
+torche consumée#
+cheminée#
+sacs de grain#
+grain#
+toit de bois#
+étoffes#
+cible de lancer#
+tonneaux#
+puits#
+fourneau#
+billot et coin à fendre#
+planches et coin à fendre#
+troncs d'arbres#
+banc#
+matériel d'écriture#
+tumulus#
+marmites et poêles#
+chaudron sacrificiel sanglant#
+tour de guet#
+manteau#
+!marqueur!#
+fosse piégée#
+effigie de Wodan#
+effigie de Donar#
+bannière au corbeau#
+pièces d'or#
+détritus#
+mangeoire#
+bas fourneau#
+bas fourneau brisé#
+charbon#
+seau de charbon#
+lingot de fer#
+laine et peigne#
+fuseau et quenouille#
+bois de chauffage#
+bijoux d'or#
+charogne#
+enseigne#
+trophée#
+corne à boire#
+urne#
+épée inachevée#
+courge#
+fèves#
+chou#
+pois#
+foin#
+tas de fumier#
+poisson#
+poisson fumé#
+panier#
+corde#
+manteau de fourrure#
+bracelets de bronze#
+bracelets d'argent#
+bracelets d'or#
+torque de bronze#
+torque d'argent#
+torque d'or#
+fosse#
+idole#
+cotte de mailles inachevée#
+lit de repos#
+siège pliant#
+table de marbre#
+légumes#
+tunique de cuir inachevée#
+os#
+bouclier inachevé#
+tessons#
+porte enfoncée#
+sang#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+x#
+Wolf Mittag#
+présente :#
+Vous êtes %s%s.#
+encore #
+C'est %s.#
+C'est %s : des ennemis sont proches !#
+Mode triche : %s#
+oui#
+non#
+non disponible#
+Menu#
+Info#
+Carte#
+Combat : O#
+Combat : X#
+Quêtes#
+Voyager#
+Encyclopédie#
+DOCUMENTATION#
+objet#
+%s, choisir une cible :#
+Comment voulez-vous être appelé ?#
+Veuillez choisir un portrait :#
+CHARGER UNE PARTIE#
+SAUVEGARDER LA PARTIE#
+- vide -#
+Mémoire vive insuffisante.#
+Vous ne pourrez vous rendre en ce lieu {
+qu'après avoir acquis la version complète.{
+(Appuyez sur F1 et choisissez « À propos de la version complète ».)#
+Vous ne pourrez utiliser cette sauvegarde{
+qu'après avoir acquis la version complète.{
+(Appuyez sur F1 et choisissez « À propos de la version complète ».)#
+(version complète uniquement)#
+serrure fermée#
+%s : c'est fermé à clé.#
+%s : impossible à utiliser.#
+%s : impossible à utiliser avec ceci.#
+%s : impossible à revêtir.#
+%s : pas de serrure.#
+ (double-clic = utiliser)#
+ (double-clic = parler)#
+ (double-clic = utiliser)#
+ (double-clic = ouvrir)#
+ (double-clic = manger)#
+ (double-clic = boire)#
+ (double-clic = revêtir)#
+ (double-clic = manger)#
+ (double-clic = boire)#
+Utiliser avec quoi ?#
+Trop loin.#
+impossible.#
+impossible sans cible.#
+impossible (%s).#
+impossible sur soi-même.#
+Impossible avec ceci.#
+Cette clé ne convient pas.#
+%s : c'est déjà ouvert.#
+c'est verrouillé !#
+c'est déverrouillé !#
+Ça ne rentre pas.#
+%ld pièces d'argent#
+pièce d'argent#
+%ld pièces d'or#
+pièce d'or#
+Face#
+Pile#
+pas de réponse#
+%s s'enfuit.#
+Il ne se passe rien.#
+Vous êtes sans connaissance.#
+(pas en mode combat)#
+(pas avec des ennemis proches)#
+Pas en mode combat.%s%s)#
+
+(Vous devez surveiller vos ennemis.#
+
+(Désactiver avec #
+%sMode combat : %s.#
+Pas en combat d'entraînement :
+vous pourriez blesser votre partenaire.#
+Impossible tant que des ennemis sont proches.#
+Ennemis à proximité ! #
+Ennemis à proximité !#
+L'échelle ne mène nulle part.#
+Vous ne pouvez plus rien manger.#
+\Vous n'êtes pas du tout fatigué.
+(à nouveau = dormir quand même)#
+Vous vous frappez :#
+Vous frappez %s :#
+%s se frappe :#
+%s frappe :#
+%s frappe %s :#
+%s : en morceaux.#
+%s : en lambeaux.#
+%s le coup est amorti (%s).#
+%s : le coup est amorti (%s).#
+%s le coup est amorti (%s).#
+%s : le coup est amorti (%s).#
+%s : la lance reste fichée dans le bouclier.#
+%s la lance reste fichée dans votre bouclier.#
+%s : simple éraflure.#
+%s vous êtes terrassé !#
+%s tombe sous vos coups !#
+%s tombe sous les coups de %s.#
+Vous fuyez !#
+%s s'enfuit !#
+%s fuit devant %s.#
+%s se rend !#
+%s vous fait grâce !#
+On vous a dévalisé, mais par bonheur vous êtes encore en vie !#
+%s vous êtes grièvement blessé !#
+%s : blessure grave.#
+%s vous êtes blessé.#
+%s : blessure.#
+%s vous êtes légèrement blessé.#
+%s : blessure légère.#
+%s vous parez avec votre %s.#
+%s pare avec son arme (%s).#
+%s vous esquivez.#
+%s esquive.#
+%s vous bloquez avec votre %s.#
+%s bloque avec son %s.#
+Vous percevez votre environnement avec plus d'acuité.#
+Vous avez exploré les environs.#
+%s : potion ajoutée.#
+%s : ce n'est pas fermé à clé#
+%s : la serrure résiste.#
+Malédiction sur %s.#
+%s subit votre malédiction.#
+%s vous maudit.#
+%s : sortilège brisé.#
+Offrande aux dieux : %s.#
+Vous avez imploré l'aide de Wodan.#
+Vous avez de nouveau imploré l'aide de Wodan. Mais vous craignez que tant d'appels ne finissent par l'irriter...#
+Bénédiction sur %s.#
+%s reçoit votre bénédiction.#
+%s vous bénit.#
+%s ne vous est pas hostile.#
+%s offre la paix.#
+%s refuse d'abandonner ses compagnons d'armes.#
+%s refuse d'abandonner les combattants.#
+%s s'affaiblit.#
+%s obéit à votre volonté.#
+%s plonge son regard dans le vôtre, longuement et avec désir.#
+%s vous regarde soudain d'un air plutôt aimable.#
+%s grimace.#
+Vous serez bientôt rétabli.#
+Mais sans l'aide d'un guérisseur, vous ne vous rétablirez pas.#
+Inutile, vous ne saignez plus.#
+Vous pansez vos blessures et arrêtez le saignement.#
+Vous pansez les blessures de %s et arrêtez le saignement.#
+Vous vous sentez mieux.#
+%s se sent mieux.#
+Vous vous sentez invulnérable.#
+Vous ne vous sentez pas bien.#
+Vous vous sentez au plus mal.#
+Vous vous sentez bien éveillé et attentif.#
+Vous vous sentez gai, indifférent et hébété.#
+Vous ne vous sentez pas émoustillé, mais plutôt hébété.#
+Vous vous sentez étourdi, désinhibé et lubrique.#
+Vous êtes soudain terriblement fatigué.#
+Vous vous sentez faible et sans défense.#
+Vous vous sentez comme une bête sauvage.#
+Vous vous trouvez formidable et adorable.#
+Cette potion n'avait pas très bon goût.#
+Cette herbe était plutôt coriace.#
+(Choisir une personne)#
+(Choisir une arme ou une armure)#
+(Choisir un contenant ou une porte)#
+(Choisir un lieu piégé)#
+(Choisir un lieu)#
+(Choisir une arme, une armure, de l'or ou des vivres)#
+(Choisir une torche ou un foyer)#
+(Choisir un mort)#
+(Choisir une arme, une armure ou une personne)#
+(Choisir une cible)#
+Qu'aiguiser ?
+(Choisir une arme)#
+De qui deviner les intentions ?#
+Avec qui faire la paix ?#
+Qui effrayer ?#
+Qui affaiblir ?#
+Qui dominer ?#
+Que sacrifier ?#
+À qui parler ?#
+Que bénir ?#
+Que maudire ?#
+Qui guérir ?#
+De qui panser les blessures ?#
+Sur quoi briser un sortilège ?#
+Quelle serrure ouvrir ?#
+Quel piège désamorcer ?#
+Qui détrousser ?#
+Avec qui troquer ?#
+Où creuser ?#
+Il fait trop sombre.#
+Vous ne savez pas trop si quelque chose est enterré ici.#
+Vous ne savez pas trop si quelque chose est enterré ici. (Essayez encore.)#
+Wodan veut ta perte.#
+Wodan t'est hostile.#
+Wodan ne se soucie pas de ton sort.#
+Wodan t'est favorable.#
+Wodan te souhaite chance et victoire.#
+Cette arme est plutôt lourde.#
+ça n'a pas marché.#
+C'est bloqué.#
+Oui#
+Non#
+Continuer#
+Comme vous voudrez.
+#
+Comme tu voudras.
+#
+Comme vous le souhaitez.
+#
+C'est comme tu veux.
+#
+Tant pis, alors.
+#
+Tant pis, alors.
+#
+Une autre fois, peut-être.
+#
+Une autre fois, peut-être.
+#
+Comme vous le souhaitez, maître.
+#
+Voici pour vous.
+#
+Voici pour toi.
+#
+Vous ne regretterez pas cet achat.
+#
+Tu ne regretteras pas cet achat.
+#
+Voilà, c'est à vous.
+#
+Voilà, c'est à toi.
+#
+Tenez.
+#
+Tiens.
+#
+Tenez, maître.
+#
+à l'état neuf#
+presque à l'état neuf#
+en très bon état#
+en bon état#
+en état passable#
+en piètre état#
+en mauvais état#
+en très mauvais état#
+hors d'usage#
+malédiction insurmontable#
+malédiction puissante#
+forte malédiction#
+malédiction#
+malédiction modérée#
+faible malédiction#
+très faible malédiction#
+sans bénédiction#
+très faible bénédiction#
+faible bénédiction#
+bénédiction modérée#
+bénédiction#
+assez forte bénédiction#
+forte bénédiction#
+bénédiction puissante#
+bénédiction inégalable#
+très robuste#
+très robuste#
+robuste#
+solide#
+en assez bon état#
+en état moyen#
+en mauvais état#
+en très mauvais état#
+le matin#
+le matin#
+la matinée#
+midi#
+l'après-midi#
+le soir#
+le soir#
+la nuit#
+vers le matin, #
+vers le matin, #
+dans la matinée, #
+vers midi, #
+dans l'après-midi, #
+vers le soir, #
+vers le soir, #
+au milieu de la nuit, #
+%svous arrivez : %s.#
+repu#
+rassasié#
+presque rassasié#
+en appétit#
+un peu affamé#
+affamé#
+très affamé#
+terriblement affamé#
+mourant de faim#
+frais et dispos#
+éveillé#
+assez éveillé#
+légèrement fatigué#
+un peu fatigué#
+fatigué#
+très fatigué#
+épuisé#
+mort de fatigue#
+ivre, #
+sous l'effet du poison, #
+en sang, #
+sous une bénédiction, #
+sous un sortilège, #
+en fuite, #
+l'esprit confus, #
+en sommeil, #
+sous une malédiction, #
+sous protection, #
+en état de faiblesse, #
+en furie, #
+sans vie#
+grièvement blessé#
+blessé#
+légèrement blessé#
+en bonne santé#
+Vous ne trouvez rien.#
+Plus de place.#
+%s du jour %s#
+Menu principal#
+Introduction#
+Nouvelle partie#
+Charger une partie#
+Sauvegarder la partie#
+Options#
+Quitter#
+Retour#
+en surcharge#
+Aucun son :#
+M#
+M#
+S#
+M#
+\Pour réactiver le son et la musique :
+appuyez sur « O » ou F4.#
+[228,plus d'informations dans ReadMe.Txt]#
+Voulez-vous vraiment commencer une nouvelle partie ?
+
+(La partie en cours sera perdue si vous ne l'avez pas sauvegardée.)#
+Voulez-vous vraiment mettre fin à cette partie ?#
+Il y a deux mille ans...#
+Pendant ce temps, dans les#
+terres barbares du Nord...#
+\Rome avait fait la guerre pendant dix générations{
+et soumis les peuples d'Hispanie, d'Afrique du Nord,{
+de Grèce, de Macédoine, d'Asie Mineure,{
+de Gaule, de Syrie et d'Égypte.{
+
+Elle régnait désormais sur les pays les plus riches{
+et les plus civilisés du monde connu.#
+\Mais une fois maîtres du monde,{
+les Romains perdirent leur propre liberté.{
+
+Des généraux romains s'emparèrent du pouvoir,{
+se livrèrent des guerres sanglantes{
+et régnèrent en dictateurs.#
+\En dix ans de guerres civiles, Octave,{
+petit-neveu de César, avait vaincu ses rivaux.{
+
+Le Sénat impuissant lui conféra alors{
+toutes les grandes magistratures de la République{
+et le titre d'« Auguste », l'auguste empereur.#
+\Le nouvel autocrate usa de son immense pouvoir,{
+rétablit l'ordre et la sécurité{
+et fit refleurir les provinces exsangues en bâtissant{
+de nouvelles villes, des routes et des aqueducs.#
+\Mais au-delà de la longue frontière du nord-est,{
+si difficile à défendre,{
+vivaient libres des peuples barbares et belliqueux.{
+
+Une menace constante pour l'Empire romain,{
+qui exigeait de nombreuses et coûteuses garnisons.#
+\C'est ainsi qu'Auguste chargea{
+ses beaux-fils Drusus et Tibère{
+de soumettre les tribus germaniques à l'est du Rhin{
+et d'annexer à l'Empire leurs terres{
+jusqu'à l'Elbe...#
+CONCEPTION#
+CONCEPTION, PROGRAMMATION,#
+TEXTES ET UNIVERS DU JEU#
+UNIVERS DU JEU#
+WOLF#
+WOLF MITTAG#
+GRAPHISMES#
+GRAPHISMES ET ANIMATION#
+ARNE#
+ARNE NIEMUTH#
+jamais#
+il y a %d semaines#
+il y a moins de deux semaines#
+il y a une semaine#
+il y a %d jours#
+avant-hier#
+hier#
+aujourd'hui#
+demain#
+après-demain#
+dans %d jours#
+dans une semaine#
+dans une semaine et demie#
+dans %d semaines#
+\%s : ce n'est pas à vous.{
+Prendre quand même ? (prendre à nouveau = oui)#
+\%s : c'est à %s.{
+Prendre quand même ? (prendre à nouveau = oui)#
+\%s : ce n'est pas à vous.{
+Utiliser quand même ? (utiliser à nouveau = oui)#
+\%s : c'est à %s.{
+Utiliser quand même ? (utiliser à nouveau = oui)#
+\%s : ce n'est pas à vous.{
+(Vous devez d'abord vous en saisir pour l'utiliser.)#
+\%s : c'est à %s.{
+(Vous devez d'abord vous en saisir pour l'utiliser.)#
+\%s : ce n'est pas à vous.{
+Forcer quand même ? (attaquer à nouveau = oui)#
+\%s : c'est à %s.{
+Forcer quand même ? (attaquer à nouveau = oui)#
+\%s n'est pas hostile.{
+Attaquer quand même ? (attaquer à nouveau = oui)#
+\%s ne vous appartient pas.{
+Attaquer quand même ? (attaquer à nouveau = oui)#
+\%s appartient à %s.{
+Attaquer quand même ? (attaquer à nouveau = oui)#
+\Attaquer une femme attisera la colère de vos ennemis.{
+Attaquer quand même ? (attaquer à nouveau = oui)#
+\Cet esclave vous appartiendra{
+dès que vous aurez vaincu son maître.{
+Attaquer quand même ? (attaquer à nouveau = oui)#
+\Cette esclave vous appartiendra{
+dès que vous aurez vaincu son maître.{
+Attaquer quand même ? (attaquer à nouveau = oui)#
+\%s est un hôte généreux{
+et ne verra sûrement aucun mal{
+à ce que vous vous serviez (%s).#
+\%s est une hôtesse généreuse{
+et ne verra sûrement aucun mal{
+à ce que vous vous serviez (%s).#
+Vol de %s à %s.#
+Vol de %s.#
+Vous éteignez le feu de %s.#
+Vous allumez le bois de %s.#
+\Je vous salue !#
+\Bonjour !#
+\Salut !#
+\Comment ça va ?#
+\Salut à vous !#
+\Beau temps aujourd'hui !#
+\Belle journée aujourd'hui, n'est-ce pas ?#
+\Alors, que faites-vous de beau ?#
+\J'ai à faire en ce moment.#
+\Je voudrais travailler, maintenant.#
+\Que voulez-vous ?#
+\Laissez-moi tranquille.#
+\Vous me rendez malade.#
+\Je ne veux pas parler maintenant.#
+\Je dois partir.#
+\Vous n'avez rien à faire ?#
+\Comment allez-vous ?#
+\Disparais !#
+\Allez-vous-en !#
+\Laissez-moi en paix !#
+\Je ne peux pas maintenant.#
+\Les dieux vous haïssent !#
+\Vous êtes un lâche !#
+\Tout le monde vous déteste !#
+\Vous êtes un voleur !#
+\Fichez le camp !#
+\Le travail est dur...#
+\Parlons une autre fois.#
+\J'ai encore quelque chose à faire.#
+\Tu ne m'as pas déjà tout pris ?
+Que veux-tu de plus ?#
+\Je ne veux plus vous voir.#
+\Cultiver la terre, c'est dur. Pourvu que notre tribu reparte bientôt en guerre !#
+\Il n'a pas plu depuis longtemps, vous ne trouvez pas ?#
+\Ces maudites mauvaises herbes vont envahir tout mon champ !#
+\Il fait beau aujourd'hui, n'est-ce pas ?#
+\Vous êtes un brigand !#
+\Meuuuh !#
+\Hiiii !#
+\Ouaf ! Ouaf ! Ouaf !#
+\Groin ! Groin !#
+\Je ne veux voir personne !#
+\Tu ne vois pas que j'ai à faire ?!#
+43#
+44#
+45#
+46#
+47#
+48#
+49#
+50#
+51#
+52#
+53#
+54#
+55#
+56#
+57#
+58#
+59#
+60#
+61#
+62#
+63#
+64#
+65#
+66#
+67#
+68#
+69#
+70#
+71#
+72#
+73#
+74#
+75#
+76#
+77#
+78#
+TEXT_RESERV_000d#
+TEXT_RESERV_001d#
+TEXT_RESERV_002d#
+TEXT_RESERV_003d#
+TEXT_RESERV_004d#
+TEXT_RESERV_005d#
+TEXT_RESERV_006d#
+TEXT_RESERV_007d#
+TEXT_RESERV_008d#
+TEXT_RESERV_009d#
+TEXT_RESERV_010d#
+TEXT_RESERV_011d#
+TEXT_RESERV_012d#
+TEXT_RESERV_013d#
+TEXT_RESERV_014d#
+TEXT_RESERV_015d#
+TEXT_RESERV_016d#
+TEXT_RESERV_017d#
+TEXT_RESERV_018d#
+TEXT_RESERV_019d#
+homme#
+femme#
+prêtre#
+prêtresse#
+magicien#
+sorcière#
+guerrier#
+paysan#
+barde#
+forgeron#
+aubergiste#
+Romain#
+légionnaire#
+marchand#
+brigand#
+orque#
+squelette#
+nain#
+mort-vivant#
+ondine#
+araignée géante#
+rat géant#
+démon#
+esprit des bois#
+fantôme#
+cochon#
+kobold#
+vache#
+chien#
+cheval#
+joueur#
+homme lige#
+esclave#
+esclave#
+affranchi#
+affranchie#
+gros homme#
+géant#
+vieillard#
+vieille femme#
+femme enceinte#
+ours#
+TYP000d#
+TYP001d#
+TYP002d#
+TYP003d#
+TYP004d#
+TYP005d#
+TYP006d#
+TYP007d#
+TYP008d#
+TYP009d#
+TYP010d#
+TYP011d#
+TYP012d#
+TYP013d#
+TYP014d#
+TYP015d#
+TYP016d#
+TYP017d#
+TYP018d#
+TYP019d#
+loup#
+néant#
+très faible#
+faible#
+médiocre#
+passable#
+dans la moyenne#
+honnête#
+solide#
+remarquable#
+hors du commun#
+inégalable#
+néant#
+à l'agonie#
+en déclin#
+très faible#
+faible#
+assez faible#
+ordinaire#
+assez robuste#
+robuste#
+très robuste#
+indomptable#
+néant#
+très peu#
+peu#
+un peu#
+moyennement#
+passablement#
+beaucoup#
+énormément#
+prodigieusement#
+FOR#
+DEX#
+INT#
+VIT#
+rien#
+kg#
+lbs#
+C'est trop lourd#
+votre#
+votre#
+votre#
+vos#
+vos#
+vos#
+votre#
+votre#
+votre#
+vos#
+vos#
+vos#
+ton#
+ta#
+ton#
+tes#
+tes#
+tes#
+ton#
+ta#
+ton#
+tes#
+tes#
+tes#
+pièce d'argent#
+pièces d'argent#
+Nous sommes navrés, mais cette sauvegarde est corrompue et ne peut pas être lue.
+
+
+Vous pouvez commencer une nouvelle partie ou charger une partie sauvegardée.
+
+Ou bien quittez le programme, annulez les éventuelles modifications, relancez-le et reprenez la partie en cours.
+
+
+%s
+#
+QUÊTES :#
+QUÊTES (%d/%d) :#
+&&TST0014 toutes#
+&&TST0014 importantes#
+&&TST0014 capitales#
+Effacer la quête#
+Vous n'avez aucune quête pour l'instant.#
+Voulez-vous vraiment effacer cette quête ?#
+Imprimer la liste#
+Hors de portée.#
+D'accord !#
+Non.#
+Bien.#
+(D'accord)#
+Je prends !#
+(Je prends !)#
+Voilà un bon troc.#
+Que voulez-vous ?#
+Que veux-tu ?#
+Que proposez-vous ?#
+Que proposes-tu ?#
+Votre offre est ridicule !#
+Cette offre est ridicule !#
+J'en veux au moins le double !#
+J'en veux au moins le double !#
+Si vous donnez un tiers de plus...#
+Si tu donnes un tiers de plus...#
+Seulement si vous y ajoutez quelque chose !#
+Seulement si tu y ajoutes quelque chose !#
+Encore un tout petit peu plus...#
+Encore un tout petit peu plus...#
+Cette offre passe tout juste.#
+Cette offre passe tout juste.#
+C'est une offre acceptable.#
+C'est une offre acceptable.#
+C'est une offre équitable.#
+C'est une offre équitable.#
+C'est une offre généreuse.#
+C'est une offre généreuse.#
+C'est une offre très généreuse !#
+C'est une offre très généreuse !#
+C'est une offre royale !#
+C'est une offre royale !#
+Comme vous voudrez.#
+Comme tu voudras.#
+( Sélectionnez dans#
+la fenêtre de gauche#
+ce qui vous intéresse.)#
+(Faites glisser#
+vos marchandises#
+dans cette fenêtre.)#
+\J'ai déjà trop à faire.
+
+Vous devez attendre que les autres travaux soient terminés.
+#
+\Hum... on dirait que je vous ai trop promis :
+
+Je n'ai plus aucune marchandise !
+#
+ sera prêt %s#
+ sera prête %s#
+ sera prêt %s#
+ seront prêts %s#
+ seront prêtes %s#
+ seront prêts %s#
+ et #
+Vous n'avez rien commandé.
+#
+, c'est prêt : voilà !
+#
+, tout est prêt : voilà !
+#
+libre#
+Temps d'affichage graphique : %lu,%02lu secondes
+
+#
+Clic gauche : regarder, clic droit : marcher, F1 : aide.#
+\}}I COMMANDES :
+
+
+}}I Clic gauche :
+}}I Regarder / Déplacer / Utiliser
+}}I en mode combat : attaquer
+
+
+}}I Clic droit :
+}}I Marcher
+
+
+}}I Pointeur au bord de l'écran :
+}}I Afficher menus / fenêtres
+
+
+
+%s%s%s
+#
+Vous vous réveillez...#
+Commandes#
+Manuel et règles du jeu#
+Questions techniques (ReadMe)#
+Solution complète#
+Encyclopédie : Germains et Romains#
+À propos de la démo#
+À propos de la version complète#
+À propos de ce jeu#
+Informations#
+Langue & commandes#
+Langue : %s#
+Clavier : %s#
+Unité de poids : %s#
+Niveau de censure : %s#
+aucune censure#
+sexe, mais pas de violence#
+violence, mais pas de sexe#
+violence, mais pas de femmes#
+ni sexe ni violence#
+Utilisation de la mémoire#
+Plus vite si la souris est loin : %s#
+Manger automatiquement : %s#
+Fin auto. du mode combat : %s#
+Sauvegarde auto : %s#
+avant voyage#
+avant dialogue, voyage#
+avant combat, dialogue, voyage#
+Délai des menus : %d,%d s %s#
+Boutons de la souris inversés : %s#
+Confirmer avant de quitter : %s#
+Troc : afficher la valeur totale : %s#
+mémoire libre : %ld %03ld Ko (+%ld %03ld Ko)#
+à désactiver si le jeu est trop lent :#
+Animation de course du joueur : %s#
+Personnages variés : %s#
+Personnages équipés : %s#
+Personnages animés : %s#
+Système audio : %s#
+Volume de la musique : %s#
+Graphismes & défilement#
+Plein écran : %s#
+Défilement : %s#
+très fluide (lent)#
+fluide (normal)#
+moyen#
+saccadé#
+Délai en marchant : %d %s#
+Délai à l'arrêt : %d %s#
+Messages au maximum : %d %s#
+Graphismes : %s#
+tous en RAM (lent)#
+>1024 en RAM (lent !)#
+>2048 en RAM (lent)#
+tous en VRAM (rapide)#
+Aide aux commandes : %s#
+Affichage des valeurs : %s#
+diagramme en barres#
+exact#
+arrondi à 5#
+arrondi à 10#
+Fond des dialogues : %s#
+aucun#
+ombré#
+noir#
+noir opaque#
+Tourner les pages : %s#
+sans animation#
+animation normale#
+sauf dans les menus#
+fondu#
+Luminosité et contraste#
+Luminosité : %d %% %s#
+Contraste : %d %% %s#
+Rouge : %d %% %s#
+Vert : %d %% %s#
+Bleu : %d %% %s#
+Son & musique#
+Sortie : %s#
+en continu (par défaut)#
+seulement si nécessaire#
+S#
+S#
+Sons : %s#
+Volume : %d %% %s#
+Volume : %s#
+Ambiance : %s#
+Musique : %s#
+Sons des menus : %s#
+Musique%s : %s#
+C#
+C#
+C#
+C#
+Désinstaller le jeu#
+Lire « ReadMe.Txt »#
+[%s%s%s
+#
+%c %lu %lu
+[%s%s%s
+#
+C#
+B#
+F#
+%5lu Ko de graphismes et de données{
+#
+%5lu Ko de son{
+#
+F#
+F#
+F#
+F#
+U
+[%s%s%s
+#
+Veuillez maintenant saisir le code d'activation que vous avez reçu de l'auteur :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[%s%s%s
+#
+\Calcul.%s{
+
+
+(Veuillez patienter un peu.)
+#
+\&&TST0015 Code d'activation valide :
+#
+\&&TST0016 Code d'activation{
+
+« %s »{
+
+incorrect :
+#
+s
+#
+S#
+P#
+P#
+P#
+Y#
+C#
+I#
+X#
+Nul besoin de vous soigner : vous êtes en parfaite santé.
+#
+Nul besoin de te soigner : tu es en parfaite santé.
+#
+Je ne peux vous guérir : vos blessures sont trop graves.
+#
+Je ne peux te guérir : tes blessures sont trop graves.
+#
+{
+{
+Imprimer ou enregistrer dans un fichier ?
+(Vous pourrez imprimer le fichier plus tard sous Windows.)#
+Imprimer#
+Enregistrer sous#
+Erreur d'impression :{
+{
+#
+L'imprimante ne répond pas.#
+L'imprimante n'a plus de papier.#
+L'imprimante est occupée.#
+Erreur de transmission - imprimante hors ligne ?#
+Délai dépassé.#
+L'imprimante est hors ligne.#
+Erreur d'écriture.#
+Impression terminée.#
+Attendre#
+Dormir#
+Voyager#
+Deviner les intentions#
+Trouver ce qui est caché#
+Localiser les êtres vivants#
+Voir dans le noir#
+Observer les environs#
+Explorer les environs#
+Faire la paix#
+Effrayer#
+Affaiblir#
+Dominer#
+Panser les blessures#
+Guérir un empoisonnement#
+Protection#
+Furie#
+Ignorer la faim#
+Interroger les runes#
+Sacrifice à Wodan#
+Invoquer Wodan#
+Parler aux morts#
+Bénir#
+Maudire#
+Briser un sortilège#
+Ouvrir une serrure#
+Désamorcer un piège#
+Vol à la tire#
+Troc#
+Terminer la partie#
+Vous observez les environs...#
+Vous explorez les environs...#
+Vous entrez en furie...#
+Vous tirez à l'aveugle trois baguettes runiques...#
+La peur vous submerge :
+Loin d'ici ! Fuir la mort !#
+Vous avez retrouvé vos esprits.#
+Vos yeux sont fatigués.#
+Vol réussi : %s.#
+Vous êtes empoisonné et %s.
+#
+Tu es empoisonné et %s.
+#
+Vous êtes %s%s.
+#
+Tu es %s%s.
+#
+ et empoisonné#
+Vous êtes empoisonné.
+#
+Tu es empoisonné.
+#
+Vous êtes presque rétabli.
+#
+Tu es presque rétabli.
+#
+
+Pour %d pièces d'argent, je vous soignerai ;
+%s, vous serez guéri.
+#
+
+Pour %d pièces d'argent, je te soignerai ;
+%s, tu seras guéri.
+#
+
+Voulez-vous que je vous soigne ?
+%s, vous seriez guéri.
+#
+
+Veux-tu que je te soigne ?
+%s, tu serais guéri.
+#
+Soigné avec compétence, vous reprenez vite des forces.#
+\Un peu plus tard, vous vous sentez soulagé et détendu,
+mais aussi triste et esseulé.#
+Le jour même #
+Le lendemain #
+Deux#
+Trois#
+Quatre#
+Cinq#
+Six#
+%s jours plus tard #
+Une semaine plus tard #
+Une semaine et demie plus tard #
+%s semaines plus tard #
+vous êtes rétabli.#
+vous avez beaucoup appris.
+%s se réjouit de vos progrès.#
+tout est prêt.#
+Arrêter.#
+Réparer !#
+(Réparer)#
+Ça, je ne peux pas le réparer.
+#
+Je ne peux pas réparer le métal.
+#
+Je ne peux pas réparer le bois ou le cuir.
+#
+Je ne peux pas réparer le bois, le cuir ou l'étoffe.
+#
+Mais %s est tout neuf !
+#
+Mais %s est toute neuve !
+#
+Mais %s est tout neuf !
+#
+Mais %s sont tout neufs !
+#
+Mais %s sont toutes neuves !
+#
+Mais %s sont tout neufs !
+#
+Pour %d pièces d'argent, je remettrai tout cela en état.
+
+Y a-t-il autre chose à réparer ?
+#
+Je vais remettre tout cela en état.
+
+Y a-t-il autre chose à réparer ?
+#
+Que dois-je réparer ?
+#
+Je ne peux pas en réparer autant à la fois.
+#
+Pour %d pièces d'argent, je réparerai tout cela.
+#
+Je vais réparer tout cela.
+#
+Vos affaires sont réparées.
+#
+Voilà, maître, tout est de nouveau comme neuf.
+#
+Sans outils, je ne peux rien faire.
+
+Passez tout à l'heure à mon atelier !
+#
+Vous vous videriez de votre sang.#
+Vous succomberiez au poison.#
+Vous avez laissé des objets de valeur, mais vous ne retrouverez guère ce lieu.
+Voyager quand même ? (à nouveau = oui)#
+Vous avez laissé des objets irremplaçables, mais vous ne retrouverez guère ce lieu.{
+Voyager quand même ? (à nouveau = oui)#
+Une longue route vous attend, et vous n'avez pas de chaussures.{
+Voyager quand même ? (à nouveau = oui)#
+Raccourcis clavier :#
+Réattribuer :#
+Appuyez sur 1 à 9 dans le menu des actions.#
+Sauvegarde#
+Sauvegarde %c enregistrée.#
+Sauvegarde %c chargée.#
+Sauvegarde auto#
+Erreur d'écriture :
+
+
+Partie non sauvegardée.
+
+
+%s
+#
+%s %d.%02d => %s %d.%02d#
+Retourner au système d'exploitation ?#
+Valeur : %u arg.#
+Valeur : %c arg.#
+Valeur : %u,%u arg.#
+%u arg.#
+ (%u arg.)#
+ (%c arg.)#
+arg.#
+Valeur : /#
+brûle#
+rassasie#
+%d heures#
+%c jour#
+1 jour#
+%d jours#
+contient du poison#
+ensorcellement#
+frais#
+presque frais#
+vieux de 3 jours#
+malodorant#
+avarié#
+pourri#
+putréfié#
+poisson avarié#
+Vous avez attrapé un poisson !#
+Aucun poisson n'a mordu.#
+Il ne semble pas y avoir de poissons ici.#
+Au bord d'une rivière, on devrait pouvoir pêcher avec ça.#
+« %d poissons, ça suffit ! J'en ai assez ! »#
+Avec une pioche, on pourrait peut-être piller ce tertre.#
+Vous n'avez pas assez de fil : pour tisser une pièce d'étoffe, il vous faut au moins %d fuseaux.#
+Vous avez tissé une pièce d'étoffe. (Vous êtes bien content d'avoir des esclaves qui vous épargnent d'ordinaire ce genre de travail.)#
+Avec du feu et une enclume, vous pourriez peut-être vous en servir pour réparer quelque chose...#
+Si vous aviez des tenailles, vous pourriez peut-être vous en servir pour réparer quelque chose...#
+Si vous aviez un marteau, vous pourriez peut-être vous en servir pour réparer quelque chose...#
+Que voulez-vous réparer ?#
+%s : impossible à réparer.#
+%s : les dégâts sont trop graves ; une telle réparation dépasse vos compétences...#
+%s : impossible à forger.#
+%s : pour réparer le métal, il vous faut du feu, une enclume, des tenailles et un marteau.#
+%s : réparation réussie.#
+Échec de la réparation - %s : pas mieux qu'avant.#
+Échec de la réparation - %s %s.#
+en lambeaux#
+en morceaux#
+Échec de la réparation - %s en plus mauvais état.#
+« Je ne mangerai pas cette pâtée pour cochons ! »#
+Cette charogne est déjà à moitié décomposée et dégage une odeur atroce.#
+ensorcellement#
+malédiction#
+Pouvoir magique accru#
+Protection contre la magie#
+Chance au combat#
+Dextérité accrue#
+Force accrue#
+\Passé : &&RUN%04d %s (%s)
+
+Présent : &&RUN%04d %s (%s)
+
+Avenir : &&RUN%04d %s (%s)
+#
+&&RUN%04d&&RUN%04d&&RUN%04d : Où fut %s et où est %s, là sera %s.#
+Ansuz#
+un Ase, une divinité#
+Dagaz#
+un jour#
+Fehu#
+le bétail, la richesse#
+Gebo#
+un don#
+Haglaz#
+la grêle, la ruine#
+Isaz#
+la glace#
+Jeran#
+une bonne année#
+Kaunan#
+la maladie#
+Laukaz#
+le poireau, la prospérité#
+Mannaz#
+l'homme, un être humain#
+Naudiz#
+la détresse#
+Othalan#
+l'héritage, le patrimoine#
+Raido#
+un voyage#
+Sowilo#
+le soleil#
+Tiwaz#
+le dieu de la guerre#
+Uruz#
+l'aurochs, la force#
+Wunjo#
+la félicité, le bonheur#
+FA00#
+FA01#
+FA02#
+FA03#
+FA04#
+FA05#
+FA06#
+FA07#
+FA08#
+FA09#
+FA10#
+Attaque#
+Parade#
+Esquive#
+Bouclier#
+Combat à l'épée#
+Combat à la lance#
+Combat à la hache#
+Combat à la massue#
+Combat sans arme#
+Expérience de la vie#
+Perception#
+Charisme#
+Foi#
+Savoir#
+Art de guérir#
+Artisanat#
+Natation#
+Vous êtes devenu plus dur et plus réfléchi.#
+Vous êtes devenu moins sûr de vous et plus irritable.#
+Vous vous sentez fort et supérieur.#
+Vous vous sentez indigne et pitoyable.#
+Vous sentez que les dieux vous sont favorables.#
+Vous craignez que vos actes ne vous valent l'hostilité des dieux.#
+Vous avez progressé en attaque.#
+Vous avez progressé en parade.#
+Vous avez progressé en esquive.#
+Vous maniez le bouclier plus habilement qu'avant.#
+Vous maniez votre arme plus habilement qu'avant.#
+Vous avez perdu de votre maîtrise des armes.#
+Vous devez un sacrifice à Wodan.#
+Si vous ne pansez pas vos blessures, vous allez vous vider de votre sang.#
+Il vous semble indigne de dépouiller un mort de ses vêtements.#
+Vous manquez votre cible.#
+%s le coup vous manque.#
+Touché !#
+sur#
+jamais#
+une fois#
+%d fois#
+sans arme#
+(sans arme)#
+%s#
+%s à %s#
+(nu-tête)#
+(torse nu)#
+(jambes nues)#
+%s#
+(sans bouclier)#
+%s %s : vous êtes %s%s.#
+en plus#
+en moins#
+un peu#
+assez#
+très#
+complètement#
+engoncé#
+dans l'armure.{#
+(%s).{#
+(à %s)#
+(à quelqu'un)#
+Attaque : %s#
+Parade : %s#
+Mobilité : %s#
+Dégâts : %s#
+Protection : %s#
+Poids : %s %s#
+\{
+}}H ÉTAT DE %s :
+
+
+
+
+
+
+}}H Vitalité }}L &&ICO0000 %s {
+
+
+}}H Force }}L %s {
+}}H Dextérité }}L %s {
+}}H Intelligence }}L %s {
+
+
+}}H %s.
+}}H %s.%s{
+
+
+}}H Équipement }}L %s {
+#
+\+
+%s{
+}}H %s AU COMBAT :
+
+
+
+}}H Attaque {
+
+}}H %s }}M %s {
+}}H Dégâts }}L %s {
+
+
+}}H Défense {
+
+}}H %s }}M %s {
+}}H Esquive }}M %s {
+}}H %s }}M %s {
+
+
+}}H Protection de l'armure{
+
+}}H %s }}M %s {
+}}H %s }}M %s {
+}}H %s }}M %s {
+#
+\+
+%s{
+}}H COMPÉTENCES DE %s :
+
+
+
+}}H %s }}M %s %s {
+
+}}H %s }}M %s %s {
+}}H %s }}M %s %s {
+}}H %s }}M %s %s {
+}}H %s }}M %s %s {
+
+}}H %s }}M %s %s {
+}}H %s }}M %s %s {
+}}H %s }}M %s %s {
+
+}}H %s }}M %s %s {
+}}H %s }}M %s %s {
+}}H %s }}M %s %s {
+}}H %s }}M %s %s {
+
+}}H %s }}M %s %s {
+}}H %s }}M %s %s {
+#
+
+
+#
+
+
+#
+\+
+{
+}}H HAUTS FAITS ET MÉFAITS DE %s :
+
+
+
+#
+}}H Quêtes résolues }}O %s {
+#
+}}H Ennemis vaincus }}O %s {
+#
+}}H Ennemis tués au combat }}O %s {
+#
+}}H tués dans leur fuite }}O %s {
+#
+}}H Butin de guerre }}O %s {
+#
+}}H Grâce implorée }}O %s {
+#
+}}H Attaques par surprise }}O %s {
+#
+}}H Femmes attaquées }}O %s {
+#
+}}H Dormeurs assassinés }}O %s {
+#
+}}H Empoisonnés en traître }}O %s {
+#
+}}H Vols }}O %s {
+#
+}}H Parjures }}O %s {
+#
+}}H Offert à Wodan }}O %s {
+#
+}}H Wodan invoqué }}O %s {
+#
+}}H Jeté dans le marais }}O %s {
+#
+\{
+}}H MORT DE %s :
+
+
+
+
+
+
+%s
+
+%s
+
+
+
+%s
+
++
+#
+Il mourut sans avoir vraiment vécu.#
+Il fut vainqueur en maints combats.#
+La vie qu'il vient de perdre, il la devait à la clémence d'autrui.#
+Il faillit changer le destin de sa tribu.#
+Il décida du destin de sa tribu.#
+S'il avait été roi lui-même, il aurait peut-être accompli plus encore...#
+Il accomplit tout ce qui était possible.#
+Sa vie fut sans gloire, mais pleine de plaisirs.#
+Par ses actes irréfléchis, il causa grand tort à sa tribu.#
+Ce fut un lâche assassin.#
+Ce fut un lâche empoisonneur.#
+Il n'épargna ni femmes ni enfants.#
+Ce fut un voleur et un vaurien.#
+Il prit en embuscade des gens sans méfiance.#
+Ses promesses ne valaient rien.#
+Il n'épargna pas même les fuyards.#
+Il mena une vie irréprochable et honorable.#
+Il abandonna ses amis et s'enfuit tandis qu'ils périssaient au combat.#
+Quand une femme fut en danger, il s'enfuit lâchement au lieu de combattre.#
+Ce fut un traître qui ôta à sa tribu son unique espoir.#
+Ce fut un traître qui versa le sang de ses propres amis.#
+Grâce à ses actes, sa tribu conserva une grande part de son antique liberté et de son indépendance.#
+Il défendit la liberté et l'indépendance de sa tribu contre des ennemis bien plus forts.#
+Il prit une sage décision et épargna à sa tribu bien des souffrances et des effusions de sang.#
+Il était brave, mais trop sot pour distinguer amis et ennemis.#
+Il fut trop indolent pour réussir sa vie.#
+\+
+{
+}}H %s%s{
+
+
+
+}}H PANTHÉON{
+
+
+%s
+
+#
+%s remarque votre tentative de vol.#
+%s résiste.#
+%s refuse.#
+Vous êtes trop fatigué.#
+Votre blessure ne cesse pas de saigner.#
+Vous ne vous sentez pas mieux.#
+%s ne se sent pas mieux.#
+Vous perdez connaissance...#
+Impossible à sacrifier.#
+%s, %s#
+%s#
+un lieu inconnu#
+jour#
+jours#
+Une fosse piégée ! Par chance, vous l'avez remarquée.#
+Vous êtes tombé dans une fosse piégée !#
+Vous avez trouvé quelque chose !#
+Il n'y a rien ici.#
+« %d essais, ça suffit ! J'en ai assez ! »#
+Vous avez déjà creusé ici.#
+Vous ne pouvez pas creuser ici.#
+Creuser : retirez d'abord ce qui s'y trouve.#
+%s : impossible à forcer, c'est trop solide.#
+%s : l'effraction a échoué.#
+%s : ouverture forcée !#
+Hors d'usage : ça ne fonctionne plus.#
+La herse ne s'ouvre qu'avec un levier.#
+« Merci ! »#
+« Merci beaucoup, %s ! »#
+« Merci beaucoup, maître ! »#
+« Non merci. »#
+« Je ne veux rien de vous ! »#
+Voyager : sortez d'abord d'ici.#
+Voyager : semez d'abord vos ennemis.#
+Voyager : gagnez d'abord l'extérieur.#
+< (page précédente)#
+(page suivante) >#
+%s vous est désormais hostile.#
+%s est désormais hostile à %s.#
+%s se fâche.#
+%s a succombé à ses blessures.#
+fuit devant#
+se bat contre#
+à moitié mort de faim#
+ et à moitié mort de faim#
+Vous vous sentez joyeux, mais %s.#
+potion d'invisibilité#
+potion magique#
+potion d'affaiblissement#
+potion de sommeil#
+potion d'éveil#
+potion de furie#
+poison#
+potion de soin#
+potion de protection#
+potion de soin#
+potion de virilité#
+philtre d'amour#
+antidote#
+Inutile.#
+Cliquez pour continuer...#
+animal domestique#
+quelqu'un#
+La solution complète n'est disponible que dans la version complète.
+
+(Vous jouez en ce moment à une démo gratuite.)
+
+
+[228,À propos de la version complète]
+
+
+[%s
+#
+Solution complète
+#
+\\XXXXX %s / %s XXXXX
+
+Les quêtes suivantes attendent %s :
+
+xxxxx Quêtes capitales : xxxxx
+
+#
+\\
+xxxxx Quêtes importantes : xxxxx
+
+#
+\\
+xxxxx Autres quêtes : xxxxx
+
+#
+\\
+xxxxx Quêtes résolues : xxxxx
+
+#
+%s vous hait.#
+%s ne vous apprécie pas.#
+%s ne s'intéresse pas à vous.#
+%s vous apprécie.#
+%s vous aime.#
+%s médite sa vengeance.#
+Vous voulez conquérir la gloire et toutes les douceurs de la victoire.#
+Licence n° %s.
+
+#
+\La VERSION COMPLÈTE de ce jeu ne doit pas être diffusée. (Votre licence porte le n° %s.)
+
+
+
+Mais la#
+La#
+\%s DÉMO est gratuite !
+
+Si vous voulez la transmettre à vos amis, indiquez-leur simplement www.wolfmittag.com/download, où ils pourront à tout moment télécharger gratuitement la démo la plus récente.
++
+#
+\Webmasters, rédactions et éditeurs :
+
+
+Vous pouvez diffuser librement le fichier d'installation auto-extractible {
+
+ tdogr105.exe de www.wolfmittag.com/dn/teud {
+ (qui contient la démo de {
+ « Teudogar et l'Alliance avec Rome ») {
+
+comme bon vous semble (notamment sur des sites web, des compilations de logiciels sur CD ou DVD, des CD/DVD de magazines, ou par un simple lien), {
+À CONDITION de ne modifier ce fichier en rien.
++
+La démo est gratuite, car elle ne contient qu'une petite partie de l'intrigue, des lieux, des personnages et des aventures de la version complète.
+
+Vous pouvez cependant y jouer tout à loisir et sans limite de temps - aussi longtemps qu'il vous plaira.
+
+Si un jour vous voulez en vivre davantage, vous pourrez acheter simplement et commodément la version complète, sans restriction...
+
+
+[228,À propos de la version complète]
+
+
+[%s
+#
+Il fait trop sombre pour lire.#
+%s (%d,%d,%d){
+jour %d, %d h 00 (tour %d)#
+%s (%d tours)#
+\Barre de menus
+
+Charger / sauvegarder la partie
+Informations sur le joueur
+Voyager vers d'autres lieux
+Activer / désactiver le mode combat
+Carte d'ensemble
+Carnet de notes
+Encyclopédie des Germains et aide
+#
+\Barre d'état
+
+Où êtes-vous ? Comment allez-vous ?
+Êtes-vous en état de combattre ?
+#
+\Inventaire {
+
+Qu'avez-vous sur vous ? {
+
+(En jeu, cliquez avec {
+le bouton gauche {
+pour garder la fenêtre ouverte.) {
+#
+\Menu des actions
+
+Tout ce que vous pouvez faire
+d'autre, par exemple dormir,
+soigner vos blessures
+ou invoquer les dieux.
+
+(Au fil du jeu, vous apprendrez
+bien d'autres actions.)
+#
+Ce breuvage vous rafraîchit.#
+Remplir avec quoi ?#
+ d'eau#
+ de lait#
+ de bière#
+ de bouillie#
+ de vin#
+Enfiler cela porterait atteinte à votre dignité d'homme.#
+Ouvrez#
+Photo.Bmp#
+avec un logiciel#
+de dessin#
+et insérez-y#
+votre propre#
+photo !#
+quelques minutes#
+¼ d'heure#
+½ heure#
+¾ d'heure#
+une heure#
+%d heures#
+%d h 15#
+%d h 30#
+%d h 45#
+Lancement n° %d{
+#
+Temps de jeu total : %s{
+
+#
+Mémoire : %lu Ko occupés, %lu Ko libres{
+
+#
+Inactif : %s{
+
+#
+
+SOLUTION COMPLÈTE
+
+
+Si vous suivez les conseils de cette solution complète, vous pourrez finir le jeu en un rien de temps - et vous priver ainsi de bien du plaisir.
+
+
+C'est pourquoi nous vous recommandons de ne la consulter qu'en cas de besoin.
+
+
+Tournez la page ou choisissez...
+
+[228, Retour au jeu
++
+La solution complète est découpée - selon le déroulement du jeu - en petits chapitres séparés.
+
+
+Vous pouvez ainsi trouver de l'aide sur un problème précis sans devoir lire toute la solution.
+
+
+Tournez la page ou choisissez...
+
+[228, Retour au jeu
++
+Voulez-vous vraiment consulter la solution complète ?
+
+
+
+[228, Oui, sinon je suis bloqué.
+
+
+[228, Non, je m'en sortirai sans aide !
+#
+\%s est tombé !
+#
+\%s fut tué par %s.
+#
+\Je vois une mort violente.
+#
+\...et vous ne vous réveillez plus.
+#
+\%s mourut de maladie, sans connaissance.
+#
+\Je vois la maladie, la défaillance et la mort.
+#
+\...et vous êtes livré sans défense à vos ennemis.
+#
+\%s fut tué par %s.
+#
+\Je vois l'impuissance, la défaillance et une mort violente.
+#
+\Vos ennemis se vengent pendant votre sommeil.
+#
+\%s fut assassiné par %s.
+#
+\Je vois la confiance et la haine, la candeur et une mort violente.
+#
+\Vous mourez de votre maladie.
+#
+\%s mourut de maladie, sans gloire.
+#
+\Je vois la maladie, la faiblesse et la mort.
+#
+\Vous mourez de vos blessures.
+#
+\%s succomba à ses blessures en plein combat.
+#
+\Je vois une lutte vaillante, des forces insuffisantes et une mort prématurée.
+#
+\Ce voyage vous coûte la vie.
+#
+\%s mourut de maladie au cours d'un voyage.
+#
+\Je vois une mort solitaire, loin de la terre natale.
+#
+\Vous restez inactif jusqu'à ce que l'armée romaine atteigne les terres de votre tribu.
+
+Comme vous n'avez rallié aucune autre tribu à votre cause, il ne vous reste, face à l'écrasante supériorité romaine, d'autre choix que la soumission et le tribut.
+
+%s
+#
+\%s dut servir dans les troupes auxiliaires romaines.
+
+Il mourut dans les combats meurtriers contre d'autres Germains.
+#
+\Je vois l'inaction et la soumission, l'obéissance et la mort.
+#
+\Vous avez conclu une alliance avec Rome !
+
+Aux côtés des légions romaines, les hommes de votre tribu pillent et détruisent les villages des tribus qui résistent, jusqu'à ce que toutes, en grinçant des dents, reconnaissent enfin la domination de Rome.
+
+Mais votre joie de vainqueur est de courte durée : au bout de quelques mois, les fonctionnaires de la province romaine exigent de votre tribu la même obéissance et les mêmes tributs que des peuples soumis.
+#
+\%s vécut encore de longues années, en butte aux insultes des siens, qui lui imputaient toutes les vexations de la domination romaine.
+#
+\Je vois la puissance et la destruction, l'impuissance et le remords.
+#
+\Vous avez tenté de conclure une alliance avec Rome.
+
+Mais les nombreux voyages, les négociations interminables et les multiples dangers dépassent vos forces.
+
+Vous décidez de vous consacrer de nouveau tout entier à votre domaine - et de laisser des hommes plus énergiques décider du sort de votre tribu...
+#
+\Vous avez tenté de conclure une alliance défensive contre Rome.
+
+Mais les nombreux voyages, les négociations interminables et les multiples dangers dépassent vos forces.
+
+Comme vous avez amassé une grande quantité d'or, votre sécurité personnelle vous importe davantage que la liberté de votre tribu :
+
+Vous partez pour la Gaule, où vous menez une vie agréable et paisible sous la domination et la protection de Rome.
+#
+\%s évita la guerre et émigra, fonda une famille et vécut encore de longues années dans la paix et la prospérité.
+#
+\Je vois la prospérité et la paix - loin d'ici.
+#
+\Vous vous êtes engagé dans l'armée romaine !
+
+Sous les ordres de vos maîtres romains, vous combattez pour soumettre à la volonté du divin empereur les tribus germaniques qui résistent - y compris celle qui fut la vôtre.
+
+Mais la vie d'un mercenaire barbare vaut bien moins que celle d'un légionnaire romain : on confie régulièrement à votre unité les missions les plus dangereuses et les plus désespérées. C'est au cours de l'une d'elles que vous trouvez la mort.
+#
+\%s trahit sa propre tribu et passa à l'ennemi.
+
+Il trouva la mort dans les combats qui suivirent.
+#
+\Je vois la trahison et, pour finir, la mort pour le traître.
+#
+\Vous ne pouvez résister à la tentation de garder tout cet or pour vous.
+
+Déguisé en marchand, vous vous frayez un chemin jusqu'en Gaule. Vous finissez par arriver à Rome, où vous menez une vie de débauche.
+
+Mais votre maîtresse romaine vous trouve ennuyeux et vulgaire, et rêve de jouir enfin de votre or avec des hommes plus dignes d'elle.
+
+Un festin empoisonné doit régler ce problème, et comme vous êtes ivre, selon votre habitude, vous ne vous apercevez même pas que votre vie prend fin...
+#
+\%s trahit sa tribu et s'enfuit chargé d'or à Rome, où il fut assassiné.
+#
+\Je vois la trahison et, pour finir, la mort pour le traître.
+#
+\Vous ne pouvez résister à la tentation de garder tout cet or pour vous.
+
+Déguisé en marchand, vous vous frayez un chemin jusqu'en Gaule, où vous passez vos jours en festins sans fin, et vos nuits avec des hétaïres hors de prix.
+
+Mais un soir, une bande d'hommes armés fait irruption dans votre salle des banquets : les hommes liges de Teudogar ont bel et bien retrouvé votre trace - et puisque vous et vos amis êtes ivres, comme d'habitude, votre vie prend brutalement fin...
+#
+\%s trahit sa tribu et s'enfuit chargé d'or en Gaule, où la vengeance des siens finit par le rattraper.
+#
+\Vos actes sanglants ont failli briser votre alliance des tribus.
+
+Pour apaiser les tribus voisines offensées, votre assemblée du peuple décide de vous punir de mort :
+
+Vous êtes plongé vivant dans un marais, et vous y mourez étouffé dans d'atroces souffrances.
+#
+\Vous étiez chargé d'une importante ambassade - mais votre inaction a failli faire échouer votre alliance avec Rome.
+
+Votre assemblée du peuple décide de vous en punir de mort :
+
+Vous êtes plongé vivant dans un marais, et vous y mourez étouffé dans d'atroces souffrances.
+#
+\%s fut condamné à mort par sa tribu et exécuté.
+#
+\Vous avez conclu une puissante alliance des tribus, et vous parvenez vraiment à résister aux Romains plusieurs années durant !
+
+Mais votre situation devient de plus en plus désespérée. Les chefs des tribus alliées ne s'accordent sur aucune action commune. Le plus souvent, chacun se bat seul, et nul ne peut tenir tête aux Romains : une à une, les tribus demandent la paix - et la vôtre finit par faire de même.
+
+Par bonheur, les Romains veulent mettre fin à cette guerre coûteuse, et sont prêts à vous accorder la paix et l'autonomie, pourvu que vous reconnaissiez, ne serait-ce qu'en principe, la souveraineté du divin empereur.
+#
+\%s vécut encore de longues années, célèbre et honoré des siens.
+#
+\Je vois des efforts héroïques et la gloire qui revient à un héros.
+#
+\Vous avez conclu une puissante alliance des tribus ; vous parvenez à devenir roi ; et vous tenez vraiment tête aux Romains de longues années durant !
+
+Mais votre situation devient de plus en plus désespérée, et plusieurs tribus songent déjà à capituler.
+
+Par bonheur, un grand soulèvement contre la domination romaine éclate chez les peuples au sud-est de vos terres :
+
+Les Romains font la paix avec vous en toute hâte, et retirent leurs légions pour défendre l'Italie. Votre tribu demeure invaincue, indépendante et libre !
+#
+\%s vécut encore de longues années, d'une gloire immortelle parmi toutes les tribus, et vénéré des siens.
+#
+\Je vois des efforts héroïques, une gloire immortelle, et peut-être même une victoire...
+#
+\Vous avez tenté de conclure une alliance défensive contre Rome.
+
+Votre échec contraint les vôtres à se soumettre et à implorer la clémence de l'auguste empereur. Vous et quelques autres rebelles êtes livrés au commandant romain, qui vous fait crucifier pour l'exemple.
+
+%s
+#
+\%s mourut sur la croix dans les tourments, livré aux Romains par sa propre tribu.
+#
+\Je vois l'échec, la déloyauté et une mort atroce.
+#
+\Vous avez conclu une alliance défensive contre Rome !
+
+Uni aux tribus voisines, vous livrez bataille aux légions romaines - et vous êtes vaincu, car vos guerriers ne peuvent rivaliser avec des légionnaires disciplinés et bien équipés.
+
+Votre gloire posthume est grande parmi les autres tribus de Germanie, mais les rares survivants de votre propre tribu vous maudissent, tandis qu'on les emmène enchaînés vers les marchés aux esclaves d'Italie.
+#
+\Vous avez conclu une alliance défensive contre Rome !
+
+Mais les attaques de la tribu voisine du sud vous empêchent d'aider efficacement vos alliés. Quelques mois plus tard, votre tribu se retrouve seule face aux Romains - et elle est vaincue.
+
+Votre gloire posthume est grande parmi les autres tribus de Germanie, mais les rares survivants de votre propre tribu vous maudissent, tandis qu'on les emmène enchaînés vers les marchés aux esclaves d'Italie.
+#
+\%s périt dans la bataille contre l'armée romaine.
+#
+\Je vois la confiance et la défaite, la gloire et d'amères imprécations.
+#
+\Vous mourez !
+#
+\%s mourut soudain, contre toute attente.
+#
+\Je vois une mort rapide et inattendue.
+#
+\Les années suivantes apportent à votre tribu la pauvreté et la misère, car la plupart des hommes doivent servir dans les troupes auxiliaires romaines, tandis que les autres ont toutes les peines du monde à payer les lourds tributs.
+#
+\Je vois beaucoup d'agitation, mais peu de hauts faits.
+#
+\Je vois de nombreux combats, de nombreuses victoires, et une mort inattendue.
+#
+\Je vois bien des forfaits en apparence profitables - et, pour finir, une mort violente.
+#
+\Je vois des négociations sans fin. Si seulement un homme avait pouvoir sur tous !
+#
+\Je vois une alliance solidement nouée se rompre, parce que la situation change.
+#
+\Je vois une alliance chèrement payée, et une fidélité jusqu'à la mort.
+#
+\Quelqu'un qui espère apporter la liberté à sa tribu lui apportera la ruine.
+#
+\Quelqu'un qui espère apporter la puissance à sa tribu lui apportera la servitude.
+#
+\Achève ce que tu as commencé : il n'y a plus de retour en arrière.
+#
+\Les Romains vaincront et régneront, mais pas pour toujours.
+#
+\La domination romaine durera encore des siècles, mais elle s'arrêtera au Rhin.
+#
+\Pour nos descendants, je vois la liberté et la faim, la pauvreté et des guerres sans fin entre les tribus.
+#
+\Ton avenir est incertain.
+#
+\Je ne peux rien te dire que tu ne saches déjà.
+#
+Utiliser %s : %s#
+allumez d'abord un feu.#
+jetez votre lance dessus.#
+%s : trop d'usure, affûtage inutile.#
+%s : impossible à affûter.#
+%s : le fil est déjà tranchant.#
+%s : affûtage réussi !#
+vous laissez volontiers ce genre de travaux aux esclaves et aux pauvres.#
+ce genre de travaux, vos esclaves s'en chargent.#
+ce genre de travaux, vos esclaves s'en chargent.#
+à quoi bon apprendre un métier quand on sait se battre ?#
+les dieux observent ce lieu.#
+vous êtes bien heureux d'être en vie.#
+il n'y a rien ici qui puisse vous servir.#
+ici, un feu ne ferait que des dégâts.#
+il n'y a rien ici que vous puissiez récolter.#
+plutôt que de forger des épées, vous préférez vous exercer au combat à l'épée.#
+x#
+un lieu inconnu#
+Heruwald#
+Kattfurt#
+Salle de Heremod#
+Refuge fortifié des Usipètes#
+Bois sacré de Ziu#
+Camp romain#
+Grotte d'Alwina#
+Bruglund#
+Tumulus#
+Marais de Marada#
+Forêt d'Ortruda#
+Tour de Ragangardis#
+Trésor de Teudogar#
+Domaine d'Adalmar#
+Troupe romaine et ses otages#
+Domaine de Brandolf#
+Champ de bataille d'Osmund#
+OrtR#
+OrtS#
+OrtT#
+OrtU#
+dernier lieu de la liste#
+tribu inconnue#
+tribu inconnue#
+tribu inconnue#
+tribu inconnue#
+Chérusques#
+Chérusques#
+Chérusques#
+Chérusques#
+Chattes#
+Chattes#
+Chattes#
+Chattes#
+Marcomans#
+Marcomans#
+Marcomans#
+Marcomans#
+Usipètes#
+Usipètes#
+Usipètes#
+Usipètes#
+Bructères#
+Bructères#
+Bructères#
+Bructères#
+Sicambres#
+Sicambres#
+Sicambres#
+Sicambres#
+Suèves#
+Suèves#
+Suèves#
+Suèves#
+dernière tribu de la liste#
+dernière tribu de la liste#
+dernière tribu de la liste#
+dernière tribu de la liste#
+Name00#
+Teudogar#
+Hrolf#
+Brandolf#
+Name04#
+Name05#
+Name06#
+Name07#
+Name08#
+Name09#
+Ortwin#
+Daglinda#
+Helga#
+Berta#
+Atto#
+Riches paysans#
+Nouveaux paysans#
+Arbogast#
+envoyé#
+Name19#
+Thoralf#
+Radomund#
+Alfhild#
+Erwin#
+Godolewa#
+Gerolf#
+Adalmar#
+Marada#
+Ulrike#
+Name29#
+Heremod#
+Osmund#
+sorcière#
+Siglinda#
+Boudomandua#
+Rango#
+Wigbald#
+Hugbert#
+Ortruda#
+Alwina#
+Wisgarda#
+Name41#
+Name42#
+Baltram#
+Chlodhilda#
+Ottokar#
+Gilbrecht#
+Ludwina#
+Kunrada#
+Name49#
+Ragangardis#
+quelqu'un#
+Ansgar#
+Waldriede#
+Le texte est illisible.#
+(TEXT_NOCH_FREI_1)
+#
+\... pvgnatvmqve ab hostibvs ita acriter est vt a viris fortibvs in extrema spe salvtis iniqvo loco contra eos qvi ex vallo tvrribvsqve tela iacerent pvgnari debvit, cvm in vna virtvte omnis spes consisteret.
+
+Occisis ad hominvm milibvs qvattvor reliqvi in oppidvm reiecti svnt.
+
+Postridie eivs diei refractis portis, cvm iam defenderet nemo, atqve intromissis militibvs nostris, sectionem eivs oppidi vniversa Caesar vendidit.
+
+Ab iis qvi emerant capitvm nvmervs ad evm relatvs est milivm qvinqvaginta trivm.
+
+...
+#
+\Avdpa &&CHR0181oi evve&&CHR0002e, Mou&&CHR0003a, &&CHR0002ohuTpo&&CHR0002ov, {
+ os &&CHR0181aha &&CHR0002ohha {
+
+&&CHR0002hajxOn, e&&CHR0002ei Tpoins iepov {
+ &&CHR0002TohieOpov e&&CHR0002ep&&CHR0003e {
+
+&&CHR0002ohhwv d avOpw&&CHR0002wv ide {
+ a&&CHR0003Tea xai vo&&CHR0181ov ejvw . {
+
+&&CHR0002ohha d' o j' ev &&CHR0002ovTw &&CHR0002aOev ahjea {
+ ov xaTa Ou&&CHR0181ov , {
+
+&&CHR0003pvu&&CHR0181evos ne Te Yuxnv xai {
+ vo&&CHR0003Tov eTaipwv , {
+
+ahh' oud' ws eTapous eppu&&CHR0003aTo {
+ ie&&CHR0181evos &&CHR0002ep . {
+#
+\HhOes , eu d' e&&CHR0002on&&CHR0003as , ejw de &&CHR0003 e&&CHR0181ao&&CHR0181av , {
+
+ov d' ewuEas e&&CHR0181av Qpeva xaio&&CHR0181evav &&CHR0002oOwi . {
+
+Xaipe &&CHR0002ohha , &&CHR0003iha &&CHR0181' , {
+ i&&CHR0003apiO&&CHR0181a Te Twi xpovwi , {
+
+o&&CHR0003&&CHR0003ov a&&CHR0181&&CHR0181' a&&CHR0002ehi&&CHR0181&&CHR0002aves ... {
+
+
+
+... eTivaEev e&&CHR0181ais Qpevas {
+
+Epos ws ave&&CHR0181os xaT opos dpu&&CHR0003iv e&&CHR0181&&CHR0002eTwv . {
+
+Epos dnuTe &&CHR0181' o hu&&CHR0003i&&CHR0181ehns dovei , {
+
+jhuxu&&CHR0002ixpon a&&CHR0181axavov op&&CHR0002eTov . {
+#
+\ARMA virvmqve cano, {
+ Troiae qvi primvs ab oris {
+
+Italiam, fato profvgvs, Laviniaqve venit {
+
+litora, mvltvm ille et terris {
+ iactatvs et alto {
+
+vi svpervm saevae memorem Ivnonis ob iram; {
+
+mvlta qvoqve et bello passvs, {
+ dvm conderet vrbem, {
+
+inferretqve deos Latio, genvs vnde Latinvm, {
+
+Albaniqve patres, {
+ atqve altae moenia Romae. {
+#
+\... et longam mvlta vi mvniet Albam. {
+
+Hic iam ter centvm totos regnabitvr annos {
+
+gente svb Hectorea, donec regina sacerdos, {
+
+Marte gravis, geminam partv dabit Ilia prolem. {
+
+Inde lvpae fvlvo nvtricis tegmine laetvs {
+
+Romvlvs excipiet gentem, et Mavortia condet {
+
+moenia, Romanosqve svo de nomine dicet. {
+
+His ego nec metas rervm nec tempora pono; {
+
+imperivm sine fine dedi. {
+
+...
+#
+\Haldavo à $N22, salut :{
+
+
+Sicambres, Usipètes et Tenctères{
+ont profité absence du procurateur, {
+et avec armée commune repassé Rhin.{
+
+Mais procurateur de Gaule{
+est rentré à temps de Lugdunum ;{
+a pu les repousser ;{
+puis lui-même traversée du Rhin {
+en territoire des Usipètes.{
+
+la suite dès que j'en saurai plus {
+#
+\$N22 Vogetorix Sva Salvtem {
+
+
+de $N21o nostro qvaeris et vis scire qvid agat...
+#
+\$N1 à sa chère $N22, {
+santé et salut : {
+
+Tous les grands clans sont contre les Romains : notre tribu va se joindre aux $Stamm6, faire avec eux la guerre aux Romains - et périr avec eux.
+
+Mais votre tribu ? Les Romains ont besoin d'alliés. Si seulement $N20 n'était plus chef, vous pourriez éviter la guerre et assurer à votre tribu puissance et richesse.
+
+As-tu réfléchi à ma proposition ? Songe à ce que $N21 pourrait faire pour votre tribu !
+#
+\!!U I II III IV V VI VII VIII IX {
+X XI XII XIII XIV XV XVI XVII XVIII XIX {
+XX XXI XXII XXIII XXIV XXV XXVI XXVII XXVIII XXIX{
+
+XXIV + XVII = XXX V II + IIII = XXX V V I {
+= XXXXI = XLI {
+
+
+DONVM DONI DONO DONVM DONO DONVM {
+DONA DONORVM DONIS DONA DONIS DONA {
+
+AVDIEBAM AVDIEBAS AVDIEBAT {
+AVDIEBAMVS AVDIEBATIS AVDIEBANT {
+
+LAVDABO LAVDABIS LAVDABIT {
+LAVDABIMUS LAVDABITIS LAVDABVNT {
+
+$N21VS SVM , DONA LAVDABO . {
+#
+\rvbor, calor, tvmor, dolor {
+
+sed immedicabile vvlnvs ense recidendvm est, {
+ne pars sincera trahatvr. Cito, tvto, ivcvnde.{
+
+---
+
+qvod medicamenta non sanant, sanat ferrvm, {
+qvod ferrvm non sanat, sanat ignis, {
+qvod ignis non sanat, sanat mors. {
+
+---
+
+piper III vnciae, timvm I vncia, origanvm III vnciae, ervca I vncia,
+anethvm II vnciae, mel, olevm I sextarivs
+#
+\nvnc qvoniam in eadem inopia egestate patientiaqve Germani permanent,
+eodem victv et cvltv corporis vtvntvr,
+Gallis avtem provinciarvm propinqvitas
+et transmarinarvm rervm notitia mvlta ad copiam
+atqve vsvm largitvr, pavlatim adsvefacti svperari
+mvltisqve victi proeliis ne se qvidem ipsi cvm illis virtvte comparant.
+#
+\Batavi, Canninefates, Frisii, Ampsivarii.
+
+Svgambri. Brvcteri, Marsi, Chervsci, Semnones.
+#
+\Rhenvs: Batavi, Vsipetes, Svgambri, Vbii, Tencteri, Mattiaci, Vangiones, Nemetes, Triboci.
+
+Amasia: Canninefates, Frisii, Ampsivarii, Brvcteri, Marsi, Chatti.
+
+Visvrgis: Chavci, Angrivarii, Chervsci.
+
+Albis: Langobardi, Semnones, Hermvndvri, Marcomanni.
+#
+\Hvivs Hercyniae silvae latitvdo novem diervm iter expedito patet: non enim
+aliter finiri potest neqve mensvras itinervm novervnt. Oritor ab Helvetiorvm
+et Nemetvm et Ravracorvm finibvs rectaqve flvminis Danvbii regione pertinet
+ad fines Dacorvm et Anartivm. Hinc se flectit sinistrorsvs diversis a flvmine
+regionibvs mvltarvmqve gentivm fines propter magnitvdinem attingit. Neqve
+qvisqvam est hvivs Germaniae, qvi se avt adisse ad initivm eivs silvae dicat,
+cvm diervm iter LX processerit, avt qvo ex loco oriatvr acceperit.
+#
+\Mercatoribvs est aditvs magis eo, vt qvae bello ceperint, qvibvs vendant habeant,
+qvam qvo vllam rem ad se importari desiderent. qvin etiam ivmentis,
+qvibvs maxime Galli delectantvr qvaeqve impenso parant pretio,
+Germani importatis non vtvntvr.
+#
+\$N1 Rufo Svo Salvtem {
+
+persevera vt coepisti et quantum potes propera, qvo -.
+#
+\trésor enfoui des $Stamm4 :
+marécages près du $Ort4.
+îlot au nord-est du refuge fortifié.
+
+pas de chemin direct, mais un grand détour : ruisseau au nord du refuge fortifié - le suivre vers l'ouest jusqu'à trois arbres tombés - de là, vers le sud - puis grand détour vers le sud-ouest - puis vers le nord - puis l'est - enfin le sud-est jusqu'à l'îlot - bords de l'îlot couverts d'arbres, clairière au milieu - là, le trésor.
+
+traverser le marais à gué là où sont les signes faits de bâtons - suivre la terre ferme jusqu'au prochain signe.
+#
+mon domaine#
+$N1#
+$N10#
+forgeron#
+$N15#
+$N16#
+$N14#
+\Trésor de $N1 :
+
+Grotte à l'est de $Ort1 : suivre le ruisseau à travers la forêt jusqu'à la clairière ; là, l'entrée.
+
+Dans la grotte, à gauche (sud-ouest) jusqu'à une échelle qui descend.
+
+En bas, chemin balisé : aux embranchements, toujours prendre la galerie SANS caillou.
+
+Suivre ces repères vers le nord-est. Là, enfin, une galerie et trois petites grottes :
+
+Or enfoui dans la grotte du milieu.
+#
+$N20#
+$N21#
+$N22#
+tanneur#
+forgeron#
+tisserand#
+potier#
+forgeron#
+sorcière#
+grotte de $N39#
+$N46#
+$N45#
+Tnf39#
+Tnf40#
+Tnf41#
+Tnf42#
+Tnf43#
+Ansgar demande : doit-il épouser la fille d'Odalwart, ou plutôt celle de Segimundo ?
+Réponse de $N50 : mieux vaut ni l'une ni l'autre.
+
+Degenhart : Une brève razzia en Gaule peut-elle réussir à présent ?
+Rép. : très certainement pas.
+
+Volkwin : Le cousin d'Edmund a tué le beau-frère de la sœur de mon oncle. Dois-je tuer Edmund ?
+Rép. : absolument.
+
+Wolf demande : achèvera-t-il jamais son œuvre ?
+Rép. : oui, et même avant le solstice d'hiver.
+#
+Ingolf demande : Ziu l'aidera-t-il à vaincre Bernhard ? - Non ; Ziu favorise Bernhard.
+
+Les soupirants de Svanhilda vont se battre en duel. Elle demande lequel des deux mourra - Diethelm ou Hartmut ? - Réponse : celui qu'elle aime le moins.
+
+Sigmar demande : Ziu, le dieu de la guerre, l'assistera-t-il dans la razzia qu'il prépare contre la bourgade voisine ? - Oui, s'il apporte ensuite au $Ort6 le quart du butin en offrande.
+
+Arnold demande : Meinulf ne devrait-il pas lui donner bien plus d'or que convenu au départ ? - Non ; Ziu veut que les accords soient respectés.
+
+Osgrim, de la tribu des Hermundures, demande : le moment est-il propice pour déclarer la guerre aux $Stamm2 ? - Pas maintenant ; mais dans une guerre à venir, les Hermundures remporteront une grande victoire, pourvu qu'ils sacrifient à Ziu toute l'armée ennemie.
+#
+Manfried demande : Dois-je vendre ma vache à Otto, ou plutôt la garder jusqu'à ce qu'elle vêle ? - Réponse : la vendre, si le prix est bon.
+
+Miltraut demande : Il nous faut d'urgence quelques nouveaux esclaves. Devons-nous en acheter, ou mon mari parviendra-t-il à faire des prisonniers à la prochaine guerre ? - patienter.
+
+Silke demande : Thorstein m'aimera-t-il un jour ? - oui, mais pas longtemps.
+
+Ulf demande : Silke m'aimera-t-elle un jour ? - non.
+
+Archibald demande : Dois-je donner ma fille pour épouse à Bodmar, ou à Dietrich ? - laisse-les se battre tous deux pour elle, et donne-la au vainqueur.
+
+Erkmar demande : quand viendra la fin du monde ? - un jour, certes, mais pas encore.
+
+Heike demande : Mon père veut me marier à Gerhard, mais j'aime Baldwin. Que dois-je faire ? - Pousse Dietmar à chercher querelle à Gerhard : il tuera sans doute Gerhard, et comme il aime Sunhilda, peu lui importera qui tu épouseras.
+
+Roderich demande : Où le danger me guette-t-il le plus ? - dans la boisson, et dans l'adultère.
+
+Einar demande : Comment gagner l'amour de Waltraud ? - en aucune façon, tant qu'elle aime Gerolf.
+
+Gilbert demande : Arngrim a tué mon frère. Il est bien plus fort que moi. Comment puis-je venger mon frère ? - mets le feu au logis d'Arngrim pendant qu'il dort.
+
+Ferdinand demande : Othilde m'est-elle fidèle ? - tant que tu l'ignores, c'est comme si elle t'était fidèle.
+
+Ludger demande : J'en ai assez de la pauvreté. Comment devenir riche rapidement ? - de nos jours : par la guerre, et par elle seule.
+#
+Tnf47#
+Tnf48#
+Tnf49#
+\! quête 0
+reste du texte de la quête 0#
+\!!! $Ort1, domaine au nord-ouest :
+défier $N10 en duel#
+\!!! $Ort2 : gagner $N20
+à l'alliance contre Rome#
+\!!! $Ort2 : gagner $N21
+à l'alliance contre Rome#
+\!!! $Ort2 : gagner $N22
+à l'alliance contre Rome#
+\!! $Ort9 : les bracelets du tumulus
+(clairière près de la rivière, à l'est) pour $N39#
+\!! $Ort1, domaine au sud-est :
+parler à $N1#
+\!!! $Ort6 : obtenir l'accord du prêtre
+pour l'alliance défensive#
+\!!! $Ort3 : convaincre le roi $N30
+de rejoindre l'alliance défensive#
+\!!! $Ort6 : apporter 300 pièces d'or
+au prêtre#
+\!!! $Ort6 : apporter 100 pièces d'or
+au prêtre#
+\!!! www.wolfmittag.com/shop :
+acheter la version complète de ce jeu#
+\!!! $Ort3 : avec $N31, aller chercher
+le trésor au $Ort4#
+\!!! $Ort4 :
+récupérer le trésor#
+\!!! $Ort3 : apporter 1000 pièces d'or
+à $N30 pour l'alliance avec les $Stamm3#
+\!!! $Ort2 : discuter de la suite
+avec $N20#
+\! $Ort1 : apprendre la magie
+auprès de $N11, la femme de $N10#
+\! $Ort3, forêt : apporter à $N40
+des bijoux d'or ; apprendre d'elle la magie#
+\!! $Ort1 : obtenir 30 pièces d'or de $N10
+pour le prêtre de Ziu#
+\! $Ort3 :
+tuer $N35#
+\! $Ort2 : se battre en duel
+avec $N25#
+\! $Ort3 : grotte, réserve au nord-est :
+déterrer le trésor#
+\! $Ort11 : piller
+le tumulus#
+\!!! $Ort10 : gagner les $Stamm5
+à l'alliance contre Rome#
+\!!! $Ort10 :
+vaincre $N45#
+\!!! $Ort10 : vaincre
+les successeurs de $N45#
+\!!! $Ort14 : demander à $N50
+ce qu'il faut faire#
+\!!! $Ort1 : obtenir l'accord de $N10
+pour le plan de $N50#
+\!!! $Ort17 : surprendre
+le détachement romain, libérer les otages#
+\!!! $Ort16 : convaincre $N26
+de devenir roi des $Stamm2#
+\!!! $Ort2 : trouver la preuve que $N21
+et $N22 ont commis l'empoisonnement#
+\! $Ort13 : se faire bénir par $N38
+et protéger contre la magie#
+\! $Ort1 : grotte au nord, galerie ouest :
+trésor enfoui au milieu de la dernière fourche#
+\! $Ort12 : apporter une hache
+à $N27 ; apprendre la magie auprès d'elle#
+\! $Ort6 : apporter 12 amphores de vin
+au prêtre ; apprendre la magie auprès de lui#
+\!!! $Ort2 : discuter de la suite
+avec $N20#
+\!!! $Ort1 : se battre en duel
+avec $N10#
+\!! $Ort1, domaine au nord-ouest :
+parler à $N10#
+\!!! $Ort1 : remettre 100 pièces d'or
+à l'envoyé des $Stamm6#
+\!! $Ort15 : rapporter
+l'or du trésor#
+\!! $Ort18, grotte N : à droite, au lac
+au-delà, entre stalagmites : épée de $N3#
+\!! $Ort18 :
+aller chercher l'épée de $N3#
+\!!! $Ort7 : annoncer aux Romains que
+l'assemblée du peuple approuve l'alliance#
+\! $Ort7 :
+se rallier aux Romains#
+\!! $Ort1 : parler à l'envoyé
+des $Stamm6#
+\!!! $Ort1 : parler à $N10
+de la ligue des tribus contre Rome#
+\!!! $Ort1 : parler à $N10
+du meurtre d'un membre du clan#
+\! $Ort12 : interroger $N27
+sur l'avenir#
+\!! $Ort1 : se faire préparer
+au duel par $N1#
+\! $Ort1 : se faire préparer au duel
+par $N2, l'homme lige de $N1#
+\! $Ort1 : se faire soigner et bénir
+par la femme de $N1#
+\! $Ort1 :
+parler à $N1#
+\!! $Ort6 :
+amener le prêtre à baisser son prix#
+\! $Ort9 : apprendre la magie
+auprès de $N39#
+\!! $Ort2 : parler à $N20
+des exigences de $N30#
+\!! $Ort1 : parler à $N10
+des exigences de $N30#
+\!! $Ort3 : amener les amis de $N30
+à le convaincre de l'utilité de l'alliance#
+\!! $Ort3 :
+amener $N30 à baisser son prix#
+\!! $Ort1 ou $Ort2 : dire à $N10 ou $N20
+que $N30 n'est pas d'accord#
+\! $Ort3 : apprendre la magie
+auprès de $N34#
+\!! $Ort13, grotte à l'ouest : sur la piste
+du chercheur de trésors, trouver le torque#
+\!!! $Ort1 : discuter de la suite
+avec $N10#
+\!!! $Ort3 : discuter de la suite
+avec $N30#
+\!!! $Ort1 : informer $N10
+de la révolution de palais chez les $Stamm2#
+\!!! $Ort3 : informer $N30
+de la révolution de palais chez les $Stamm2#
+\!!! $Ort3 : obtenir l'accord de $N30
+pour faire la paix avec les Romains#
+\!!! $Ort1 : annoncer à $N10
+que la paix avec les Romains est impossible#
+\!!! se faire recommander une prophétesse
+qui puisse donner conseil#
+\!! $Ort9 : les bracelets à $N39 ;
+demander à $N39 de lever la malédiction#
+\!!! $Ort16 : informer $N26
+de la preuve contre $N21 et $N22#
+\!!! $Ort1 : annoncer à $N10
+que les $Stamm2 sont de nouveau alliés#
+\!!! $Ort3 : annoncer à $N30
+que les $Stamm2 sont de nouveau alliés#
+\! $Ort2 : apprendre auprès du forgeron
+à ouvrir les serrures#
+\! $Ort3 : apprendre la magie
+auprès des épouses de $N30#
+\! $Ort3 : demander au père
+de $N30 où trouver la femme de $N36#
+TEXT_AUFGABE75#
+TEXT_AUFGABE76#
+TEXT_AUFGABE77#
+TEXT_AUFGABE78#
+TEXT_AUFGABE79#
+\À PROPOS DE LA VERSION COMPLÈTE{
+
+La démo gratuite ne contient qu'une petite partie du jeu. La VERSION COMPLÈTE de TEUDOGAR est bien plus vaste et palpitante :
+
+
+-- Visitez salles royales et huttes misérables, villages et domaines innombrables. Explorez un camp romain, un refuge fortifié dans les marais, des grottes labyrinthiques et de nombreuses forêts.
+
+-- Rencontrez nobles avides de pouvoir et sages prophétesses, légionnaires romains et mercenaires barbares, bardes voyageurs et sorcières savantes, princes tyranniques et guerriers vindicatifs.
+
+-- Affrontez combats légendaires, batailles sanglantes et intrigues perfides, et vivez mille aventures.
+
+-- Libérez un village. Élucidez un meurtre. Battez-vous pour une femme. Trouvez des trésors inestimables. Gagnez gloire, puissance ou richesse.
++
+#
+-- Équipez-vous de cottes de mailles, de casques et d'épées. Prenez aux Romains leurs cuirasses segmentées, leurs boucliers et leurs armes.
+
+-- Laissez %s gagner en expérience et en force, apprendre de nombreuses actions nouvelles, et s'épanouir pleinement.
+
+-- Apprenez enfin la vraie magie. Et trouvez, ou arrachez à vos ennemis, des armes et des anneaux ensorcelés de légende.
+
+-- Combattez pour la liberté de votre tribu. Concluez de puissantes alliances. Renversez un roi. Attaquez des troupes romaines. Ou alliez-vous à Rome.
+
+-- Menez votre aventure vers une fin heureuse ou effroyable. Devenez paysan ou marchand, chef de guerre ou rentier, héros ou traître, mercenaire romain ou roi de votre tribu.
++
+#
+\Seule la version complète vous permet de {
+-- connaître tous les personnages et tous les lieux du jeu.
+-- jouer jusqu'au bout, sauver votre tribu, et obtenir le plus grand succès personnel.
+-- suivre toutes les intrigues, et par exemple vous allier à Rome au lieu de combattre les Romains.
+-- trouver dans la solution complète comment gagner la partie.
+-- lire tous les chapitres de l'encyclopédie des Germains et des Romains.
+
+
+Bien sûr, la version complète reprend toutes vos sauvegardes - que vous pourrez désormais jouer jusqu'au bout.
+
+
+Nous vous livrons la version complète IMMÉDIATEMENT, en téléchargement (30 min au plus). Commandez maintenant, et d'ici une demi-heure, vous pourrez guider %s à travers de nouvelles aventures...
++
+#
+\La version complète ne coûte que 12,50 € ou 14,95 US${
+(soit environ 19 FS, 8 GB£, 15 CN$, 16 AU$, etc.)
+
+
+Vous pouvez payer commodément par prélèvement ou virement, par carte bancaire ou compte PayPal, par chèque, ou même en espèces (toutes les grandes devises). (Autriche : les virements vers l'Allemagne sont gratuits. Suisse : virement possible sur un compte suisse.)
+
+
+Vous saisissez vos données sur des pages sécurisées par chiffrement SSL, et votre paiement est traité de façon sûre et fiable par PayPal, KAGI ou CK-Software, services de paiement éprouvés dans le monde entier.
+
+
+[228>,Commander ! www.wolfmittag.com/shop]
+
+[228>,Commander sans Internet]
+
+
+[[72x,%s]
+#
+La version complète est follement palpitante.
+#
+Dans la version complète, tu peux apprendre la vraie magie :
+
+Tu y rencontreras des sorcières bien plus puissantes que moi, tu apprendras de nombreux sortilèges, et tu accroîtras ta puissance grâce à des armes ou des anneaux ensorcelés de légende !
+#
+Dans la version complète t'attendent des combats légendaires, des salles royales et des huttes, des villages et des domaines, un camp romain, un refuge fortifié dans les marais, des grottes labyrinthiques, des batailles et des intrigues, et d'innombrables aventures...
+#
+Dans la version complète, tu peux devenir riche - plus riche que Heremod !
+
+Des monceaux de trésors, des grottes et des tumulus pleins d'objets précieux, du butin de guerre, des armes romaines, l'or de tes ennemis :
+
+Tout ce qu'il te faut, c'est la version complète - et elle n'est pas bien chère...
+#
+Dans la version complète, tu peux explorer tous les lieux du jeu, rencontrer tous les personnages, vivre toutes les aventures, et sauver ta tribu ou la mener à sa perte !
+
+Ziu et les autres dieux te seront favorables si tu achètes la version complète...
+#
+Dans la version complète, tu peux faire payer aux Romains ce qu'ils ont fait à nos tribus !
+
+Bien sûr, dans la version complète, tu peux aussi t'allier à Rome - mais tu ne ferais tout de même pas une chose pareille, j'espère ?!
+#
+Dans la version complète, tu peux sauver ta tribu !
+
+Tu peux en outre forger de puissantes alliances, survivre à des batailles sanglantes et à des intrigues perfides, acquérir gloire et puissance, et mener ton aventure vers une fin heureuse ou effroyable...
+#
+
+Dans la version complète, tu peux suivre jusqu'au bout toutes les intrigues possibles de ce jeu.
+
+Tu peux sauver ta tribu ou la précipiter dans le malheur, et - par Fulla ! - je crois même que tu as une chance de devenir roi de ta tribu...
+#
+Cette démo n'est qu'un petit avant-goût.
+
+Dans la version complète, tu peux explorer tous les lieux du jeu, rencontrer tous les personnages, et vivre toutes les aventures !
+
+La version complète ne coûte que 12,50 €. La commande est très simple (dans le monde entier), et le paiement commode et sûr. Livraison IMMÉDIATE par téléchargement !
+#
+Dans la version complète, tu peux gagner une gloire immortelle, développer tes compétences, apprendre la magie, parfaire ton équipement, et découvrir d'innombrables lieux et personnages nouveaux !
+
+De plus, la version complète contient tous les chapitres de l'encyclopédie des Romains et des Germains.
+#
+Retour au jeu#
+Afficher à l'écran#
+D'où souhaitez-vous commander ?
+
+
+[228, Europe]
+
+
+[228, États-Unis et reste du monde]
+
+
+[[72x,%s]
+#
+Les informations de cette démo ne sont peut-être plus à jour.
+
+Veuillez télécharger le bon de commande actuel sur %s. (Avec ce bon de commande, vous pourrez ensuite commander même sans Internet.)
+
+
+[228, télécharger le bon de commande actuel]
+
+
+[228, utiliser l'ancien bon de commande]
+
+
+[[72x,%s]
+#
+\
++
+Wolf Mittag{
+
+-- a conçu et produit ce jeu.{
+
+-- a programmé le monde du jeu, l'interaction, l'intelligence artificielle, et tout le reste. {
+(142 000 lignes, soit 2380 pages de code C++ : imprimées sur papier continu, elles formeraient un ruban de près de 600 mètres).{
+
+-- a étudié les fondements historiques, et rédigé l'encyclopédie en ligne sur les Germains et les Romains.{
+(25 500 mots, soit 60 pages) {
++
+-- a inventé personnages, lieux et intrigue, et écrit et programmé plus de 150 longs dialogues.{
+(60 000 mots, soit 150 pages) {
+
+-- a construit le monde du jeu, bâti des dizaines de bourgades, aménagé 140 maisons, réglé l'emploi du temps de centaines de personnages, créé des dizaines de forêts et de marais, et 80 grottes.{
+
+-- a créé le site web, rédigé la documentation, dessiné de nombreuses illustrations, fait tout ce qui restait à faire, et dépensé beaucoup d'argent en graphismes, traduction, hébergement web, etc.{
++
+Wolf Mittag{
+
+approche de la trentaine, est originaire de Cologne, et vit aujourd'hui surtout à Berlin.
+
+Avec ce projet, il publie pour la première fois un jeu vidéo vraiment ambitieux.
++
+Arne Niemuth (Cologne){
+
+-- a dessiné les graphismes du jeu : sols, herbes, plantes, marais, arbres, murs, toits, clôtures, mobilier, armes, équipement, et bien plus encore.{
+(1500 textures de sol et 2700 objets){
+
+-- a animé 77 personnages, animaux et vêtements, pour qu'ils se tiennent debout, marchent, courent, s'assoient et gesticulent.{
+(5800 images en tout){
+
+-- a retravaillé, retouché et animé 350 visages.{
+
+-- a dessiné ou créé écrans, fenêtres, armes et équipements.{
+
+-- a testé, critiqué, et apporté d'innombrables idées et améliorations.
++
+Volker Schlanze (Seattle, USA){
+
+-- a traduit tous les dialogues de l'allemand en anglais.{
+(110 pages){
+-- a traduit l'encyclopédie des Germains et des Romains.{
+(40 pages){
+-- a traduit documentation, textes du jeu et site web.{
+(25 pages){
+-- a relu et vérifié.{
+
+
+
+
+Patrick Mumpower (Seattle, USA){
+
+-- a traduit une partie de l'encyclopédie.{
+(20 pages){
+-- a relu et vérifié.{
++
+Volker Schlanze,{
+
+M.A. de linguistique (University of Texas at Austin), originaire de Hambourg, travaille à Seattle (Washington, USA) pour Emerson Kennedy, dans la reconnaissance de l'écriture manuscrite allemande et la localisation web. Il y propose aussi des traductions (anglais-allemand ; allemand-anglais), ainsi que la relecture et la révision de textes.
+
+Si vous souhaitez faire traduire vos textes, envoyez un e-mail décrivant votre projet à info@emersonkennedy.com.
++
+Pasquale Maiellaro (ITALIE){
+
+-- travaille en ce moment à la traduction des dialogues de l'anglais en italien.{
+(110 pages){
+-- a traduit documentation, textes du jeu et site web.{
+(25 pages){
+-- a relu et vérifié.{
++
+Si vous souhaitez nous faire part{
+
+-- de vos critiques{
+-- de vos suggestions{
+-- de corrections{
+-- ou simplement de votre avis{
+
+utilisez notre formulaire de contact sur www.wolfmittag.com/contact.
+
+
+
+Merci de votre intérêt !
+#
+Avant-dernier texte
+#
+Dernier texte
+#
+Tout dernier texte
+#

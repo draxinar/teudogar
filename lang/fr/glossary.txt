@@ -1,0 +1,597 @@
+# The terms of the French translation: the German term, a tab, the
+# French term, and a tab and a note where one helps.
+
+# The title.
+Teudogar und das Bündnis mit Rom	Teudogar et l'Alliance avec Rome
+ UND DAS BÜNDNIS MIT ROM	 ET L'ALLIANCE AVEC ROME	the colored capitals of the title screen
+
+# The peoples, in their French forms, plural in every case slot.
+Cherusker	Chérusques
+Katten	Chattes
+Markomannen	Marcomans
+Usipeter	Usipètes
+Brukterer	Bructères
+Sigambrer	Sicambres
+Sueben	Suèves
+Germanen	Germains
+Römer	Romains
+unbekannter Stamm	tribu inconnue	strings 1601 to 1604
+letzter Stamm der Liste	dernière tribu de la liste	strings 1633 to 1636
+
+# The places.
+Germanien	Germanie
+Rom	Rome
+Rhein	Rhin
+Weser	Weser
+Elbe	Elbe
+
+# The historical people.
+Arminius	Arminius
+Varus	Varus
+Augustus	Auguste
+Drusus	Drusus
+Tiberius	Tibère
+
+# The gods keep their Germanic names.
+Wodan	Wodan
+Donar	Donar
+
+# The armor and the weapons, as gram.txt gives their genders.
+Schuhe	chaussures	f p
+Hose	braies	f p, the trousers of the Germans and the Gauls
+Lederhose	braies de cuir	f p
+Muskelpanzer	cuirasse musclée	f s
+Beinschienen	jambières	f p
+Wams	tunique	f s
+wattiertes Wams	tunique matelassée	f s
+Lederwams	tunique de cuir	f s
+Kettenhemd	cotte de mailles	f s
+Schuppenpanzer	cuirasse d'écailles	f s
+Schienenpanzer	cuirasse segmentée	f s, the lorica segmentata
+Kleid	robe	f s
+Schild	bouclier	m s
+Römerschild	bouclier romain	m s
+Lederhelm	casque de cuir	m s
+Bronzehelm	casque de bronze	m s
+Eisenhelm	casque de fer	m s
+Mantel	manteau	m s
+Pelzmantel	manteau de fourrure	m s
+Bronzeschwert	épée de bronze	f s
+Streitkolben	masse d'armes	f s
+Keule	massue	f s
+Dolch	poignard	m s
+Kurzschwert	épée courte	f s
+Streitaxt	hache de guerre	f s
+Axt	hache	f s
+Schwert	épée	f s
+Zweihandschwert	épée à deux mains	f s
+Streithammer	marteau de guerre	m s
+große Streitaxt	grande hache	f s, short enough for the column of the combat sheet
+Spitzhacke	pioche	f s
+Brennholz	bois de chauffage	m s
+Speer	lance	f s
+Wurfbeil	hache de jet	f s
+Bogen	arc	m s
+Langbogen	arc long	m s
+
+# Money.
+Silberstück	pièce d'argent	strings 842 and 843
+
+# The society of the tribes and of Rome.
+Gefolgsherr	seigneur	the lord whom a retainer follows
+Gefolgsmann	homme lige
+Heerkönig	chef de guerre
+Thing	thing	the assembly of the free men, masculine
+Volksversammlung	assemblée du peuple
+Gau	canton
+Herr	seigneur	maître from the player's own slaves, noble seigneur for edler or geehrter Herr
+Herrin	maîtresse
+Sklave	esclave
+freilassen	affranchir
+vogelfrei	hors-la-loi
+Geisel	otage
+Bündnis	alliance
+Vertrag	traité	accord for a private agreement, as in string 1736
+Barbar	Barbare	a noun and an address, barbare as an adjective
+Gallier	Gaulois
+Germane	Germain
+Bataver	Bataves
+Kaiser	empereur	in lowercase: l'auguste empereur, le divin empereur
+Caesar Augustus	César Auguste
+Feldherr	général
+Centurio	centurion
+Späher	éclaireur
+Lager	camp
+Praetorium	prétoire
+Teutates	Teutatès	the Gaulish god
+
+# Places and things.
+Hof	domaine
+Vorratshaus	réserve
+Werkstatt	atelier
+Badehaus	thermes
+Zaubertrank	potion magique
+Tauschhandel	troc
+
+# Labels and set phrases.
+Einverstanden	D'accord	a choice's label
+Seid gegrüßt	Je vous salue
+Auf Wiedersehen	Au revoir	as a character says it, the farewell choice reads Adieu
+
+# The game's own words, as the interface names them.
+Aufgabe	quête
+Kampfmodus	mode combat
+Cheatmodus	mode triche
+Lexikon	encyclopédie
+Komplettlösung	solution complète
+Vollversion	version complète
+Demo-Version	démo
+Spielstand	sauvegarde
+ein	oui	an option's state, as "Musique : %s"
+aus	non	an option's state
+KRA	FOR	the attributes: strength, dexterity, intelligence, life
+GES	DEX
+INT	INT
+LEB	VIT
+
+# Magic, healing, and the sacred.
+Übungskampf	combat d'entraînement
+Zauber	sortilège
+Trank	potion
+Heiler	guérisseur
+Fluch	malédiction
+Segen	bénédiction
+Kultbild	effigie
+Götterbild	idole
+Hinkelstein	menhir
+Grabhügel	tumulus
+
+# Objects.
+Halsring	torque
+Feldzeichen	enseigne
+Schmelzofen	bas fourneau
+Silbermünze	pièce d'argent
+Goldmünze	pièce d'or
+
+# People, by role and kind.
+Gastgeber	hôte	Gastgeberin, hôtesse
+Zauberer	magicien
+Hexe	sorcière
+Nixe	ondine
+Waldschrat	esprit des bois	the English and the Italian say giant, wrongly
+Kobold	kobold
+Untoter	mort-vivant
+Räuber	brigand
+Wirt	aubergiste
+
+# The tribes' politics, and the labels that recur in many scenes.
+Stammesbund	ligue des tribus	the label Stammesbund gegen Römer reads Ligue des tribus contre Rome
+Stammesbündnis	alliance des tribus
+Streit anfangen	Chercher querelle	a choice's label
+Häuptling	chef
+Knecht	valet
+Edelmann	gentilhomme
+Heil Euch	Salut à vous	Heil Dir, Salut à toi
+Hallo	Bonjour	Salut where it follows a Bonjour, as string 620 does
+Neuigkeiten	Nouvelles
+
+# Sacred places and buildings.
+Hain	bois sacré
+Opferstein	pierre des sacrifices
+große Halle	grande salle
+Wohnhaus	maison
+Lagerhaus	entrepôt
+
+# The gods that the German names, kept as it names them.
+Full	Full
+Fulla	Fulla
+Ziu	Ziu
+
+# Regions and measures.
+Gallien	Gaule
+Rätien	Rhétie
+Meile	mille
+
+# Arms and money.
+Panzer	cuirasse	the generic body armor
+Rüstung	armure
+Goldstück	pièce d'or
+
+# The potions, as the strings and the script name them.
+Gegengift	antidote
+Wach-Trank	potion d'éveil
+Schutz-Trank	potion de protection
+Schwächungs-Trank	potion d'affaiblissement
+
+# The attributes and skills, as the character sheet and the manual name
+# them.
+Lebenskraft	vitalité
+Kraft	force
+Geschicklichkeit	dextérité	DEX
+Intelligenz	intelligence
+Charisma	charisme
+Glaube	foi
+Lebenserfahrung	expérience de la vie
+Wissen	savoir
+Verstecktes finden	trouver ce qui est caché
+
+# Luck, and the labels of magic.
+Heil	chance	the luck that the gods grant, as the encyclopedia glosses it. Heil verlieren reads perdre la faveur des dieux, and santé et salut opens a letter, as in string 1700
+Glück	veine	where the German sets it against Heil
+Zaubern lehren	Apprendre la magie	a choice's label, the player's aim
+Zauberei	magie
+verzaubern	ensorceler
+Ratschläge	Conseils	a choice's label
+segnen	bénir
+verfluchen	maudire
+Leb wohl	Adieu	as a character says it
+
+# People and places of the script.
+Gast	invité
+Gefolgsleute	hommes liges
+Sippe	clan
+Halle	salle
+Festhalle	salle des banquets
+Fluchtburg	refuge fortifié
+Donau	Danube
+keltisch	celte
+
+# Worship.
+Hohepriester	grand prêtre
+Heiligtum	sanctuaire
+Opfer	sacrifice
+Trankopfer	libation
+Gunst	faveur
+Kriegsgott	dieu de la guerre
+Frevler	impie
+Met	hydromel
+
+# The peoples beyond the tribes.
+Boier	Boïens
+Friesen	Frisons
+Kimbern	Cimbres
+Teutonen	Teutons
+Belgier	Belges
+Kelten	Celtes
+
+# Alliances and their parts.
+Verteidigungsbündnis	alliance défensive
+Bund	ligue
+Teilstamm	branche
+Stammesverband	confédération
+suebisch	suève
+Kundschafter	espion
+Abgabe	tribut	redevance for the dues of a person
+Gesandter	envoyé
+Versammlungsplatz	place des assemblées
+
+# Arms of the script.
+Langschwert	épée longue
+Zauberschwert	épée magique
+verzauberte Waffe	arme ensorcelée
+
+# Feuds, raids, and seers.
+Raubzug	razzia	Raubzüge, a label, Razzias
+Fehde	querelle	Fehden ausfechten, vider des querelles
+Zweikampf	duel	Zweikampf mit $N10, a label, Duel avec $N10
+Zukunft vorhersehen	Voir l'avenir	a choice's label
+Seherin	prophétesse
+Kampferfahrung	expérience du combat
+Geächtete	hors-la-loi
+Gutsherr	maître de maison
+Tribun	tribun
+Ariovist	Arioviste
+Iulius Caesar	Jules César
+Minerva	Minerve
+
+# The places, which $Ort1 to $Ort18 insert (strs[zones[N].name], dialog.cpp).
+# Each name stands bare and capitalized, as a proper name, and the site
+# writes the preposition and the article that its gender takes: au, du,
+# le for a masculine name, à la, de la, la for a feminine one, à and de
+# for a proper name alone.
+Heruwald	Heruwald	$Ort1, proper name: à Heruwald
+Kattfurt	Kattfurt	$Ort2, proper name: à Kattfurt
+Heremods Halle	Salle de Heremod	$Ort3, f: à la salle de Heremod
+Fluchtburg der Usipeter	Refuge fortifié des Usipètes	$Ort4, m: au refuge fortifié des Usipètes
+unbekanntem Ort	un lieu inconnu	$Ort0, $Ort5, $Ort19
+Hain des Ziu	Bois sacré de Ziu	$Ort6, m: au bois sacré de Ziu
+Römerlager	Camp romain	$Ort7, m: au camp romain
+Osmunds Schlachtfeld	Champ de bataille d'Osmund	$Ort8, m: au champ de bataille d'Osmund
+Alwinas Höhle	Grotte d'Alwina	$Ort9, f: à la grotte d'Alwina
+Bruglund	Bruglund	$Ort10, proper name: à Bruglund
+Grabhügel	Tumulus	$Ort11, m: au tumulus
+Maradas Sumpf	Marais de Marada	$Ort12, m: au marais de Marada
+Ortrudas Wald	Forêt d'Ortruda	$Ort13, f: à la forêt d'Ortruda
+Ragangardis' Turm	Tour de Ragangardis	$Ort14, f: à la tour de Ragangardis
+Teudogars Hort	Trésor de Teudogar	$Ort15, m: au trésor de Teudogar
+Adalmars Gehöft	Domaine d'Adalmar	$Ort16, m: au domaine d'Adalmar
+Römertrupp mit Geiseln	Troupe romaine et ses otages	$Ort17, f: à la troupe romaine
+Brandolfs Gehöft	Domaine de Brandolf	$Ort18, m: au domaine de Brandolf
+
+# The script, as script-07 settled it.
+Trupp	détachement
+Gesandtschaft	ambassade
+Wohnhalle	logis
+Tempelhaus	temple
+Runen befragen	interroger les runes
+Waffen segnen	Bénir les armes	a choice's label
+Geschenke	Présents	a choice's label
+Nornen	Nornes
+Geschlecht	lignée	a lineage
+Geiseln freilassen	Libérer les otages	a choice's label
+
+# The script, as script-08 settled it.
+Ubier	Ubiens	ubisch, ubien
+Tenkterer	Tenctères
+Walhalla	Walhalla
+Hel	Hel	Par Hel !
+Hundertschaft	centurie
+Siedlung	bourgade	cité for the Ubian town that the Romans built up
+Bündnisvertrag	traité d'alliance
+Proviant	vivres
+Vorräte	provisions
+Zunft	corporation
+Kiste	caisse	the item of string 28, apart from the Truhe
+Weiter	Continuer	a choice's label
+
+# The interface and the character sheet, as strings-02 settled them.
+Silb.	arg.	the abbreviation of pièces d'argent in prices
+Freischaltcode	code d'activation
+Fähigkeiten	compétences
+Menüzeile	barre de menus
+Statuszeile	barre d'état
+Aktionsmenü	menu des actions
+Notizbuch	carnet de notes
+Übersichtskarte	carte d'ensemble
+Ruhmeshalle	PANTHÉON
+Helden- und Schandtaten	hauts faits et méfaits
+Wortbrüchig	parjures
+Kriegsbeute	butin de guerre
+Hügel	tertre	the mound to plunder
+kB	Ko
+unbeweglich	engoncé	in armor
+Person	quelqu'un	the name of a missing unit
+
+# The skills.
+Angreifen	Attaque
+Parieren	Parade
+Ausweichen	Esquive
+Kampf mit Schwert	Combat à l'épée	and à la lance, à la hache, à la massue
+Kampf Unbewaffnet	Combat sans arme
+Wahrnehmung	Perception
+Heilkunst	Art de guérir
+Handwerk	Artisanat
+Schwimmen	Natation
+
+# The potions and the furies.
+Berserker	Furie	the action, potion de furie for the potion
+Heiltrank	potion de soin
+Schlaf-Trank	potion de sommeil
+Unsichtbarkeits-Trank	potion d'invisibilité
+Potenz-Trank	potion de virilité
+Liebestrank	philtre d'amour
+Gift	poison
+Runenstäbe	baguettes runiques
+
+# The script, as script-09 settled it.
+Halsreif	torque	as Halsring
+Höhle	grotte
+Fluch brechen	briser la malédiction
+Fluch aufheben	lever la malédiction	and Segen aufheben, lever la bénédiction
+noch stärker segnen	bénir davantage
+Beweis	preuve
+losschlagen	passer à l'attaque
+Giftmord	empoisonnement
+zur Sache	revenons-en au fait	a choice's label
+
+# The script, as script-11 settled it.
+Zauberin	magicienne
+Amulett	amulette
+Schutzzauber	sortilège de protection
+Segenszauber	bénédictions
+machtvoller Kämpfer	puissant combattant
+Heirat	Mariage	a choice's label
+
+# The script, as script-10 settled it.
+Fürst	prince
+Königswürde	dignité royale
+Gastrecht	droit d'hospitalité
+Totengott	dieu des morts
+Götterpaar	couple divin
+Bundesgenossen	alliés
+Gefolgschaft	hommes liges	troupe d'hommes liges for the band as a whole
+Waffensegen	bénédiction des armes
+Berserker-Zauber	sortilège de furie
+Königshalle	salle royale
+Kriegsglück	sort des armes
+Hauptort	principal village
+Giftmörder	empoisonneur
+Mitgift	dot
+Wehrpflicht	Conscription	a choice's label
+Gehorsam	Obéissance	a choice's label
+
+# The walkthrough, as its batches settled it.
+Buße	prix du sang	the wergild for a killing
+Oberherrschaft	suprématie
+Umsturz	révolution de palais
+Lederpanzer	tunique de cuir	the game's name of the leather armor
+Rucksack	sac
+Feldherrenzelt	tente du général
+Oberkommandant	commandant en chef
+
+# The encyclopedia, as its first batch settled it. Gehöft takes ferme
+# for a farmstead in general and domaine for a lord's, and Siedlung
+# habitat for settlement in general and bourgade for a village.
+Lexikon: Germanen und Römer	Encyclopédie : Germains et Romains
+Vorwort	Avant-propos
+Siedlungsraum	territoire
+Stammesgebiet	territoire tribal	territoire alone where the tribe's name or a possessive names the tribe, as le territoire des $Stamm6g
+Stammesverbund	confédération de tribus
+Großfamilie	famille élargie	grande famille names a leading family
+Dorfverband	communauté villageoise
+Weiler	hameau
+Magd	servante
+Statthalter	gouverneur
+Heerführer	général	a Roman commander. The elected leader of a Germanic army is chef militaire, and Heerführer und König reads chef de guerre et roi
+Volkstribun	tribun de la plèbe
+Oberpriester	grand pontife
+Söldner	mercenaire
+Bürgerrecht	citoyenneté romaine
+Römisches Reich	Empire romain
+spätrömisches Reich	Bas-Empire
+Völkerwanderungszeit	époque des Grandes Invasions
+Octavian	Octave
+Marc Anton	Marc Antoine
+Pompeius	Pompée
+Sulla	Sylla
+Livia	Livie
+Tacitus	Tacite
+Weichsel	Vistule
+Britannien	îles Britanniques	Bretagne for the Roman province and its island
+Bajuwaren	Baïuvares
+Alamannen	Alamans
+Langobarden	Lombards
+Ostgoten	Ostrogoths
+Westgoten	Wisigoths
+
+# History and daily life, as the encyclopedia settled them.
+v.Chr.	av. J.-C.	and n.Chr., apr. J.-C.
+Jh.	siècle	Ier siècle, IIIe siècle
+germanisch	germanique
+Adeliger	noble
+Gastmahl	festin
+Fibel	fibule
+Umhang	cape
+Kittel	sarrau
+Tunika	tunique
+Toga	toge
+Wurfspeer	javelot
+Legionär	légionnaire
+Thermen	thermes
+Senat	Sénat
+Mittelalter	Moyen Âge
+Etsch	Adige
+
+# The quest notes and the map, as strings-04 settled them.
+Hermunduren	Hermundures
+Lagerraum	réserve
+Abzweigung	embranchement
+Gabelung	fourche
+Gerber	tanneur
+Weber	tisserand
+Töpfer	potier
+Verehrer	soupirants
+Bestellformular	bon de commande
+Weiterspielen	Retour au jeu	a button
+
+# The script, as script-12 settled it.
+Zukunft vorhersagen	Prédire l'avenir	the witch's service, a label
+Gunst der Götter	faveur des dieux	Gunst der Götter gewinnen, Gagner la faveur des dieux
+Vormachtsstellung	hégémonie
+Wodan sei Dank!	Wodan soit loué !
+räthisch	rhète
+
+# Religion and art, as the encyclopedia settled them. The gods of the
+# encyclopedia keep the German's spellings: Odin, Thor, Tiwaz, Tyr,
+# Freya, Nerthus, Njörd, Frigg, Baldur, Loki.
+Asen	Ases
+Vanen	Vanes	vanisch, des dieux vanes
+Göttergeschlechter	lignées divines
+Hausgemeinschaft	maisonnée
+Runenzauber	magie des runes
+Zaubersprüche	formules magiques
+Priesterin	prêtresse
+Gottesurteil	ordalie
+Hausgeister	esprits de la maison
+Stabreim	vers allitératifs
+Tierstil	style animalier germanique
+Burgunder	Burgondes
+Chlodwig	Clovis
+Karl der Große	Charlemagne
+Ludwig der Fromme	Louis le Pieux
+Theodorich	Théodoric
+Nibelungenlied	Chanson des Nibelungen
+Edda	Edda	l'ancienne Edda, la jeune Edda
+
+# Society and law, as the encyclopedia settled them.
+Unfreie	non-libres	unfrei, non libre, Unfreiheit, servitude
+Gauhäuptling	chef de canton
+Adel	noblesse
+Adelige	nobles
+Schiedsrichter	arbitre	and Schlichter, Schiedsspruch arbitrage
+Mord	meurtre
+Totschlag	homicide
+Blutrache	vengeance sanglante
+Kebsweib	concubine
+Vormundschaft	tutelle
+Wagenburg	enceinte de chars
+Sippenfehde	querelle entre clans
+
+# War and Rome's conquest, as the encyclopedia settled them.
+Legionslager	camp légionnaire
+Heerstraße	voie militaire
+Hilfstruppen	troupes auxiliaires
+Schildwall	mur de boucliers
+Dezimierung	décimation
+Fahne	étendard
+Leibwache	garde	gardes du corps for the men
+Triumphzug	triomphe
+Varusschlacht	désastre de Varus
+Denar	denier
+Chauken	Chauques
+Ampsivarier	Ampsivariens
+Goten	Goths
+Noricum	Norique
+Bodensee	lac de Constance
+Böhmen	Bohême
+Mainz	Mayence
+Köln	Cologne
+Augsburg	Augsbourg
+Marbod	Marbod
+
+# Rome's rule and its end, as the encyclopedia settled them.
+Befehlshaber	commandant
+Oberbefehl	commandement en chef
+Beamte	fonctionnaires
+Steuern	impôts
+Troß	convoi
+Handelsplätze	comptoirs
+Weltreich	empire universel
+Provinzrömer	Romains de province
+Vandalen	Vandales
+Angeln	Angles
+Sachsen	Saxons
+Franken	Francs
+Schwaben	Souabes
+Segestes	Ségeste
+Theodosius	Théodose
+Geiserich	Genséric
+Scipio Africanus	Scipion l'Africain
+Pannonien	Pannonie
+Frankenreich	royaume des Francs	Empire franc from 700 to 843
+Deutsches Reich	royaume de Germanie	after 843
+
+# The last scenes, as script-13 to script-15 settled them.
+Stammesgenossen	les gens de notre tribu	or les nôtres
+einheimische Verbündete	alliés du pays
+Steuererhebung	levée d'impôts
+Großonkel	grand-oncle
+Großneffe	petit-neveu
+Schwager	beau-frère
+Witwe	veuve
+Schicksalsgöttinnen	déesses du destin
+Häuptlingswürde	rang de chef
+Eisenbarren	lingots de fer
+Zauberkundige	initiée à la magie
+Truhe	coffre
+Hort	trésor	as $Ort15
+Schloss	serrure	of a chest
+Speisezimmer	salle à manger
+Anhänger	partisans
+Prophezeiung	prophétie
+Spruch	oracle	the saying of a seeress
+Kriegszug	expédition guerrière
+Bürgerkrieg	guerre civile
+Vasall	vassal
+Flegel	rustre
+Gang	galerie	in a cave

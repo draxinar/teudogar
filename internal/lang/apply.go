@@ -20,12 +20,16 @@ import (
 
 // Apply applies the sources of the feature name in the folder dir
 // (lang/) to the build b, and returns the problems that its checks find.
-func Apply(name string, b *Build, picks []Pick, dir string) ([]Problem, error) {
+// With partial set, French takes the English for the texts that it
+// still lacks.
+func Apply(name string, b *Build, picks []Pick, dir string, partial bool) ([]Problem, error) {
 	switch name {
+	case "french":
+		return applyFrench(b, picks, dir, partial)
 	case "errata":
 		return applyErrata(b, picks, dir)
 	}
-	return nil, fmt.Errorf("lang: unknown feature %q, want errata", name)
+	return nil, fmt.Errorf("lang: unknown feature %q, want french or errata", name)
 }
 
 // source returns the text of the file name of dir, or false when it is
@@ -41,6 +45,15 @@ func source(dir, name string) (string, bool, error) {
 	return string(b), true, nil
 }
 
+// releaseSource returns the source form of the release's entry id.
+func releaseSource(r *Release, id int, k Kind) (string, error) {
+	b, err := r.Decoded(id)
+	if err != nil {
+		return "", err
+	}
+	return Source(k, b)
+}
+
 // splitStrings returns the strings of the source form s of an entry of
 // strings.
 func splitStrings(s string) []string {
@@ -53,6 +66,165 @@ func within(file string, ps []Problem) []Problem {
 		ps[i].Unit = file + ": " + ps[i].Unit
 	}
 	return ps
+}
+
+// applyFrench puts lang/fr into the build: the six texts into their
+// French slots, texts.txt into the texts patch, gram.txt into the French
+// column of the grammar tables, glyphs.txt into the fonts, and
+// readme.txt into readme_f.txt. The build then offers French.
+func applyFrench(b *Build, picks []Pick, dir string, partial bool) ([]Problem, error) {
+	var ps []Problem
+	fr := filepath.Join(dir, Codes[French])
+	r := b.r
+	b.Langs[French] = true
+
+	bye, tps, err := frenchTexts(b, picks, fr, partial)
+	if err != nil {
+		return nil, err
+	}
+	ps = append(ps, tps...)
+
+	for _, tx := range Texts {
+		name := tx.Name + ".txt"
+		file := filepath.Join("lang", Codes[French], name)
+		s, ok, err := source(fr, name)
+		if err != nil {
+			return nil, err
+		}
+		if !ok {
+			if !partial {
+				ps = append(ps, problem(file, "missing"))
+				continue
+			}
+			en, err := r.Decoded(tx.ID + English)
+			if err != nil {
+				return nil, err
+			}
+			if err := b.Fill(tx.ID+French, en); err != nil {
+				return nil, err
+			}
+			continue
+		}
+		if tx.Kind == Script {
+			s = scriptSpaces(s)
+		} else {
+			s = Spaces(s)
+		}
+		d, err := Entry(tx.Kind, s)
+		if err != nil {
+			ps = append(ps, problem(file, "%v", err))
+			continue
+		}
+		cps, err := checkFrench(b, tx, s, d, bye)
+		if err != nil {
+			return nil, err
+		}
+		ps = append(ps, within(file, cps)...)
+		if err := b.Fill(tx.ID+French, d); err != nil {
+			return nil, err
+		}
+	}
+
+	gps, err := frenchGram(b, fr, partial)
+	if err != nil {
+		return nil, err
+	}
+	ps = append(ps, gps...)
+
+	gs, ok, err := source(fr, "glyphs.txt")
+	if err != nil {
+		return nil, err
+	}
+	if ok {
+		es, err := ReadGlyphs(strings.NewReader(gs))
+		if err != nil {
+			ps = append(ps, problem("lang/fr/glyphs.txt", "%v", err))
+		}
+		for _, e := range es {
+			g, ws := e.Apply(r.Block)
+			b.Glyphs = append(b.Glyphs, g)
+			b.Widths = append(b.Widths, ws...)
+		}
+	} else if !partial {
+		ps = append(ps, problem("lang/fr/glyphs.txt", "missing"))
+	}
+
+	s, ok, err := source(fr, "readme.txt")
+	if err != nil {
+		return nil, err
+	}
+	switch {
+	case ok && strings.Contains(s, "\r"):
+		ps = append(ps, problem("lang/fr/readme.txt", "a CR, want LF line ends"))
+	case ok:
+		d, err := ToCP1252(Spaces(s))
+		if err != nil {
+			ps = append(ps, problem("lang/fr/readme.txt", "%v", err))
+			break
+		}
+		b.SetReadme("readme_f.txt", bytes.ReplaceAll(d, []byte("\n"), []byte("\r\n")))
+	case partial:
+		// The release's English, as for the texts that French lacks.
+		d, err := os.ReadFile(filepath.Join(r.Dir, "readme_e.txt"))
+		if err != nil {
+			return nil, err
+		}
+		b.SetReadme("readme_f.txt", d)
+	default:
+		ps = append(ps, problem("lang/fr/readme.txt", "missing"))
+	}
+	return ps, nil
+}
+
+// frenchTexts reads lang/fr/texts.txt into the texts patch, and returns
+// the French farewell.
+func frenchTexts(b *Build, picks []Pick, fr string, partial bool) (string, []Problem, error) {
+	const file = "lang/fr/texts.txt"
+	r := b.r
+	var lines []TextLine
+	s, ok, err := source(fr, "texts.txt")
+	if err != nil {
+		return "", nil, err
+	}
+	if ok {
+		lines, err = ReadTexts(strings.NewReader(s))
+		if err != nil {
+			return "", []Problem{problem(file, "%v", err)}, nil
+		}
+		for i := range lines {
+			lines[i].Text = Spaces(lines[i].Text)
+		}
+	}
+	ps := within(file, CheckTexts(r, picks, lines, !partial))
+	have := make(map[int]bool)
+	bye := ""
+	for _, l := range lines {
+		have[l.Off] = true
+		d, err := ToCP1252(l.Text)
+		if err != nil {
+			continue
+		}
+		if l.Off == Bye {
+			bye = l.Text
+		}
+		lang := -1
+		if len(CString(r.Block.Texts[:], l.Off)) > 0 {
+			lang = French
+		}
+		b.Texts = append(b.Texts, TextPatch{Off: l.Off, Lang: lang, Text: storedText(picks, l.Off, d)})
+		ps = append(ps, checkButtons(b.FontW, fmt.Sprintf("%s: texts %04x", file, l.Off), l.Text)...)
+	}
+	if partial {
+		for _, p := range picks {
+			off := p.Off[French]
+			if have[off] {
+				continue
+			}
+			have[off] = true
+			b.Texts = append(b.Texts, TextPatch{Off: off, Lang: -1, Text: CString(r.Block.Texts[:], p.Off[English])})
+		}
+	}
+	return bye, ps, nil
 }
 
 // groupDE returns the offset of the German string of the call of pick
@@ -75,6 +247,71 @@ func storedText(picks []Pick, off int, d []byte) []byte {
 	return d
 }
 
+// checkFrench runs the checks of the text tx on its French source s.
+func checkFrench(b *Build, tx Text, s string, d []byte, bye string) ([]Problem, error) {
+	ps, err := checkAgainst(b, tx, s, d, bye)
+	if err != nil {
+		return nil, err
+	}
+	return append(ps, CheckElision(tx, s)...), nil
+}
+
+// checkAgainst runs the checks that compare the French source s of tx
+// with the release's German, English, and Italian.
+func checkAgainst(b *Build, tx Text, s string, d []byte, bye string) ([]Problem, error) {
+	r := b.r
+	de, err := releaseSource(r, tx.ID+German, tx.Kind)
+	if err != nil {
+		return nil, err
+	}
+	en, err := releaseSource(r, tx.ID+English, tx.Kind)
+	if err != nil {
+		return nil, err
+	}
+	it := en
+	if ib, err := r.Decoded(tx.ID + Italian); err == nil && len(ib) > 3 {
+		if it, err = Source(tx.Kind, ib); err != nil {
+			return nil, err
+		}
+	}
+	switch tx.Kind {
+	case Strings:
+		ds, es, is, fs := splitStrings(de), splitStrings(en), splitStrings(it), splitStrings(s)
+		ps := CheckStrings(ds, es, is, fs)
+		ps = append(ps, CheckLengths(b.Composed, b.Room, ds, es, is, fs)...)
+		for i := range min(len(ds), len(fs)) {
+			ps = append(ps, checkButtons(b.FontW, fmt.Sprintf("string %d", i), fs[i])...)
+		}
+		return ps, nil
+	case Script:
+		ps := CheckScript(de, en, it, s)
+		ps = append(ps, checkChoices(b.FontW, s)...)
+		// CheckTexts reports a farewell missing from texts.txt.
+		if bye != "" {
+			ps = append(ps, CheckFarewell(de, s, bye)...)
+		}
+		return ps, nil
+	}
+	dd, err := r.Decoded(tx.ID + German)
+	if err != nil {
+		return nil, err
+	}
+	gd, err := text.DecodeDoc(dd)
+	if err != nil {
+		return nil, err
+	}
+	fd, err := text.DecodeDoc(d)
+	if err != nil {
+		return nil, err
+	}
+	ps := CheckDoc(gd, fd)
+	ps = append(ps, checkBreaks(gd, fd)...)
+	for i := range min(len(gd.Topics), len(fd.Topics)) {
+		ps = append(ps, checkButtons(b.FontW, fmt.Sprintf("topic %d (%s)", i, FromCP1252([]byte(gd.Topics[i].Name))), FromCP1252([]byte(fd.Topics[i].Text)))...)
+	}
+	return ps, nil
+}
+
 // GramTypes lists the item types of armorgram and weapongram
 // (texts.cpp) that have a name: those whose entry of typenames (entry
 // 5000) holds the index of a string.
@@ -84,6 +321,88 @@ var GramTypes = []int{
 	0x1bb, 0x1bc, 0x1bd, 0x1be, 0x1bf, 0x1c6,
 	0x1c7, 0x1c8, 0x1c9, 0x1ca, 0x1cb, 0x1cc, 0x1cd, 0x1ce, 0x1cf, 0x1d0,
 	0x1d1, 0x1d2, 0x1d3, 0x1d4, 0x1d5, 0x1d6, 0x1d7, 0x1d8, 0x528,
+}
+
+// ReadGram parses gram.txt: each line holds an item type in hex, a tab,
+// the gender (m, f, or n) and the number (s or p) of its name, and may
+// end with a tab and a comment, the name. Blank lines and lines that
+// start with # are comments.
+func ReadGram(rd io.Reader, lang int) ([]GramPatch, error) {
+	var gs []GramPatch
+	seen := make(map[int]bool)
+	sc := bufio.NewScanner(rd)
+	for n := 1; sc.Scan(); n++ {
+		l := sc.Text()
+		if l == "" || l[0] == '#' {
+			continue
+		}
+		f := strings.Split(l, "\t")
+		if len(f) < 2 {
+			return nil, fmt.Errorf("line %d: want a type, a tab, and a gender and a number", n)
+		}
+		t, err := strconv.ParseUint(f[0], 16, 16)
+		if err != nil || !slices.Contains(GramTypes, int(t)) {
+			return nil, fmt.Errorf("line %d: type %q, want one of GramTypes in hex", n, f[0])
+		}
+		if seen[int(t)] {
+			return nil, fmt.Errorf("line %d: type %x given twice", n, t)
+		}
+		seen[int(t)] = true
+		gn := f[1]
+		if !isGram(gn) {
+			return nil, fmt.Errorf("line %d: %q, want a gender (m, f, n) and a number (s, p)", n, gn)
+		}
+		gs = append(gs, GramPatch{Type: int(t), Lang: lang, Gender: gn[0], Number: gn[1]})
+	}
+	return gs, sc.Err()
+}
+
+// frenchGram reads lang/fr/gram.txt into the French column.
+func frenchGram(b *Build, fr string, partial bool) ([]Problem, error) {
+	const file = "lang/fr/gram.txt"
+	s, ok, err := source(fr, "gram.txt")
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		if partial {
+			return nil, nil
+		}
+		return []Problem{problem(file, "missing")}, nil
+	}
+	gs, err := ReadGram(strings.NewReader(s), French)
+	if err != nil {
+		return []Problem{problem(file, "%v", err)}, nil
+	}
+	types, err := b.r.Types()
+	if err != nil {
+		return nil, err
+	}
+	var ps []Problem
+	byName := make(map[uint8]GramPatch) // the first row of each name
+	have := make(map[int]bool)
+	for _, g := range gs {
+		have[g.Type] = true
+		n := types.Name[g.Type]
+		f, ok := byName[n]
+		if !ok {
+			byName[n] = g
+			continue
+		}
+		if f.Gender != g.Gender || f.Number != g.Number {
+			ps = append(ps, problem(file, "type %x is %c%c and type %x %c%c, want the same for string %d, the name of both",
+				f.Type, f.Gender, f.Number, g.Type, g.Gender, g.Number, n))
+		}
+	}
+	if !partial {
+		for _, t := range GramTypes {
+			if !have[t] {
+				ps = append(ps, problem(file, "type %x missing", t))
+			}
+		}
+	}
+	b.Gram = append(b.Gram, gs...)
+	return ps, nil
 }
 
 // An Erratum is a line of errata.txt: the unit that it fixes, and the
@@ -299,8 +618,9 @@ func (b *Build) fix(l int, picks []Pick, es []Erratum) ([]Problem, error) {
 }
 
 // checkFixed runs on the source s of tx, a language's text as errata
-// fixes it, the checks against the release's German, English, and
-// Italian, and for strings the check of their lengths. The release's
+// fixes it, the checks that a translation passes against the release's
+// German, English, and Italian, with the genitive that the three write
+// allowed, and for strings the check of their lengths. The release's
 // Italian, where it holds a placeholder, reads the English.
 func (b *Build) checkFixed(tx Text, s string) ([]Problem, error) {
 	var rel [3]string
@@ -320,10 +640,10 @@ func (b *Build) checkFixed(tx Text, s string) ([]Problem, error) {
 	switch tx.Kind {
 	case Strings:
 		ds, es, is, fs := splitStrings(rel[0]), splitStrings(rel[1]), splitStrings(rel[2]), splitStrings(s)
-		ps := checkStrings(ds, es, is, fs)
+		ps := checkStrings(ds, es, is, fs, false)
 		return append(ps, CheckLengths(b.Composed, b.Room, ds, es, is, fs)...), nil
 	case Script:
-		return checkScript(rel[0], rel[1], rel[2], s), nil
+		return checkScript(rel[0], rel[1], rel[2], s, false), nil
 	}
 	dd, err := Entry(Doc, rel[0])
 	if err != nil {

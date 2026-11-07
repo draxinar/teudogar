@@ -95,6 +95,12 @@ char *itemname(unsigned long item);
 #ifdef FEATURES
 char *feattext(char *s);
 #endif
+// FEATURE: french: the rules of French, in src/feature/french.c
+#ifdef FEATURE_FRENCH
+EXTERN_C void frsentcase(char *s);
+EXTERN_C void frtitle(char *s);
+EXTERN_C void frposs(char *s, int size);
+#endif
 
 extern char *strs[];
 extern int lang;
@@ -391,6 +397,13 @@ capname(Unit *u)
 void
 sentcase(char *s)
 {
+	// FEATURE: french: French sentences, elided, which go on after a colon
+#ifdef FEATURE_FRENCH
+	if (lang == 2) {
+		frsentcase(s);
+		return;
+	}
+#endif
 	capstart = s;
 	capnext = 1;
 	for (; *s; s++) {
@@ -862,6 +875,13 @@ titlecase(char *s)
 {
 	if (lang == 0)
 		return;
+	// FEATURE: french: a French title, elided, with a capital on its first word alone
+#ifdef FEATURE_FRENCH
+	if (lang == 2) {
+		frtitle(s);
+		return;
+	}
+#endif
 	if (lang == 4)
 		titleit(s);
 	else
@@ -1632,6 +1652,11 @@ youritem(unsigned long item, short a, short b)
 {
 	wsprintf(yourbuf, texts + 0x9dea, strs[(a ? b ? 0x344 : 0x338 : b ? 0x33e : 0x332)
 		+ itemplural(item) * 3 + itemgender(item)], itemname(item));
+	// FEATURE: french: ton, not ta, before a feminine name that starts with a vowel
+#ifdef FEATURE_FRENCH
+	if (lang == 2)
+		frposs(yourbuf, sizeof yourbuf);
+#endif
 	return yourbuf;
 }
 

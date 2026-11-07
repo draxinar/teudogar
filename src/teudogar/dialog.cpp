@@ -425,6 +425,10 @@ extern short combatkind;
 extern int playmode;
 extern DWORD ordercmd;
 extern int lang;
+// FEATURE: french: the elision of French, in src/feature/french.c
+#ifdef FEATURE_FRENCH
+EXTERN_C void frelide(char *s);
+#endif
 extern short avengers;
 extern short victimname;
 extern short victimzone;
@@ -1795,6 +1799,12 @@ expand(char **dst, char **src)
 void
 expandstr(char *dst, char *src)
 {
+	// FEATURE: french: the start of the text, which French elides once it is expanded
+#ifdef FEATURE_FRENCH
+	char *start;
+
+	start = dst;
+#endif
 	while (*src != 0) {
 		if (*src == '%' || *src == '$')
 			expand(&dst, &src);
@@ -1802,6 +1812,11 @@ expandstr(char *dst, char *src)
 			*dst++ = *src++;
 	}
 	*dst = 0;
+	// FEATURE: french: elide the articles of the expanded text
+#ifdef FEATURE_FRENCH
+	if (lang == 2)
+		frelide(start);
+#endif
 }
 
 /* find the first { of the scene from p on */
@@ -1961,6 +1976,11 @@ expandnodes(void)
 			}
 			*nodetextp++ = *exps;
 			*nodetextp++ = 0;
+			// FEATURE: french: elide the articles of an expanded choice
+#ifdef FEATURE_FRENCH
+			if (lang == 2)
+				frelide(nodes[expi].text);
+#endif
 			settext(expi, nodes[expi].text);
 		}
 	}

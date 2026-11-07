@@ -1,0 +1,383 @@
+&&CUR0129 Manuel + règles du jeu
+
+
+[Commandes
+Commandes
+
+Vous dirigez votre personnage avec la souris :
+
+Bouton droit de la souris :
+-- Marcher en direction du pointeur (plus il est loin du personnage, plus vous allez vite){
+-- Fermer les fenêtres / quitter les menus{
+
+Bouton gauche de la souris :
+-- Cliquer : regarder{
+-- Maintenir enfoncé : examiner de près{
+-- Cliquer-glisser : ramasser et déplacer{
+-- Double-cliquer (ou cliquer-glisser) :
+parler / utiliser / revêtir / manger{
+-- Cliquer sur le personnage : ouvrir l'inventaire{
+-- En mode combat : attaquer / ramasser une arme{
+
+
+[Menus et fenêtres d'info
+Menus et fenêtres d'info
+
+Si vous amenez le pointeur de la souris au bord supérieur, droit, inférieur ou gauche de l'écran, vous faites apparaître respectivement la barre de menus, l'inventaire, la barre d'état ou le menu des actions. Ces affichages disparaissent dès que vous éloignez le pointeur du bord.
+
+La barre de menus (bord supérieur de l'écran) vous donne accès, entre autres, au menu principal (Charger, Sauvegarder, Options, Quitter) et au menu d'aide (Encyclopédie des Germains et des Romains, Manuel et règles du jeu, Solution complète, Commander la version complète).
+
+L'inventaire (bord droit de l'écran) montre votre équipement. Pour le garder ouvert, cliquez avec le bouton gauche de la souris avant d'éloigner le pointeur.
+
+La barre d'état est là pour vous donner un aperçu rapide. Pour en savoir plus, ouvrez l'écran Info du personnage depuis la barre de menus supérieure.
+
+
+[-
+[Fenêtres d'inventaire
+Fenêtres d'inventaire
+
+La fenêtre du personnage montre votre personnage (vous-même) avec ses vêtements et ses armes.
+
+Si vous êtes armé d'une lance, vous pouvez porter en plus une seconde arme à la ceinture, avec laquelle vous continuez automatiquement le combat une fois la lance jetée.
+
+Sous la fenêtre du personnage apparaît le sac, dans lequel vous transportez le reste de vos affaires (provisions, argent, marchandises de troc).
+
+Vous pouvez ouvrir ou fermer ces deux fenêtres d'inventaire de plusieurs façons :
+-- cliquer sur le personnage (au centre de l'écran){
+-- appuyer sur la barre d'espace{
+-- amener le pointeur au bord droit de l'écran et cliquer avec le bouton gauche{
+-- faire glisser un objet au bord droit de l'écran (les fenêtres d'inventaire s'ouvrent automatiquement){
+
+Ramasser / revêtir :
+Pour mettre un objet dans le sac ou enfiler un vêtement, faites glisser l'objet sur le sac ou sur la fenêtre du personnage en maintenant le bouton gauche de la souris enfoncé, puis déposez-le en relâchant le bouton.
+
+Ramasser :
+Vous n'êtes pas obligé d'ouvrir les fenêtres d'inventaire : pour ramasser un objet et l'emporter, il vous suffit de le faire glisser sur votre personnage (au centre de l'écran). Il est alors rangé dans le sac, ou revêtu automatiquement.
+
+Ramasser rapidement :
+Maintenez la touche Maj enfoncée, puis cliquez avec le bouton gauche sur l'objet que vous voulez ramasser (sur la carte, dans la fenêtre d'un contenant, dans la fenêtre de troc, etc.). L'objet est alors rangé dans le sac, ou revêtu automatiquement. (Cette commande équivaut à faire glisser l'objet sur votre personnage, au centre de l'écran.)
+
+S'équiper rapidement :
+Pour enfiler aussitôt un vêtement ou prendre une arme en main, il suffit de double-cliquer dessus, ou, en mode combat, de cliquer simplement dessus.
+
+Retirer :
+Pour ôter un vêtement ou poser une arme, faites glisser l'objet de la fenêtre du personnage vers le sac ou sur le sol. (Vous atteignez commodément l'arme passée à votre ceinture en cliquant, dans la fenêtre du personnage, sur la petite icône en bas à gauche, à côté du personnage.)
+
+Déposer rapidement :
+Maintenez la touche Maj enfoncée, puis cliquez avec le bouton gauche sur l'objet que vous voulez déposer (dans la fenêtre du personnage ou dans celle du sac). Si la fenêtre de troc ou celle d'un autre contenant est ouverte à ce moment, l'objet y est placé automatiquement. Sinon, il est posé sur le sol.
+
+
+[Équipement
+Équipement
+
+Les épées sont les meilleures armes, car elles sont maniables et précises. Les armes plus lourdes, comme les haches, causent certes plus de dégâts, mais il est difficile de toucher l'adversaire avec elles.
+
+Les lances sont idéales pour engager un combat, mais elles se prêtent mal au corps-à-corps. Si, en mode combat, vous voulez tirer votre arme de corps-à-corps, cliquez dessus dans la fenêtre du personnage (ou cliquez en bas à gauche, à côté du personnage). Votre lance est alors posée automatiquement sur le sol.
+
+Pour ne pas être sans défense au combat, vous feriez bien de porter un bouclier : comme il est bien plus facile d'arrêter un coup avec le bouclier que de l'esquiver, vous augmentez nettement vos chances de victoire.
+
+Vos ennemis vous frapperont le plus souvent à la tête et au torse. Protégez-vous donc d'un casque et d'une cuirasse. Pour savoir à quel point une pièce d'armure protège, cliquez dessus en maintenant longuement le bouton de la souris enfoncé (ou pointez-la avec la souris, puis appuyez sur la touche Ctrl).
+
+Une armure lourde protège certes beaucoup, mais elle entrave votre dextérité, et donc votre capacité à repousser les attaques. Autrement dit, chaque coup est amorti, mais vous êtes touché plus souvent.
+
+Pour comparer deux armes ou deux armures, équipez-vous de l'une d'elles. Ramassez la seconde et faites-la glisser au bord inférieur de l'écran : la barre d'état s'ouvre en bas et reste ouverte jusqu'à ce que vous ayez revêtu l'une des deux et posé l'autre. Vous apprenez ainsi rapidement, par exemple, à quel point une armure diminue votre dextérité.
+
+L'écran Info du personnage, accessible par la barre de menus supérieure, donne des informations détaillées.
+
+
+[-
+[Parler
+Parler
+
+Double-cliquez sur une personne (ou cliquez dessus et faites glisser) pour engager la conversation. Vous choisissez ensuite vos réponses d'un simple clic.
+
+Pour mettre fin à la conversation, cliquez sur « Adieu », ou appuyez simplement un bref instant sur le bouton droit de la souris.
+
+
+[Troc
+Troc
+
+Choisissez « Troc » dans le menu des actions (côté gauche de l'écran), puis désignez la personne avec qui vous voulez troquer.
+
+Trois fenêtres apparaissent alors à l'écran : à gauche, les objets que propose votre interlocuteur ; au milieu, une fenêtre vide ; et à droite, votre inventaire.
+
+Dans la fenêtre de gauche, cliquez sur les articles de votre interlocuteur que vous souhaitez acquérir. Faites ensuite glisser vos propres marchandises de votre inventaire vers la fenêtre du milieu. Si votre interlocuteur accepte votre offre, vous pouvez à votre tour cliquer sur « D'accord » - et l'échange est conclu.
+
+Les paroles de votre interlocuteur vous font comprendre combien de marchandises vous devez encore ajouter pour qu'il accepte. Dans votre propre fenêtre d'inventaire, un pouce levé ou baissé indique si vous estimez faire une bonne ou une mauvaise affaire.
+
+Aide : si vous voulez des indications précises, ouvrez le menu des options et, sous « Langue et commandes », réglez l'option « Troc : afficher la valeur totale » sur « oui » : la valeur totale des objets sélectionnés s'affiche alors en pièces d'argent sous chaque fenêtre de troc.
+
+Remarque : dans ce jeu, on ne fait que du troc, et les pièces de monnaie elles-mêmes ne servent que de marchandise d'échange. Les marchandises n'ont donc pas de prix objectif : leur prix dépend chaque fois de l'intérêt que votre interlocuteur porte à l'objet proposé, et de votre charisme. (Les prix affichés représentent toujours la valeur qu'aurait la marchandise pour vous-même - votre interlocuteur peut être d'un tout autre avis.)
+
+
+[-
+[Le mode combat
+Le mode combat
+
+Dès que des ennemis sont proches ou que votre interlocuteur veut se battre avec vous, le mode combat s'active automatiquement : vous prenez votre arme en main et êtes désormais prêt à attaquer ou à vous défendre. (Si vous voulez attaquer en traître quelqu'un qui ne se doute de rien, vous pouvez aussi activer vous-même le mode combat, avec la touche Entrée ou par la barre de menus supérieure.)
+
+Le pointeur de la souris prend la forme d'une épée, et une petite jauge de vitalité apparaît sur le côté droit de l'écran.
+
+En mode combat, vous ne pouvez ni déplacer d'objets ni parler à d'autres personnes : si vous cliquez sur une personne ou sur un objet, vous l'attaquez aussitôt.
+Seules font exception les armes et les boucliers à votre portée immédiate : un simple clic suffit pour les prendre en main.
+
+Le combat se déroule au tour par tour : à chaque tour, chacun peut faire un pas ou attaquer une fois un adversaire, et se défendre une fois contre l'attaque de son adversaire.
+
+Si vous êtes vous-même attaqué, vous vous défendez automatiquement, et vous pouvez ensuite attaquer à votre tour ou vous éloigner d'un pas.
+
+Au lieu de marcher ou d'attaquer, vous pouvez aussi accomplir une action du menu des actions (côté gauche de l'écran). Vous pourriez par exemple tenter de faire la paix avec votre adversaire, ou de le maudire.
+(Attention : certaines actions durent plusieurs tours. Pendant ce temps, toutes les autres personnes continuent d'agir et peuvent par exemple vous attaquer plusieurs fois de suite sans que vous puissiez vous défendre.)
+
+Ou bien vous cliquez sur l'arme d'un guerrier tombé, pour la ramasser et poursuivre le combat avec elle. (En mode combat, vous ne pouvez revêtir ni casque, ni cuirasse, ni braies, car vous tenez une arme en main et devez surveiller vos ennemis.)
+
+Vous pouvez aussi ne rien faire pendant un tour, par exemple pour attendre que vos adversaires approchent. Cliquez pour cela sur votre jauge de vitalité, dans le coin inférieur droit de l'écran, ou appuyez sur la touche + du pavé numérique.
+
+Comme le temps est figé en mode combat, vous pouvez réfléchir tranquillement à ce que vous voulez faire.
+
+Pour vous renseigner sur vos adversaires, amenez le pointeur sur eux : si un point d'exclamation blanc apparaît sur l'épée du pointeur, il ne s'agit pas d'un ennemi. Le sang sur le pointeur indique la gravité des blessures de la personne. En outre, de petits pictogrammes apparaissent sur le côté gauche de l'écran si la personne s'enfuit ou si ses blessures saignent (comme sur le côté droit pour vous-même).
+Pour des informations détaillées, amenez le pointeur sur une personne, puis appuyez sur la touche Ctrl et maintenez-la enfoncée.
+
+Une petite croix sur le pointeur signifie que vous ne pouvez pas attaquer la personne, car elle est hors de votre portée ; une petite lance signifie que vous devez jeter votre lance pour attaquer cette personne - ce que vous ne devriez faire que si vous portez encore une seconde arme à la ceinture.
+
+Si vous amenez le pointeur sur un bouclier ou sur une arme que vous pourriez ramasser et utiliser, il prend la forme d'une main.
+
+Un tour s'achève dès que vous avez choisi votre action : attaquer un ennemi, par exemple, reculer d'un pas ou ramasser une arme. Les autres personnes peuvent alors agir (attaquer une fois, ou faire un pas). Puis c'est de nouveau à vous, et ainsi de suite.
+
+
+[Attaque et défense
+Attaque et défense
+
+Attaquez donc l'un de vos ennemis ! L'efficacité de votre attaque dépend de votre expérience, de votre dextérité et de votre arme.
+
+Votre adversaire tentera de se défendre en bloquant le coup avec son bouclier, en l'esquivant ou en le parant. Plus votre compétence d'attaque surpasse sa défense, plus vous avez de chances de la percer et de le toucher.
+
+Si vous touchez, votre force et le type de votre arme déterminent les dégâts que vous infligez. L'armure de votre adversaire peut en absorber une partie.
+
+Une fois que vous avez attaqué, c'est au tour de toutes les autres personnes : tous vos ennemis vont maintenant vous attaquer !
+
+Évitez de vous laisser encercler, car vous ne pouvez vous défendre qu'une fois par tour : même si vous repoussez la première attaque, vous serez à la merci de la deuxième ou de la troisième.
+
+Vous vous défendez automatiquement : vous esquivez, vous bloquez le coup avec votre bouclier ou vous parez avec votre arme. L'une de ces actions est choisie et exécutée automatiquement - le plus souvent celle que vous maîtrisez le mieux. (Les deux dernières ne sont bien sûr possibles que si vous tenez un bouclier et une arme en main.)
+
+Que vous parveniez ou non à détourner l'attaque dépend de votre expérience et de votre dextérité - ainsi que de la compétence d'attaque de votre adversaire.
+
+Si votre défense échoue, vous êtes touché : selon que le coup atteint votre tête, votre torse ou (très rarement) vos jambes, le casque ou la cuirasse peut l'amortir, voire l'arrêter entièrement.
+
+Surveillez votre jauge de vitalité : moins il vous reste de vitalité, plus vous êtes faible - et si elle tombe à 0, vous mourez. Si vous saignez, vous perdez continuellement de la vitalité.
+
+Dès que vous êtes sérieusement blessé, vous n'avez guère de chances de gagner un combat : fuyez plutôt avant d'être encore plus mal en point, et ne revenez que lorsque vous serez de nouveau en état de combattre.
+
+Quand toutes les autres personnes ont agi, c'est de nouveau à vous d'attaquer (ou de fuir), et ainsi de suite.
+
+Quand vous avez vaincu tous vos ennemis (ou que vous leur avez échappé), le mode combat se désactive automatiquement. (Si vous ne le souhaitez pas, parce que vous voulez par exemple abattre aussi les ennemis en fuite, vous pouvez désactiver cet arrêt automatique dans le menu des options, sous « Langue et commandes ».) Si le mode combat ne se désactive pas de lui-même, vous pouvez l'arrêter vous-même avec la touche Entrée ou par la barre de menus supérieure.
+
+Vous pouvez alors ramasser les objets qui traînent (cliquer-glisser), ou prendre leurs armures et leurs boucliers à vos ennemis morts (double-clic sur le cadavre).
+
+Si vous saignez, vous devriez panser vos blessures (menu des actions, côté gauche de l'écran) pour ne pas perdre davantage de vitalité.
+
+Les blessures légères guérissent ensuite d'elles-mêmes (le sommeil accélère la guérison). En cas de blessure sérieuse (croix rouge dans la jauge de vitalité), vous devez vous faire soigner pendant quelque temps. Seul un guérisseur, ou quelqu'un qui s'y connaît en magie, peut guérir les blessures très graves.
+
+
+[-
+[Actions
+Actions
+
+Les actions les plus importantes, à savoir marcher, regarder, déplacer, utiliser, parler et attaquer, s'accomplissent d'un simple clic de souris.
+
+Toutes les autres actions, comme dormir, faire la paix, panser ses blessures ou troquer, sont accessibles par le menu des actions, sur le côté gauche de l'écran.
+
+Au début du jeu, beaucoup d'actions vous sont inconnues. Vous ne savez pas, par exemple, comment bénir une arme ou effrayer vos ennemis de façon convaincante, etc. Mais vous pourrez l'apprendre au fil du jeu. Dès que vous avez appris une nouvelle action, elle devient accessible dans le menu.
+
+La réussite d'une action dépend de vos compétences, de votre état du moment et de la cible de l'action. (Le message « Impossible. » signifie que l'action ne peut pas être accomplie avec la cible choisie. « Ça n'a pas marché. » signifie que l'action a échoué _cette fois_ seulement - la prochaine tentative pourrait bien réussir.)
+
+Si votre foi est forte, il vous sera par exemple facile d'implorer pour vous-même la protection des dieux - et de vous sentir ensuite vraiment protégé.
+
+Si vous êtes très fatigué, votre charisme en souffrira, et vous aurez du mal à maudire un adversaire de façon convaincante.
+
+Enfin, le succès de vos malédictions dépend aussi de l'expérience de la vie, du savoir et de la foi (voire de la superstition) de vos ennemis.
+
+Certaines actions durent plusieurs tours (ce qui compte en mode combat) : pendant que vous prononcez par exemple un sortilège de protection, vos ennemis peuvent vous attaquer deux fois de suite sans que vous puissiez vous défendre.
+
+Vous pouvez « jeter des sorts » autant de fois de suite que vous le voulez : prononcer une incantation n'est pas particulièrement fatigant. Seule l'approche de vos ennemis armés peut limiter votre magie.
+
+Il existe des potions magiques qui produisent le même effet que certaines actions (par exemple Antidote, Protection ou Furie). Si vous avez une telle potion dans votre inventaire (et que vous en connaissez l'effet), l'action correspondante est disponible dans le menu des actions - même si, en réalité, vous ne l'avez pas encore apprise. Si vous choisissez alors cette action, vous buvez automatiquement la potion. Vous pouvez ainsi y recourir même en mode combat. Autre avantage : les potions magiques agissent toujours, et souvent plus fortement que de simples formules magiques.
+
+
+[-
+[Compétences
+Compétences
+
+Chaque fois que deux personnes se mesurent l'une à l'autre, leurs compétences sont confrontées. Si vous attaquez quelqu'un à l'épée, par exemple, vos chances de le toucher dépendent de vos compétences d'attaque et de combat à l'épée - et de la capacité de défense de votre ennemi : bouclier, esquive ou parade, par exemple.
+
+Si vous voulez maudire votre adversaire, par exemple, vos chances de succès dépendent de votre charisme et de votre expérience de la vie - et de la foi, de l'expérience de la vie et du savoir de votre adversaire.
+
+Une compétence supérieure ne garantit pas la victoire dans l'affrontement - mais elle vous donne de très grandes chances de succès. Les blessures, la fatigue, la faim, une armure lourde et bien d'autres choses encore peuvent diminuer la valeur actuelle de vos compétences.
+
+Dans tout ce que vous faites, vous gagnez insensiblement en pratique et en expérience. Des combats d'entraînement fréquents, par exemple, amélioreront beaucoup vos compétences au combat. Au fil du jeu, vous pourrez porter nombre de vos compétences jusqu'à la maîtrise. Les niveaux de compétence vont de néant à inégalable, en passant par très faible, faible, médiocre, passable, dans la moyenne, honnête, solide, remarquable et hors du commun. (Bien sûr, une compétence que vous laissez en friche ne s'améliore pas.)
+
+Vos succès renforcent votre charisme et votre foi ; mais même vos actions infructueuses vous apportent de l'expérience de la vie. Seule votre foi s'affaiblit en cas d'échec.
+
+Les actes infâmes qui vous donnent à vous-même mauvaise conscience diminuent votre charisme et votre foi (par exemple si vous assassinez d'autres personnes, attaquez des femmes ou volez).
+
+L'écran Info du personnage (accessible par la barre de menus supérieure) donne le détail des valeurs actuelles de vos caractéristiques et de vos compétences. Avec « valeurs de base », vous pouvez afficher ce que seraient vos compétences si vous étiez en parfaite santé et sans le moindre fardeau. Les modifications sont signalées par (+) ou (-).
+
+
+[-
+[Pointeur de la souris
+Pointeur de la souris
+
+Le pointeur de la souris vous renseigne, surtout en mode combat, sur ce qui se trouve dessous et sur ce que vous pouvez faire :
+
+&&CUR0003 }}F Mode normal : main qui pointe{
+Elle vous permet de regarder les choses (clic gauche), de les ramasser et de les déplacer (cliquer-glisser) ou de les utiliser (double-clic).
+
+&&CUR0039 }}F Mode normal ou combat : flèche{
+Tant que vous maintenez le bouton droit enfoncé, vous marchez dans la direction de la flèche.
+Plus vous éloignez le pointeur de votre personnage, plus la flèche grandit et plus vous allez vite.
+
+&&CUR0004 }}F Mode normal ou combat : croix{
+Quelque chose ne marche pas comme vous le voulez, par exemple si vous essayez d'attaquer quelqu'un qui est hors de votre portée.
+
+&&CUR0002 }}F Mode combat : épée{
+Vous tenez votre arme en main et êtes prêt à attaquer (clic gauche).
+Vous ne pouvez alors ni regarder les choses, ni les déplacer, ni les utiliser. (Pour regarder, appuyez sur la touche Ctrl.)
+
+&&CUR0005 }}F Mode combat : épée ensanglantée{
+La personne sous votre pointeur est indemne, légèrement, moyennement ou gravement blessée - selon la quantité de sang sur le pointeur.
+
+&&CUR0008 }}F Mode combat : épée et point d'exclamation{
+La personne sous votre pointeur n'est pas un ennemi et ne s'attend pas non plus à ce que vous l'attaquiez.
+
+&&CUR0059 }}F Mode combat : épée et croix{
+La cible sous votre pointeur est hors d'atteinte, parce qu'elle est trop loin ou que quelque chose barre le chemin.
+
+&&CUR0058 }}F Mode combat : épée et lance{
+Si vous attaquez, vous jetez votre lance. Si vous portez une seconde arme à la ceinture, vous continuez automatiquement le combat avec elle.
+
+&&CUR0141 }}F Mode combat : épée de bois et smiley{
+La personne sous votre pointeur est votre partenaire d'entraînement : vous vous battez pour le plaisir et veillez tous deux à ne pas vous blesser.
+Le combat d'entraînement s'arrête de lui-même au bout de quelques tours. Si vous voulez arrêter avant, désactivez le mode combat, ou reculez de quelques pas.
+
+&&CUR0012 }}F Mode combat : main qui saisit{
+Sous votre pointeur se trouve une arme ou un bouclier que vous pouvez ramasser et utiliser (clic gauche).
+En revanche, vous ne pouvez revêtir ni casque, ni cuirasse, ni braies, car vous tenez une arme en main et devez surveiller vos ennemis.
+
+&&CUR0046 }}F Mode combat : sablier{
+Vous êtes occupé pendant un tour et ne pouvez donc ni marcher ni attaquer, par exemple parce que vous prononcez une incantation ou que vous apprêtez une autre arme.
+Ou bien vous pointez votre jauge de vitalité, en bas à droite de l'écran : cliquez pour attendre un tour, par exemple que vos adversaires se soient approchés.
+
+
+[Pictogrammes
+Pictogrammes
+
+Dans le coin inférieur droit de l'écran, de petits symboles indiquent votre état.
+
+En mode combat, le coin inférieur gauche affiche les mêmes indications pour la personne que désigne le pointeur.
+
+ &&ICO0013 Jauge de vitalité{
+ &&ICO0006 fatigué (dextérité réduite){
+ &&ICO0007 affamé (force réduite){
+ &&ICO0009 surchargé (dextérité réduite){
+ &&ICO0012 saigne (perd de la vitalité){
+ &&ICO0008 empoisonné (perd de la vitalité){
+ &&ICO0033 affaibli (force réduite){
+ &&ICO0035 béni (chance au combat){
+ &&ICO0036 maudit (malchance){
+ &&ICO0011 protégé (contre les attaques){
+ &&ICO0023 en fuite{
+ &&ICO0010 hypnotisé (obéit à un autre){
+ &&ICO0024 ivre (dextérité réduite)
+ &&ICO0034 furie (force accrue){
+
+Quand ces pictogrammes apparaissent, vous pouvez consulter la barre d'état pour obtenir une description précise de votre état (amenez le pointeur au bord inférieur de l'écran). Ou bien ouvrez l'écran Info du personnage par la barre de menus supérieure.
+
+
+[-
+[Raccourcis clavier
+Raccourcis clavier
+
+Les touches (et combinaisons de touches) suivantes donnent un accès rapide aux principales fonctions.
+
+Ctrl / Q : }}G Examiner de près{
+}}G ce qui est sous le pointeur{
+}}G (même en mode combat)
+
+Espace : }}G Ouvrir / fermer{
+}}G l'inventaire{
+
+Maj + bouton gauche :{
+}}G Ramasser / déposer{
+}}G rapidement un objet{
+
+Échap : }}G Menu principal{
+
+F1 : }}G Menu d'aide{
+
+F2 / S : }}G Sauvegarder la partie{
+
+F3 / L : }}G Charger une partie{
+
+Maj+F3 / Maj+L :
+}}G Charger la dernière partie{
+}}G sauvegardée ou chargée{
+
+F4 / O : }}G Menu des options{
+
+F5 / I : }}G Écran Info du personnage{
+
+F6 / Tab : }}G Afficher la carte d'ensemble{
+
+F7 / N : }}G Carnet de notes des quêtes{
+
+F8 / Retour arrière (<=) :
+}}G Voyager - carte et choix de la destination{
+
+F9 / Entrée :
+}}G Activer / désactiver le mode combat{
+
++ (pavé numérique) :
+}}G En mode combat :
+}}G passer un tour{
+
+Inser : }}G Menu des actions{
+0 : }}G Afficher l'affectation des touches 1..9{
+1..9 : }}G Exécuter une action{
+
+Pause : }}G Mettre le jeu en pause{
+
+Alt+M : }}G Activer / couper la musique{
+Alt+Z : }}G Activer / couper les bruitages{
+
+V : }}G Afficher le numéro de version{
+
+Alt+F4 / Alt+X :
+}}G Quitter le programme{
+
+Pendant la lecture des textes :
+ Flèches, Début, Fin, Pg préc, Pg suiv :
+}}G Tourner les pages{
+ 1..9 : }}G Ouvrir à la page 1..9{
+ Ctrl+flèche gauche ou flèche droite :
+}}G Sujet précédent ou suivant{
+
+
+[-
+[Utiliser votre photo
+Utiliser votre photo pour le visage du personnage
+
+Quittez le jeu (appuyez sur Alt+X), puis ouvrez le dossier « Teudogar and the Alliance with Rome - saved games » dans votre dossier « Mes documents ».
+
+Ouvrez-y le fichier « Photo.Bmp » avec un logiciel de dessin. Collez votre photo dans les cases vides de ce fichier, puis enregistrez-le. Relancez ensuite le jeu comme d'habitude.
+
+Si, plus tard, vous voulez retrouver le visage prévu par le jeu à la place de celui que vous avez créé, quittez le jeu et supprimez les fichiers Photo.Bmp et Photo.Dat du dossier « Teudogar... - saved games ».
+
+
+[Utiliser votre musique
+Utiliser vos propres fichiers MIDI pour la musique de l'introduction et du mode combat
+
+Quittez le jeu (appuyez sur Alt+X), puis ouvrez le dossier « Teudogar and the Alliance with Rome - saved games » dans votre dossier « Mes documents ».
+
+Copiez dans ce dossier les fichiers de musique MIDI que vous voulez utiliser. (Seuls les fichiers MIDI conviennent - pas les fichiers MP3.) Renommez ensuite en « intro.mid » le fichier que vous voulez entendre comme musique d'introduction, et en « combat.mid » celui que vous voulez entendre comme musique du mode combat. Puis relancez le jeu comme d'habitude.
+
+Si, plus tard, vous voulez retrouver les musiques prévues par le jeu à la place des vôtres, quittez le jeu et retirez les fichiers *.mid de votre dossier « Teudogar... - saved games ».
+

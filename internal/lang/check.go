@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+	"unicode"
 
 	"github.com/draxinar/teudogar/internal/text"
 )
@@ -33,6 +34,7 @@ var (
 	printfVerb  = regexp.MustCompile(`%[-+ #0]*\d*(?:\.\d+)?l?[sdcuxXo%]`)
 	dollarTerm  = regexp.MustCompile(`\$(?:obj.[eE]?|[A-Za-z_]+\d*)`)
 	percentTerm = regexp.MustCompile(`%[A-Za-z_][A-Za-z0-9_/*]*|%\d+`)
+	genitive    = regexp.MustCompile(`\$N\d+s`)
 )
 
 // The sets of marks that marks finds. A string keeps every mark of its
@@ -107,16 +109,64 @@ func terms(s string, percent bool) []string {
 	return t
 }
 
+// termsOnly reports whether s holds $ and % terms, and no word but
+// theirs.
+func termsOnly(s string) bool {
+	if !dollarTerm.MatchString(s) && !percentTerm.MatchString(s) {
+		return false
+	}
+	rest := percentTerm.ReplaceAllString(dollarTerm.ReplaceAllString(s, ""), "")
+	return !strings.ContainsFunc(rest, unicode.IsLetter)
+}
+
+// spacedTerms reports whether fr is de, a line of terms alone, with
+// the French space before its ? ! : and ;.
+func spacedTerms(de, fr string) bool {
+	if !termsOnly(de) {
+		return false
+	}
+	s := spaceMarks(de)
+	return fr == s || fr == Spaces(s)
+}
+
+// spaceMarks returns s with a space before each ? ! : and ; that follows
+// a byte other than a space.
+func spaceMarks(s string) string {
+	var b strings.Builder
+	for i := 0; i < len(s); i++ {
+		if strings.IndexByte("?!:;", s[i]) >= 0 && i > 0 && s[i-1] != ' ' {
+			b.WriteByte(' ')
+		}
+		b.WriteByte(s[i])
+	}
+	return b.String()
+}
+
 // shared reports whether the German, English, and Italian versions of a
-// unit read the same, as names, Latin, and placeholders do.
+// unit read the same, as names, Latin, and placeholders do. French then
+// reads the same too.
 func shared(de, en, it string) bool {
 	return de == en && de == it
 }
 
-// checkStrings checks the strings tr of a language that errata fixes
-// against the German de, with en and it for the units that the three
-// share.
-func checkStrings(de, en, it, tr []string) []Problem {
+// interfaceWords lists the strings that the German, English, and Italian
+// share and that French translates: words of the interface that the
+// three leave in English.
+var interfaceWords = map[int]bool{
+	936: true, // AutoSave: %s, the option of the autosave
+}
+
+// CheckStrings checks the French strings fr against the German de, with
+// en and it for the units that the three share.
+func CheckStrings(de, en, it, fr []string) []Problem {
+	return checkStrings(de, en, it, fr, true)
+}
+
+// checkStrings checks the strings tr of French, or of a language that
+// errata fixes, against the German de, with en and it for the units
+// that the three share. With french set, it rejects the genitive
+// $N10s, which German and English write and French must not.
+func checkStrings(de, en, it, tr []string, french bool) []Problem {
 	var ps []Problem
 	if len(tr) != len(de) {
 		return append(ps, problem("strings", "%d strings, want %d", len(tr), len(de)))
@@ -126,19 +176,19 @@ func checkStrings(de, en, it, tr []string) []Problem {
 	}
 	for i := range de {
 		unit := fmt.Sprintf("string %d", i)
-		keep := shared(de[i], en[i], it[i])
-		ps = append(ps, checkUnit(unit, de[i], tr[i], keep)...)
+		keep := shared(de[i], en[i], it[i]) && !interfaceWords[i]
+		ps = append(ps, checkUnit(unit, de[i], tr[i], keep, french)...)
 		ps = append(ps, checkString(unit, i, de[i], tr[i])...)
 	}
 	return ps
 }
 
-// checkUnit checks the marks and the terms of one unit, and with keep
-// set, that the text tr reads as the German, which the English and the
-// Italian share.
-func checkUnit(unit, de, tr string, keep bool) []Problem {
+// checkUnit checks the marks and the terms of one unit, with keep set,
+// that the translation tr reads as the German, which the English and
+// the Italian share, and with french set, that it holds no genitive.
+func checkUnit(unit, de, tr string, keep, french bool) []Problem {
 	var ps []Problem
-	if keep && tr != de {
+	if keep && tr != de && tr != Spaces(de) {
 		ps = append(ps, problem(unit, "reads %q, want %q as German, English, and Italian have it", tr, de))
 		return ps
 	}
@@ -147,6 +197,9 @@ func checkUnit(unit, de, tr string, keep bool) []Problem {
 	}
 	if t, w := terms(tr, false), terms(de, false); !slices.Equal(t, w) {
 		ps = append(ps, problem(unit, "terms %q, want %q", t, w))
+	}
+	if g := genitive.FindString(tr); french && g != "" {
+		ps = append(ps, problem(unit, "genitive %s, want de $N... as Italian writes it", g))
 	}
 	return ps
 }
@@ -269,11 +322,17 @@ func splitChoice(l string) (cond, label, tail string, ok bool) {
 	return cond, label, "{" + tail, ok
 }
 
-// checkScript checks the script tr of a language that errata fixes
-// against the German de, line for line, with en and it for the lines
-// that the three share. The lines are those of the source form, LF
-// ended.
-func checkScript(de, en, it, tr string) []Problem {
+// CheckScript checks the French script fr against the German de, line
+// for line, with en and it for the lines that the three share. The
+// lines are those of the source form, LF ended.
+func CheckScript(de, en, it, fr string) []Problem {
+	return checkScript(de, en, it, fr, true)
+}
+
+// checkScript checks the script tr of French, or of a language that
+// errata fixes, as CheckScript does, and with french set, rejects the
+// genitive $N10s, which French must not write.
+func checkScript(de, en, it, tr string, french bool) []Problem {
 	var ps []Problem
 	dl, el, il, fl := strings.Split(de, "\n"), strings.Split(en, "\n"), strings.Split(it, "\n"), strings.Split(tr, "\n")
 	if len(fl) != len(dl) || len(el) != len(dl) || len(il) != len(dl) {
@@ -301,22 +360,29 @@ func checkScript(de, en, it, tr string) []Problem {
 			}
 			_, elab, _, _ := splitChoice(el[i])
 			_, ilab, _, _ := splitChoice(il[i])
-			ps = append(ps, checkText(unit, dlab, elab, ilab, flab)...)
+			ps = append(ps, checkText(unit, dlab, elab, ilab, flab, french)...)
 		case textLine:
-			ps = append(ps, checkText(unit, d, el[i], il[i], f)...)
+			ps = append(ps, checkText(unit, d, el[i], il[i], f, french)...)
 		}
 	}
 	ps = append(ps, checkScenes(dl, fl)...)
 	return ps
 }
 
-// checkText checks a text line or a choice's label of the script.
-func checkText(unit, de, en, it, tr string) []Problem {
+// checkText checks a text line or a choice's label of the script, and
+// with french set, rejects the genitive.
+func checkText(unit, de, en, it, tr string, french bool) []Problem {
 	if strings.ContainsAny(tr, `"#{}\`) {
 		return []Problem{problem(unit, "%q holds a byte of the script's structure (\" # { } \\)", tr)}
 	}
-	if shared(de, en, it) && tr != de {
+	// A line that the three languages share stays the German's, which
+	// Spaces may give a no-break space in the French. A line of terms
+	// alone may also take the French space before its ? ! : and ;.
+	if shared(de, en, it) && tr != de && tr != Spaces(de) && !spacedTerms(de, tr) {
 		return []Problem{problem(unit, "reads %q, want %q as German, English, and Italian have it", tr, de)}
+	}
+	if g := genitive.FindString(tr); french && g != "" {
+		return []Problem{problem(unit, "genitive %s, want de $N... as Italian writes it", g)}
 	}
 	return nil
 }

@@ -72,12 +72,12 @@ WARN = $(WARN_$(CC)_$(ARCH)) $(WARN_$(CC))
 
 # MACROS gives the modules FEATURES and FEATURE_<NAME> for each feature,
 # and FEATURE_MODULES lists the modules of src/feature: feature.cpp, the
-# plumbing of the features. With an empty list the program keeps the
-# original's texts and gameplay, with faults and pace, which every
+# plumbing, and the features' own. With an empty list the program keeps
+# the original's texts and gameplay, with faults and pace, which every
 # program on SDL3 takes.
 ifneq ($(strip $(FEATURES)),)
 MACROS := -DFEATURES $(patsubst %,-DFEATURE_%,$(shell echo $(FEATURES) | tr '[:lower:]' '[:upper:]'))
-FEATURE_MODULES = feature
+FEATURE_MODULES = feature $(filter french,$(FEATURES))
 endif
 
 # The flags. The game's modules compile as C99 with the prelude of
@@ -130,6 +130,9 @@ $(O)/%.o: src/teudogar/%.cpp build/features | $(O)
 # feature.cpp reads the headers that cmd/lang writes.
 $(O)/%.o: src/feature/%.cpp build/features build/lang/.ok | $(O)
 	$(COMPILE) -x c $(GAME_CFLAGS) $(WARN) -MMD -MP -c -o $@ $<
+
+$(O)/%.o: src/feature/%.c build/features | $(O)
+	$(COMPILE) $(GAME_CFLAGS) $(WARN) -MMD -MP -c -o $@ $<
 
 $(O)/%.o: build/gen/%.c | $(O)
 	$(COMPILE) $(CFLAGS) -c -o $@ $<

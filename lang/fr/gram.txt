@@ -1,0 +1,54 @@
+# The gender (m, f) and the number (s, p) of the French name of each
+# item type of armorgram and weapongram (texts.cpp) that has a name:
+# the type in hex, a tab, the gender and the number, and a tab and the
+# name, string N of strings.txt. Types that share a name share a row's
+# letters.
+
+# armorgram
+1a0	fp	braies, string 35
+1a1	fp	braies de cuir, string 36
+1a2	fp	jambières, string 38
+1a3	fp	jambières, string 38
+1a7	ms	bouclier, string 46
+1a8	ms	bouclier, string 46
+1a9	ms	bouclier romain, string 47
+1ad	fs	tunique, string 39
+1ae	fs	tunique matelassée, string 40
+1af	fs	tunique de cuir, string 41
+1b0	fs	cotte de mailles, string 42
+1b1	fs	cuirasse d'écailles, string 43
+1b2	fs	cuirasse segmentée, string 44
+1b3	fs	tunique de cuir, string 41
+1b4	fs	cuirasse musclée, string 37
+1b5	fs	robe, string 45
+1b7	fp	chaussures, string 34
+1b8	fp	chaussures, string 34
+1b9	ms	manteau, string 145
+1ba	ms	casque de cuir, string 48
+1bb	ms	casque de fer, string 50
+1bc	ms	casque de fer, string 50
+1bd	ms	casque de bronze, string 49
+1be	ms	casque de bronze, string 49
+1bf	ms	casque de bronze, string 49
+1c6	ms	manteau de fourrure, string 179
+
+# weapongram
+1c7	fs	épée de bronze, string 64
+1c8	fs	masse d'armes, string 59
+1c9	fs	massue, string 60
+1ca	ms	poignard, string 61
+1cb	fs	épée courte, string 62
+1cc	fs	hache de guerre, string 63
+1cd	fs	épée de bronze, string 58
+1ce	fs	hache, string 65
+1cf	fs	épée, string 66
+1d0	fs	épée à deux mains, string 67
+1d1	fs	épée à deux mains, string 67
+1d2	ms	marteau de guerre, string 68
+1d3	fs	grande hache, string 69
+1d4	ms	bois de chauffage, string 161
+1d5	fs	lance, string 71
+1d6	fs	hache de jet, string 72
+1d7	ms	arc, string 73
+1d8	ms	arc long, string 74
+528	fs	pioche, string 70
