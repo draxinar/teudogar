@@ -706,11 +706,27 @@ regbin(HKEY key, char *name, char *buf, DWORD size)
 	DWORD type;
 
 	memset(buf, 0, size);
+	// FIXED: a value longer than buf, as a registry edited by hand can hold, fails with ERROR_MORE_DATA and its length in size, and the clear writes past buf by the difference. Clear buf at most.
+#ifdef FEATURE_FAULTS
+	{
+		DWORD room;
+
+		room = size;
+		if (RegQueryValueEx(key, name, NULL, &type, (BYTE *)buf, &size) != ERROR_SUCCESS || type != REG_BINARY) {
+			if (size > room)
+				size = room;
+			if (size != 0)
+				memset(buf, 0, size);
+			return 0;
+		}
+	}
+#else
 	if (RegQueryValueEx(key, name, NULL, &type, (BYTE *)buf, &size) != ERROR_SUCCESS || type != REG_BINARY) {
 		if (size != 0)
 			memset(buf, 0, size);
 		return 0;
 	}
+#endif
 	return 1;
 }
 

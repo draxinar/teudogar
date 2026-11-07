@@ -1836,7 +1836,12 @@ newitem(unsigned long item)
 			r = randn(25) + 2;
 		goto coin;
 	case 0xa:
+		// FIXED: the test lets nrealms reach 255, and the 121st container lands past realms[125]. Refuse it as the test meant.
+#ifdef FEATURE_FAULTS
+		if (nrealms + 5 >= 125)
+#else
 		if (nrealms == 0xff)
+#endif
 			return -1;
 		memset(&realms[nrealms + 5], 0, sizeof realms[0]);
 		realms[nrealms + 5].item = item & 0xfff;
@@ -2155,6 +2160,11 @@ listtorches(void)
 	ntorches = 0;
 	for (ltidx = 1, ltp = &mapitems[ltidx]; ltidx < nmapitems; ltidx++, ltp++)
 		if (islittorch(*ltp)) {
+			// FIXED: the 101st lit torch lands past torches[100]. List the first 100.
+#ifdef FEATURE_FAULTS
+			if (ntorches == 100)
+				break;
+#endif
 			torches[ntorches] = ltidx;
 			ntorches++;
 		}
@@ -2381,7 +2391,12 @@ setcelltype(int pos, unsigned long type)
 unsigned long
 additem(int pos, unsigned long item)
 {
+	// FIXED: an insertion moves the items up to mapitems[nmapitems + 1], past the 32767 items when nmapitems is 32766. Refuse the item there.
+#ifdef FEATURE_FAULTS
+	if (nmapitems >= 0x7ffe)
+#else
 	if (nmapitems >= 0x7fff)
+#endif
 		return 0;
 	if ((item & 0xfff) == 0)
 		return 0;
@@ -2470,6 +2485,11 @@ findclass2(int pos, unsigned char c1, unsigned char c2)
 short
 findtype(int pos, unsigned long type)
 {
+	// FIXED: tilesounds asks about the cells around the hero, off the map near its corners
+#ifdef FEATURE_FAULTS
+	if (pos < 0 || pos >= 22500)
+		return 0;
+#endif
 	if (!(map[pos] & 0x1000))
 		return 0;
 	type &= 0xfff;

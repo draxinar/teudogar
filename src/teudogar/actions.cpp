@@ -3002,7 +3002,12 @@ done:
 			goto ok;
 	fail:
 		if (randn(100) < 50)
+			// FIXED: strs[1194] prints the item's name, and the call passes none. Pass it, as repair's other messages do.
+#ifdef FEATURE_FAULTS
+			msgf(0x63, strs[1194], itemname(targetitem));
+#else
 			msgf(0x63, strs[1194]);
+#endif
 		else {
 			liftitem(0);
 			repval++;

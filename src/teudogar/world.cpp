@@ -886,7 +886,12 @@ done:
 	if (inview(pos % 150, pos / 150)) {
 		if (isportcullis(oditem))
 			queuesound(0x17);
+		// FIXED: the sound comes from the door's column times 10 over its row, and a door on the map's top row divides by 0. Take the sound of an even quotient there.
+#ifdef FEATURE_FAULTS
+		else if (pos / 150 != 0 && (pos % 150 * 10 / (pos / 150) & 1))
+#else
 		else if (pos % 150 * 10 / (pos / 150) & 1)
+#endif
 			queuesound(0);
 		else
 			queuesound(0x4a);
@@ -2724,6 +2729,29 @@ seeroofs(void)
 	memset(viewgrid, 0x40, sizeof viewgrid);
 }
 
+// FIXED: near the map's top and bottom the walks of the sight leave map, which the original's memory fills with its neighbors. They read zeros off the map here
+#ifdef FEATURE_FAULTS
+enum {
+	Sightrows = 10	/* the rows off the map that a walk can reach, and those from an end where it can */
+};
+
+static unsigned long sightbuf[22500 + 2 * Sightrows * 150];
+static unsigned long *sight = map;
+
+/* sightinit gives the walks the map, or near its ends a copy between rows of zeros. */
+void
+sightinit(void)
+{
+	sight = map;
+	if (playery >= Sightrows && playery < 150 - Sightrows)
+		return;
+	memcpy(sightbuf + Sightrows * 150, map, sizeof map);
+	sight = sightbuf + Sightrows * 150;
+}
+
+#define map sight
+#endif
+
 void
 spreadup(void)
 {
@@ -2831,6 +2859,10 @@ lookaround(void)
 {
 	int k;
 
+	// FIXED: sightinit gives the walks of the sight the zeros that they read off the map
+#ifdef FEATURE_FAULTS
+	sightinit();
+#endif
 	lookstale = 0;
 	memset(viewgrid, 0, sizeof viewgrid);
 	viewgrid[8][9] = 1;
@@ -2937,6 +2969,11 @@ lookaround(void)
 			lookx = lookcol - 9;
 			looky = lookrow - 8;
 			lookcell = (looky + playery) * 150 + (lookx + playerx);
+			// FIXED: a cell off the map goes, where the original reads mapflags and map past their ends
+#ifdef FEATURE_FAULTS
+			if (lookcell < 0 || lookcell >= 22500)
+				continue;
+#endif
 			if (mapflags[lookcell] & 0x100 && (*lookp == 1 || *lookp == 4 || *lookp == 0x40)) {
 				looktype = map[lookcell] & 0xfff;
 				if ((looktype == 0x289 || looktype == 0x296) && (gamehour <= 4 || gamehour >= 23)
@@ -2985,6 +3022,11 @@ lookaround(void)
 	calctorch();
 	scanblocks();
 }
+
+// FIXED: map names the map again past the walks of the sight
+#ifdef FEATURE_FAULTS
+#undef map
+#endif
 
 void
 waitmouseup(short wait)

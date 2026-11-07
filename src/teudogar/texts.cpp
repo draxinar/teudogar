@@ -159,7 +159,12 @@ extern char attackbuf[104];
 extern char nextbuf[32];
 extern char romanbuf[20];
 extern short fatepic;
+// FIXED: as at its definition below, itembuf's room for every language's names
+#ifdef FEATURE_FAULTS
+extern char itembuf[64];
+#else
 extern char itembuf[32];
+#endif
 extern char yourbuf[40];
 
 /* the text of the current language, English when it has none */
@@ -1724,5 +1729,10 @@ char attackbuf[104];
 char nextbuf[32];
 char romanbuf[20];
 short fatepic;
+// FIXED: Italian item names of 32 and 33 bytes, the cauldron of blood and the knife in the wood, write past itembuf's 32. Give itembuf room for every language's names and their states.
+#ifdef FEATURE_FAULTS
+char itembuf[64];
+#else
 char itembuf[32];
+#endif
 char yourbuf[40];

@@ -1,0 +1,28 @@
+#!/bin/sh
+# Usage: lock [-s] file command [arg ...]
+#
+# Lock runs a command holding flock's lock on file, exclusive, or shared
+# with -s, and says once on standard error when it has to wait for it.
+# flock holds the lock itself and the command inherits none of it, so a
+# server that the command starts and that outlives it, such as
+# wineserver, holds nothing.
+
+set -eu
+
+usage() {
+	echo 'usage: lock [-s] file command [arg ...]' >&2
+	exit 2
+}
+
+how=-x
+if [ "${1-}" = -s ]; then
+	how=-s
+	shift
+fi
+[ $# -ge 2 ] || usage
+file=$1
+shift
+if ! flock "$how" -n "$file" true; then
+	echo "lock: waiting for $file" >&2
+fi
+exec flock "$how" -o "$file" "$@"

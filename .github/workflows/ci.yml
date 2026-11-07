@@ -1,7 +1,7 @@
-# ci builds every target on the latest Fedora: the programs of 2008,
-# with Watcom C/C++. Each step runs whatever the others do, so that a
-# run reports every target, and make runs four jobs at a time, with the
-# output of each rule in one piece.
+# ci builds every target on the latest Fedora: the programs of 2008 and
+# the game with the features, with Watcom C/C++. Each step runs
+# whatever the others do, so that a run reports every target, and make
+# runs four jobs at a time, with the output of each rule in one piece.
 name: ci
 
 on:
@@ -58,6 +58,9 @@ jobs:
       - name: ddraw.dll
         if: ${{ !cancelled() }}
         run: make ddraw
+      - name: Game with the features
+        if: ${{ !cancelled() }}
+        run: make dist
       - name: Programs
         run: |
           cd build

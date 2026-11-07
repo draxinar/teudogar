@@ -936,7 +936,12 @@ extern char sheetstatus[256];
 extern char sheettired[40];
 extern char sheetimmob[64];
 extern char sheetname[24];
+// FIXED: as at its definition below, sheetweapon's room for any weapon's name
+#ifdef FEATURE_FAULTS
+extern char sheetweapon[96];
+#else
 extern char sheetweapon[32];
+#endif
 extern char sheetdmg[32];
 extern char sheetshield[32];
 extern char sheethelm[32];
@@ -946,7 +951,12 @@ extern char hasshield;
 extern char skillmarks[30][8];
 extern char sheetcause[40];
 extern char sheetepitaph[240];
+// FIXED: as at its definition below, sheetverdict's room for the verdicts with their marks
+#ifdef FEATURE_FAULTS
+extern char sheetverdict[240];
+#else
 extern char sheetverdict[120];
+#endif
 extern char sheetfate[120];
 extern short curatk;
 extern short curdodge;
@@ -1660,7 +1670,12 @@ sysreport(char *p)
 	catstr(p, namebuf);
 	unscrambleall();
 	if (udstr0[0]) {
+		// FIXED: the Italian format asks for five strings, where the others ask for the four that the call passes, so wsprintf reads a fifth past them. Pass an empty fifth, which the others leave.
+#ifdef FEATURE_FAULTS
+		wsprintf(namebuf, pick(texts + 0x7dbc, texts + 0x7de6, texts + 0x7e0f, texts + 0x7e10, texts + 0x7e11, texts + 0x7e3a), udstr0, udstr1, udstr2, udstr3, "");
+#else
 		wsprintf(namebuf, pick(texts + 0x7dbc, texts + 0x7de6, texts + 0x7e0f, texts + 0x7e10, texts + 0x7e11, texts + 0x7e3a), udstr0, udstr1, udstr2, udstr3);
+#endif
 		catstr(p, namebuf);
 		catstr(p, texts + 0xb2a8);
 	}
@@ -1731,7 +1746,12 @@ sysreport(char *p)
 	wsprintf(p, texts + 0xb2b2);
 	for (; *p; p++)
 		;
+	// FIXED: the format's second %lu, the game world's memory, has no argument. Pass gfxmem's, as memtable does.
+#ifdef FEATURE_FAULTS
+	wsprintf(p, texts + 0x9715, datamem() >> 10, gfxmem() >> 10);
+#else
 	wsprintf(p, texts + 0x9715, datamem() >> 10);
+#endif
 	for (; *p; p++)
 		;
 	wsprintf(p, texts + 0x9769, npcmem() >> 10);
@@ -4550,7 +4570,12 @@ aboutgame(void)
 	catstr(workbuf, namebuf);
 	unscrambleall();
 	if (udstr0[0]) {
+		// FIXED: the Italian format asks for five strings, where the others ask for the four that the call passes, so wsprintf reads a fifth past them. Pass an empty fifth, which the others leave.
+#ifdef FEATURE_FAULTS
+		wsprintf(namebuf, pick(texts + 0x7dbc, texts + 0x7de6, texts + 0x7e0f, texts + 0x7e10, texts + 0x7e11, texts + 0x7e3a), udstr0, udstr1, udstr2, udstr3, "");
+#else
 		wsprintf(namebuf, pick(texts + 0x7dbc, texts + 0x7de6, texts + 0x7e0f, texts + 0x7e10, texts + 0x7e11, texts + 0x7e3a), udstr0, udstr1, udstr2, udstr3);
+#endif
 		catstr(workbuf, namebuf);
 		catstr(workbuf, texts + 0xb2a8);
 	}
@@ -6359,7 +6384,12 @@ char sheetstatus[256];
 char sheettired[40];
 char sheetimmob[64];
 char sheetname[24];
+// FIXED: a name in hand of 29 bytes or more, as the Italian ones of 32 and 33, takes "con " past sheetweapon's 32 bytes. Give it room for any name that itembuf holds.
+#ifdef FEATURE_FAULTS
+char sheetweapon[96];
+#else
 char sheetweapon[32];
+#endif
 char sheetdmg[32];
 char sheetshield[32];
 char sheethelm[32];
@@ -6369,7 +6399,12 @@ char hasshield;
 char skillmarks[30][8];
 char sheetcause[40];
 char sheetepitaph[240];
+// FIXED: colwrap adds 5 bytes of marks to each line, and lengthens the Italian verdict strs[1364], 113 bytes, past sheetverdict's 120. Give it the room of sheetepitaph.
+#ifdef FEATURE_FAULTS
+char sheetverdict[240];
+#else
 char sheetverdict[120];
+#endif
 char sheetfate[120];
 short curatk;
 short curdodge;

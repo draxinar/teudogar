@@ -191,7 +191,12 @@ loadudta(void)
 	n = *w++;
 	ok = 1;
 	if (n > 0x113) {
+		// FIXED: the format prints two numbers, and the call passes one. Pass the length read and the blob's size.
+#ifdef FEATURE_FAULTS
+		logf("Udta len == %d, siz(udta) == %d", (int)n, (int)sizeof udtablob);
+#else
 		logf("Udta len == %d, siz(udta) == %d", sizeof udtablob);
+#endif
 		ok = 0;
 	} else if (n == 0) {
 		logf("Udta len == 0");

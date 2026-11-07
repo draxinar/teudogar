@@ -1071,7 +1071,13 @@ smfSeek(HSMF hsmf, TICKS tkPosition, LPMIDIHDR lpmh)
 			kf.rbProgram[bEvent & 0x0F] = EVENT_CH_B1(event);
 			break;
 		case MIDI_CONTROLCHANGE:
+			// FIXED: the keyframe holds 120 controllers a channel, and a channel mode message, controller 120 to 127, writes into the next channel's, and past kf on channel 16. Keep controllers 0 to 119 alone.
+#ifdef FEATURE_FAULTS
+			if (EVENT_CH_B1(event) < 120)
+				kf.rbControl[(((WORD)bEvent & 0x0F) * 120) + EVENT_CH_B1(event)] = EVENT_CH_B2(event);
+#else
 			kf.rbControl[(((WORD)bEvent & 0x0F) * 120) + EVENT_CH_B1(event)] = EVENT_CH_B2(event);
+#endif
 			break;
 		}
 	}

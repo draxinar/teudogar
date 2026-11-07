@@ -1453,7 +1453,12 @@ extern int maploaded;
 extern short censorship;
 extern char trvfailmsg;
 extern unsigned long mapsum;
+// FIXED: as at its definition in dialog.cpp, daytext's room for every language's days
+#ifdef FEATURE_FAULTS
+extern char daytext[64];
+#else
 extern char daytext[32];
+#endif
 extern int shown;
 extern short lastwarm;
 extern unsigned char cmbautooff;
@@ -3325,13 +3330,39 @@ duel(Unit *u, int right)
 	u->sympathy = 0;
 }
 
+// FIXED: as in placenear
+#ifdef FEATURE_FAULTS
+extern unsigned short itemflags[4096];
+extern unsigned char classes[4096];
+
+/* terrainbyte returns byte i of terrains as the original reads it: past its 4,096, those of itemflags, weights, and classes, which WLINK places after it */
+static unsigned char
+terrainbyte(int i)
+{
+	if (i < 4096)
+		return terrains[i];
+	i -= 4096;
+	if (i < 2 * 4096)
+		return itemflags[i / 2] >> (i % 2 * 8);
+	i -= 2 * 4096;
+	if (i < 2 * 4096)
+		return weights[i / 2] >> (i % 2 * 8);
+	return classes[i - 2 * 4096];
+}
+#endif
+
 void
 placenear(Unit *u, short x, short y, int r)
 {
 	if (badunit(u))
 		return;
 	pnprov = provat(x, y);
+	// FIXED: from cell 4,096 on, the original reads past terrains the bytes of itemflags, weights, and classes, which WLINK places after it. Read them there, through terrainbyte.
+#ifdef FEATURE_FAULTS
+	pnterr = terrainbyte(x + y * 150);
+#else
 	pnterr = terrains[x + y * 150];
+#endif
 	pnx0 = x - r;
 	if (pnx0 < 5)
 		pnx0 = 5;
@@ -3357,7 +3388,12 @@ placenear(Unit *u, short x, short y, int r)
 			continue;
 		if (provat(x, y) != pnprov)
 			continue;
+		// FIXED: the bytes past terrains through terrainbyte, as above
+#ifdef FEATURE_FAULTS
+		if (pnterr != 4 && terrainbyte(y * 150 + x) == 4)
+#else
 		if (pnterr != 4 && terrains[y * 150 + x] == 4)
+#endif
 			continue;
 		if (map[y * 150 + x - 1] & 0x4000)
 			break;
@@ -4720,6 +4756,11 @@ newunit(unsigned char kind, unsigned char type)
 			nuunit = &units[nui];
 			goto found;
 		}
+	// FIXED: with 150 units the next one lands past units[150]. Give it the last unit's place.
+#ifdef FEATURE_FAULTS
+	if (nunits == 150)
+		nunits--;
+#endif
 	nuunit = &units[nunits++];
 found:
 	memset(nuunit, 0, sizeof(Unit));
@@ -8176,7 +8217,12 @@ clearsight(int x0, int y0, int x1, int y1)
 		if (!(lineendx == x0 && lineendy == y0) && !(lineendx == x1 && lineendy == y1)
 		    && (mapflags[lineendy * 150 + lineendx] & 4)) {
 			blocker = unitat(lineendx, lineendy);
+			// FIXED: a cell flagged as taken may hold a dead unit alone, and unitat's 0xff then reads units[255], past the 150 units. Take such a cell as clear.
+#ifdef FEATURE_FAULTS
+			if (blocker != 0xff && !isfemale(&units[blocker]) && units[blocker].sympathy <= 0)
+#else
 			if (!isfemale(&units[blocker]) && units[blocker].sympathy <= 0)
+#endif
 				return 0;
 			blocker = 0xff;
 		}
@@ -8947,6 +8993,13 @@ rununits(short mode)
 			break;
 		case 0x19:
 		flee:
+			// FIXED: a unit that flees from no one, as a hero whom Frighten leaves without a foe once tickstatus sets modeb to 0xff, reads units[255], 46 KB past the 150 units. Take it for a foe out of reach.
+#ifdef FEATURE_FAULTS
+			if (curu->modeb == 0xff) {
+				makepeace(curu, units);
+				break;
+			}
+#endif
 			uta = abs(units[curu->modeb].x - curu->x);
 			utb = abs(units[curu->modeb].y - curu->y);
 			if (uta > 50 || utb > 50) {
@@ -9223,7 +9276,12 @@ rununits(short mode)
 		stuck:
 			uta = unitat(curu->sched[3][gamehour], curu->sched[4][gamehour]);
 			/* a defect: the original tests == 0xff where it means != 0xff */
+			// FIXED: with uta 0xff the test reaches units[255], past the 150 units, and it holds for no other unit. Leave it false, as for every other unit.
+#ifdef FEATURE_FAULTS
+			if (0)
+#else
 			if (uta == 0xff && uta && units[uta].incoming == 0xff)
+#endif
 				units[uta].incoming = curi;
 			roam(curu);
 			if (curu->cellmate != 0xff)
@@ -11905,7 +11963,12 @@ sackarea(int x0, int y0, int x1, int y1, int n, int mode)
 				if (sackclass != 0xff) {
 					for (;; sackobj++) {
 						sackitem = mapitems[sackobj];
+						// FIXED: the test for a container takes the class of the cell's first item for every item, so the id of a later item can reach past the 125 realms. Keep to the realms.
+#ifdef FEATURE_FAULTS
+						if ((mode == -1 || mode == -2) && sackclass == 10 && idof(sackitem) < 125) {
+#else
 						if ((mode == -1 || mode == -2) && sackclass == 10) {
+#endif
 							if (!(mode == -2 && buried(sackobj))) {
 								sackrealm = idof(mapitems[sackobj]);
 								if (sackrealm) {

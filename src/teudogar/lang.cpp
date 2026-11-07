@@ -43,7 +43,12 @@ wrap(char *s, int width)
 			while (*wrq++ != '\0');
 		} else
 			wrn++;
+		// FIXED: a text that starts with a line's end reads the byte before it
+#ifdef FEATURE_FAULTS
+		if (*wrp == 13 && wrp > s && wrp[-1] == ' ')
+#else
 		if (*wrp == 13 && wrp[-1] == ' ')
+#endif
 			while (wrp > s && wrp[-1] == ' ') {
 				wrp--;
 				wrq = wrp;
@@ -76,7 +81,12 @@ wrap(char *s, int width)
 				wrindent = 0;
 				continue;
 			}
+			// FIXED: a text whose second byte ends a line reads the byte before the text. Read inside the text alone.
+#ifdef FEATURE_FAULTS
+			if (wrp - s >= 2 && wrp[-2] == '[' && wrp[-1] == '-') {
+#else
 			if (wrp[-2] == '[' && wrp[-1] == '-') {
+#endif
 				wrp += 2;
 				continue;
 			}
@@ -93,7 +103,12 @@ wrap(char *s, int width)
 			case ']':
 				break;
 			case '.':
+				// FIXED: a line of two or three bytes that ends in a period at the text's start, as the German reply "Ja.", reads up to 2 bytes before the text. Read inside the text alone.
+#ifdef FEATURE_FAULTS
+				if ((wrp - s >= 3 && wrp[-3] == '.') || (wrp - s >= 4 && wrp[-4] == '.'))
+#else
 				if (wrp[-3] == '.' || wrp[-4] == '.')
+#endif
 					*wrp = ' ';
 				break;
 			case '{':

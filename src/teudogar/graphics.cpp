@@ -4064,6 +4064,34 @@ drawspq(void)
 	}
 }
 
+// FIXED: t3whole and t3fits test the marks of text3, which reads an automap label typed with && at its end past its 20 bytes, and fontw or surfm past their ends for a large code
+#ifdef FEATURE_FAULTS
+/* t3whole reports whether p holds n characters before its end */
+static int
+t3whole(const char *p, int n)
+{
+	int i;
+
+	for (i = 0; i < n; i++)
+		if (p[i] == 0)
+			return 0;
+	return 1;
+}
+
+/* t3fits reports whether code, of the mark at p, lies in the table of its kind: the font's 256 glyphs, or surfm's or surfo's pages of 13 by 16 tiles (tilepos) */
+static int
+t3fits(const char *p, int code)
+{
+	if (p[2] == 'C' && p[3] == 'H' && p[4] == 'R')
+		return code >= 0 && code < 256;
+	if (p[2] == 'M' && p[3] == 'A' && p[4] == 'P')
+		return code >= 0 && code < (int)(sizeof surfm / sizeof surfm[0]) * 13 * 16;
+	if (p[2] == 'O' && p[3] == 'B' && p[4] == 'J')
+		return code >= 0 && code < (int)(sizeof surfo / sizeof surfo[0]) * 13 * 16;
+	return 1;
+}
+#endif
+
 /* text3 draws s in the 24x20 font at x, y of surface n: x 0xffff centers it, x and y 0xffff measure it into text3width. &&CHRnnnn draws glyph nnnn, &&MAPnnnn to &&TSTnnnn a source of setsrc, }}nnnn and }}X move to a column. It stops at {, at a return, and at a space when spacestop is set */
 int
 text3(int n, int x, int y, char *s)
@@ -4108,9 +4136,23 @@ again:
 		}
 	}
 	while (*t3p) {
+		// FIXED: text3 reads 9 bytes from && and 4 or 8 from }}, past the end of a text that ends inside the mark. End the text there.
+#ifdef FEATURE_FAULTS
+		if (*t3p == '&' && t3p[1] == '&' && !t3whole(t3p, 9))
+			break;
+		if (*t3p == '}' && t3p[1] == '}' && !t3whole(t3p, isdec(t3p[2]) ? 8 : 4))
+			break;
+#endif
 		if (*t3p == '&' && t3p[1] == '&') {
 			t3p += 8;
 			t3code = (t3p[-3] - '0') * 1000 + (t3p[-2] - '0') * 100 + (t3p[-1] - '0') * 10 + (t3p[0] - '0');
+			// FIXED: the code of &&CHR, &&MAP, or &&OBJ indexes fontw or surfm unbounded. Draw nothing for a code outside the font or the tile pages.
+#ifdef FEATURE_FAULTS
+			if (!t3fits(t3p - 8, t3code)) {
+				t3w = 0;
+				goto next;
+			}
+#endif
 			if (t3p[-6] == 'C' && t3p[-5] == 'H' && t3p[-4] == 'R')
 				goto glyph;
 			if (t3p[-6] == 'M' && t3p[-5] == 'A' && t3p[-4] == 'P') {
@@ -4177,6 +4219,11 @@ src:
 		} else if (*t3p == '}' && t3p[1] == '}') {
 			cx = t3p[2] - 'A';
 			cx *= 32;
+			// FIXED: a column left of }}A puts the next letters left of the row. Take the screen's left.
+#ifdef FEATURE_FAULTS
+			if (cx < 0)
+				cx = 0;
+#endif
 			t3p += 3;
 		} else
 			goto plain;
@@ -5755,6 +5802,17 @@ faceshadow(int x, int y, char *src)
 {
 	char *p;
 
+	// FIXED: the scans of the portrait's last row read past its end, into the next portrait in WLINK's layout. Stop them at the end of the row.
+#ifdef FEATURE_FAULTS
+	fscol0 = 0;
+	while (fscol0 < 0x6c && src[0x3234 + fscol0] == 0)
+		fscol0++;
+	if (fscol0 >= 0x6c)
+		return;
+	fsw = 0;
+	for (p = src + fscol0; p < src + 0x6c && p[0x3234]; p++)
+		fsw++;
+#else
 	fscol0 = 0;
 	while (src[0x3234 + fscol0] == 0) {
 		if (fscol0 >= 0x6c)
@@ -5764,6 +5822,7 @@ faceshadow(int x, int y, char *src)
 	fsw = 0;
 	for (p = src + fscol0; p[0x3234]; p++)
 		fsw++;
+#endif
 	if (0x6c - fscol0 < fsw)
 		fsw = 0x6c - fscol0;
 	if (shadowleft)
@@ -5773,7 +5832,12 @@ faceshadow(int x, int y, char *src)
 	fsrow = 0x77;
 	fscol = fscol0 + fsw - 1;
 	if (src[fscol0 + fsw - 1 + fsrow * 0x6c]) {
+		// FIXED: at the right edge of the last row the test reads past the portrait, into the next one in WLINK's layout. Take that byte as 0, the background.
+#ifdef FEATURE_FAULTS
+		for (; src[fsrow * 0x6c + fscol] != '\0' && !(fscol + 1 + fsrow * 0x6c < 0x6c * 0x78 && src[fscol + 1 + fsrow * 0x6c] != '\0') && fsrow > 1; fsrow--)
+#else
 		for (; src[fsrow * 0x6c + fscol] != '\0' && !(src[fscol + 1 + fsrow * 0x6c] != '\0') && fsrow > 1; fsrow--)
+#endif
 			;
 		fsrow++;
 		if (shadowleft)

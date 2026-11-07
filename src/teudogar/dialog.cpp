@@ -1563,7 +1563,12 @@ expand(char **dst, char **src)
 				*src += 4;
 			}
 			if (lang) {
+				// FIXED: the case of an item's name that starts the speech, as at the answers of a priest's break spell in English, comes from 2 bytes before the speech. Take it for a sentence's start.
+#ifdef FEATURE_FAULTS
+				exc = *dst == speech || *dst == speech + 1 ? 0 : (*dst)[-2];
+#else
 				exc = (*dst)[-2];
+#endif
 				if (iswordc(exc) || exc == ',') {
 					exc = **dst;
 					**dst = lower(exc);
@@ -3940,9 +3945,15 @@ runnode(char **pa, char **pb, unsigned char n)
 			*pa = speech;
 			while (**pa)
 				(*pa)++;
+			// FIXED: the copy of a node's commands into nodecmds, which the game only writes, runs past its 180 bytes: 293 in the lesson of wizardry in script 3200, and at the fifth paid vision of script 2500 over the choice $N10 in nodetexts. Skip the line. *pb then stays at the array's start, and the test above skips the space too.
+#ifdef FEATURE_FAULTS
+			while (*rp++ != 13)
+				;
+#else
 			while ((*(*pb)++ = *rp++) != 13)
 				;
 			*--*pb = 0;
+#endif
 			rp++;
 			if (!ret)
 				continue;
@@ -4175,7 +4186,12 @@ runnode(char **pa, char **pb, unsigned char n)
 		}
 		do {
 			if (*rp == 10) {
+				// FIXED: a line that ends at the speech's start reads before the buffer, and at its first character writes there too
+#ifdef FEATURE_FAULTS
+				switch (*pa - speech >= 2 ? (*pa)[-2] : 0) {
+#else
 				switch ((*pa)[-2]) {
+#endif
 				case 13:
 				case '!':
 				case '\'':
@@ -4184,7 +4200,13 @@ runnode(char **pa, char **pb, unsigned char n)
 				case '?':
 					break;
 				default:
+					// FIXED: as above, write inside the speech.
+#ifdef FEATURE_FAULTS
+					if (*pa > speech)
+						(*pa)[-1] = ' ';
+#else
 					(*pa)[-1] = ' ';
+#endif
 					break;
 				}
 				rp++;
@@ -4601,4 +4623,9 @@ short talknext;
 short gobattle;
 DWORD staylen;
 short talkfight;
+// FIXED: the Italian "Una settimana e mezza più tardi " fills daytext's 32 bytes and its NUL writes past them. Give daytext room for every language's days.
+#ifdef FEATURE_FAULTS
+char daytext[64];
+#else
 char daytext[32];
+#endif

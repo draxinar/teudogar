@@ -1283,6 +1283,11 @@ sackout(unsigned long *item)
 	for (sonew = 5; sonew < nrealms + 5; sonew++)
 		if (realms[sonew].item == 0)
 			goto found;
+	// FIXED: with 120 containers the new realm lands past realms[125]. Leave the item in its realm.
+#ifdef FEATURE_FAULTS
+	if (nrealms + 5 >= 125)
+		return 0;
+#endif
 	sonew = nrealms + 5;
 	nrealms++;
 found:
@@ -2326,7 +2331,12 @@ keycmd(unsigned char key)
 			waitkeyup();
 			return 0;
 		}
+		// FIXED: the tenth letter writes the terminator past cheatbuf. Keep nine, room for every cheat word.
+#ifdef FEATURE_FAULTS
+		if (cheatlen < sizeof cheatbuf - 1) {
+#else
 		if (cheatlen < sizeof cheatbuf) {
+#endif
 			cheatbuf[cheatlen++] = cheatc;
 			cheatbuf[cheatlen] = 0;
 			for (cheatc = 0; cheatc < 10; cheatc++) {

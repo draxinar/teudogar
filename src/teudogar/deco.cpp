@@ -1425,7 +1425,12 @@ draw:
 	decooff = decobase - ((char *)tilecache);
 	if (decooff < 0 || (unsigned)decooff > (setpics - 1) * 0x900)
 		decooff = -1;
+	// FIXED: the pictures of a unit's grass mask and gear come from scrbuf past the screen, which holds 120 of them, and 61 units on grass with gear take the 121st past scrbuf. Draw a unit without its mask once they run out.
+#ifdef FEATURE_FAULTS
+	if (cellflag40(map[decocell]) && partof(decounit)->grassmask && decooff != -1 && ndecobufs < 120) {
+#else
 	if (cellflag40(map[decocell]) && partof(decounit)->grassmask && decooff != -1) {
+#endif
 		grassbody = ((char (*)[0x900])(scrbuf + 0x7d00))[ndecobufs];
 		ndecobufs++;
 		memcpy(grassbody, bodylay, 0x900);
@@ -1433,7 +1438,12 @@ draw:
 		bodylay = grassbody;
 	}
 	pickicons();
+	// FIXED: as for the grass mask, draw a unit without its gear once scrbuf's 120 pictures run out
+#ifdef FEATURE_FAULTS
+	if (nicons && hasgearbank == 1 && ndecobufs < 120) {
+#else
 	if (nicons && hasgearbank == 1) {
+#endif
 		gearbody = ((char (*)[0x900])(scrbuf + 0x7d00))[ndecobufs];
 		ndecobufs++;
 		memcpy(gearbody, bodylay, 0x900);

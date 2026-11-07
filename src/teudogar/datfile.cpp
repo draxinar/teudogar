@@ -159,7 +159,12 @@ extern char attackbuf[104];
 extern char nextbuf[32];
 extern char romanbuf[20];
 extern short fatepic;
+// FIXED: as at its definition in texts.cpp, itembuf's room for every language's names
+#ifdef FEATURE_FAULTS
+extern char itembuf[64];
+#else
 extern char itembuf[32];
+#endif
 extern char yourbuf[40];
 
 /* the offset of *id in [base, base + 6), *id set to base, else -1 */

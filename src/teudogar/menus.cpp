@@ -436,7 +436,12 @@ extern DWORD esctime;
 extern short savesel;
 extern short savekeysel;
 extern char *cornertext;
+// FIXED: the screenshot's name, teudogar_0000.bmp, takes 18 bytes, and the original writes its last two into listi. Give it room.
+#ifdef FEATURE_FAULTS
+extern char shotname[18];
+#else
 extern char shotname[16];
+#endif
 extern short listi;
 extern short listy;
 extern short listlines;
@@ -1486,7 +1491,12 @@ done:
 	}
 end:
 	if (m) {
+		// FIXED: a page without buttons reads the rectangle before the first, which C leaves undefined
+#ifdef FEATURE_FAULTS
+		if (m->n > 0 && m->rects[m->n - 1].y == 439 && m->rects[m->n - 1].w == 130 && (m->n <= 1 || m->rects[m->n - 2].y != 439))
+#else
 		if (m->rects[m->n - 1].y == 439 && m->rects[m->n - 1].w == 130 && (m->n <= 1 || m->rects[m->n - 2].y != 439))
+#endif
 			cornerrect(m, m->n - 1);
 		for (pagen = 0; pagen < m->n; pagen++)
 			if (*btntext[pagen] != 0) {
@@ -4165,7 +4175,17 @@ asknumber(short x, short y, unsigned short ndigits, int min, int max, int init)
 			if (numkey == 1)
 				return -1;
 			if (numkey == 0x1c && numlen) {
+				// FIXED: number reads the byte before the first digit, which lies outside numdigits. Hand it a copy behind a byte of its own.
+#ifdef FEATURE_FAULTS
+				{
+					static char numbuf[sizeof numdigits + 1];
+
+					memcpy(numbuf + 1, numdigits, sizeof numdigits);
+					numres = evalvar(numbuf + 1);
+				}
+#else
 				numres = evalvar(numdigits);
+#endif
 				lastscan = 0;
 				waitrelease();
 				if (numres == -1 || numres < min || numres > max)
@@ -4429,7 +4449,12 @@ maketitle(void)
 	loadscr(0x2086, (unsigned char *)scrbuf, 0, packbuf, 0x96640);
 	loadscr(0x2065, (unsigned char *)picbuf, 0, packbuf, 0x96640);
 	titlecolors((unsigned char *)picbuf, 0);
+	// FIXED: the loop reads 2,524 bytes past picbuf, into loadbuf in WLINK's layout, for scrbuf's tail past the screen. Stop at the end of picbuf.
+#ifdef FEATURE_FAULTS
+	for (titlei = 0; titlei < 308200; titlei++)
+#else
 	for (titlei = 0; titlei < 0x4b9c4; titlei++)
+#endif
 		if (picbuf[titlei])
 			scrbuf[titlei] = picbuf[titlei];
 }
@@ -4543,7 +4568,12 @@ DWORD esctime;
 short savesel;
 short savekeysel;
 char *cornertext;
+// FIXED: room for the screenshot's name, as at its declaration
+#ifdef FEATURE_FAULTS
+char shotname[18];
+#else
 char shotname[16];
+#endif
 short listi;
 short listy;
 short listlines;
