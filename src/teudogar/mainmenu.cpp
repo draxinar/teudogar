@@ -797,6 +797,11 @@ extern int wornpic;
 extern short wornx;
 extern short worny;
 extern char *months[14];
+// FEATURE: features: the languages and texts of the build, in src/feature/feature.cpp
+#ifdef FEATURES
+int featlang(int c);
+char *feattext(char *s);
+#endif
 extern char romanbuf[];
 extern short pagex;
 extern short pagemaxh;
@@ -2144,7 +2149,12 @@ nextlang(void)
 {
 	lang++;
 	while (lang < 6) {
+		// FEATURE: features: the languages of the build
+#ifdef FEATURES
+		if (featlang(lang))
+#else
 		if (lang == 1 || lang == 0 || lang == 4)
+#endif
 			break;
 		lang++;
 	}
@@ -2168,7 +2178,12 @@ options(int ingame)
 		if (esckey == 0xff)
 			break;
 		optn = 0;
+		// FEATURE: features: the build's own format of the menu's title
+#ifdef FEATURES
+		wsprintf(((char (*)[100])scrbuf)[optn], feattext(texts + 0xb057), texts + 0xb49f, strs[547], strs[552]);
+#else
 		wsprintf(((char (*)[100])scrbuf)[optn], texts + 0xb057, texts + 0xb49f, strs[547], strs[552]);
+#endif
 		upperstr(((char (*)[100])scrbuf)[optn]);
 		optitems[optn] = ((char (*)[100])scrbuf)[optn];
 		optn++;
@@ -2202,7 +2217,12 @@ options(int ingame)
 			oldauto = autolevel;
 			for (;;) {
 				optn = 0;
+				// FEATURE: features: the build's own format of the menu's title
+#ifdef FEATURES
+				wsprintf(((char (*)[100])scrbuf)[optn], feattext(texts + 0xb062), texts + 0xb49f, texts + 0xb3ff, strs[552], strs[922]);
+#else
 				wsprintf(((char (*)[100])scrbuf)[optn], texts + 0xb062, texts + 0xb49f, texts + 0xb3ff, strs[552], strs[922]);
+#endif
 				upperstr(((char (*)[100])scrbuf)[optn]);
 				optitems[optn] = ((char (*)[100])scrbuf)[optn];
 				optn++;
@@ -2320,7 +2340,12 @@ options(int ingame)
 					optsel = t;
 				}
 				optn = 0;
+				// FEATURE: features: the build's own format of the menu's title
+#ifdef FEATURES
+				wsprintf(((char (*)[100])scrbuf)[optn], feattext(texts + 0xb062), texts + 0xb49f, texts + 0xb3ff, strs[552], strs[932]);
+#else
 				wsprintf(((char (*)[100])scrbuf)[optn], texts + 0xb062, texts + 0xb49f, texts + 0xb3ff, strs[552], strs[932]);
+#endif
 				upperstr(((char (*)[100])scrbuf)[optn]);
 				optitems[optn] = ((char (*)[100])scrbuf)[optn];
 				optn++;
@@ -2431,7 +2456,12 @@ options(int ingame)
 			for (;;) {
 				optsel = menu1.keysel;
 				optn = 0;
+				// FEATURE: features: the build's own format of the menu's title
+#ifdef FEATURES
+				wsprintf(((char (*)[100])scrbuf)[optn], feattext(texts + 0xb062), texts + 0xb49f, texts + 0xb3ff, strs[552], strs[952]);
+#else
 				wsprintf(((char (*)[100])scrbuf)[optn], texts + 0xb062, texts + 0xb49f, texts + 0xb3ff, strs[552], strs[952]);
+#endif
 				upperstr(((char (*)[100])scrbuf)[optn]);
 				optitems[optn] = ((char (*)[100])scrbuf)[optn];
 				optn++;
@@ -2525,7 +2555,12 @@ options(int ingame)
 						drawscreen();
 						noflip = 0;
 						optn = 0;
+						// FEATURE: features: the build's own format of the menu's title
+#ifdef FEATURES
+						wsprintf(((char (*)[100])scrbuf)[optn], feattext(texts + 0xb062), texts + 0xb49f, texts + 0xb3ff, texts + 0xb3ff, strs[983]);
+#else
 						wsprintf(((char (*)[100])scrbuf)[optn], texts + 0xb062, texts + 0xb49f, texts + 0xb3ff, texts + 0xb3ff, strs[983]);
+#endif
 						upperstr(((char (*)[100])scrbuf)[optn]);
 						optitems[optn] = ((char (*)[100])scrbuf)[optn];
 						optn++;
@@ -2627,7 +2662,12 @@ options(int ingame)
 			optchanged = 0;
 			for (;;) {
 				optn = 0;
+				// FEATURE: features: the build's own format of the menu's title
+#ifdef FEATURES
+				wsprintf(((char (*)[100])scrbuf)[optn], feattext(texts + 0xb062), texts + 0xb49f, texts + 0xb3ff, strs[552], strs[989]);
+#else
 				wsprintf(((char (*)[100])scrbuf)[optn], texts + 0xb062, texts + 0xb49f, texts + 0xb3ff, strs[552], strs[989]);
+#endif
 				upperstr(((char (*)[100])scrbuf)[optn]);
 				optitems[optn] = ((char (*)[100])scrbuf)[optn];
 				optn++;
@@ -4678,7 +4718,12 @@ slotmenu(char load)
 	menu0.keys2[2] = 0x1f;
 	menu0.keys2[3] = 0x26;
 	pgtoback();
+	// FEATURE: features: the build's own format of the menu's title
+#ifdef FEATURES
+	wsprintf(slottext, feattext(texts + 0xb087), load ? (texts + 0xb4b5) : (texts + 0xb4aa), load ? strs[263] : strs[264]);
+#else
 	wsprintf(slottext, texts + 0xb087, load ? (texts + 0xb4b5) : (texts + 0xb4aa), load ? strs[263] : strs[264]);
+#endif
 	upperstr(slottext + 8);
 	text3grey2(0, 0xffff, 0x22, slottext);
 	for (sloti = 1; load && sloti <= 10 || sloti <= 9; sloti++) {
@@ -4711,7 +4756,12 @@ slotmenu(char load)
 			}
 			if (sloti - 1 == 9)
 				wsprintf(slottext, strs[1149]);
+			// FEATURE: features: the build's own format and month of a saved game
+#ifdef FEATURES
+			wsprintf(workbuf, feattext(lang == 0 ? (texts + 0xb16e) : (texts + 0xb14c)), sloti + 0x40, slottext, slotday, feattext(months[slotmon]), slotyear, slothour, slotmin, slotsec);
+#else
 			wsprintf(workbuf, lang == 0 ? (texts + 0xb16e) : (texts + 0xb14c), sloti + 0x40, slottext, slotday, months[slotmon], slotyear, slothour, slotmin, slotsec);
+#endif
 			menu0.enabled[sloti - 1] = load ? 1 : 2;
 			if (load == 0 && sloti - 1 == 9)
 				menu0.enabled[sloti - 1] = 0;
@@ -6472,7 +6522,12 @@ docmenu(void)
 			goto out;
 		entermenu();
 		docsel = 0;
+		// FEATURE: features: the build's own format of the menu's title
+#ifdef FEATURES
+		wsprintf((char *)((char (*)[100])scrbuf), feattext(texts + 0xb087), texts + 0xb4c0, strs[258]);
+#else
 		wsprintf((char *)((char (*)[100])scrbuf), texts + 0xb087, texts + 0xb4c0, strs[258]);
+#endif
 		docitems[docsel++] = (char *)((char (*)[100])scrbuf);
 		docitems[docsel++] = strs[917];
 		docitems[docsel++] = strs[913];

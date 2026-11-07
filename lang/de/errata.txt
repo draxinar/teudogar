@@ -1,0 +1,212 @@
+# allocieren is a misspelling of allozieren
+texts 77e8	allocieren	allozieren
+# lizensiert is a misspelling of lizenziert
+texts 5424	lizensiert	lizenziert
+# Lizensiert is a misspelling of Lizenziert
+texts 7dbc	Lizensiert	Lizenziert
+# Schloss is the spelling of 1996, where the German follows the rules of 1901 (encyclopedia2 23)
+strings 275	kein Schloss	kein Schloß
+# Schloss is the spelling of 1996, where the German follows the rules of 1901 (encyclopedia2 23)
+strings 422	Welches Schloss	Welches Schloß
+# Schloss is the spelling of 1996: walkthrough 23 names the action Schloß öffnen
+strings 1074	Schloss öffnen	Schloß öffnen
+# ihnen addresses the player, who takes the formal Ihnen
+strings 1142	Vor ihnen liegt	Vor Ihnen liegt
+# Amboss is the spelling of 1996: the item is Amboß (string 77)
+strings 1185	einem Amboss	einem Amboß
+# Amboss is the spelling of 1996: the item is Amboß (string 77)
+strings 1192	Feuer, Amboss	Feuer, Amboß
+# schloss is the spelling of 1996, where the German follows the rules of 1901 (encyclopedia2 23)
+strings 1519	schloss sich	schloß sich
+# zuende is a misspelling of zu Ende
+strings 1554	Führ zuende	Führ zu Ende
+# sich anschließen takes the dative: $Stamm6 prints Sigambrer, $Stamm6d Sigambrern
+strings 1700	sich den $Stamm6 anschließen	sich den $Stamm6d anschließen
+# Wintersonnenwende is feminine: vor der
+strings 1735	vor den Wintersonnenwende	vor der Wintersonnenwende
+# bei takes the dative: seinem geplanten Raubzug
+strings 1736	bei seinen geplanten Raubzug	bei seinem geplanten Raubzug
+# Aphoren is a misspelling of Amphoren
+strings 1775	12 Aphoren	12 Amphoren
+# würde sich is written twice
+script 1085	niemand würde sich in Deine	niemand in Deine
+# the subject Du is missing
+script 1070	dann müßtest Dich jetzt	dann müßtest Du Dich jetzt
+# zu takes the dative: $Stamm4 prints Usipeter, $Stamm4d Usipetern, as scene 3110 has it
+script 3111	zu den $Stamm4.	zu den $Stamm4d.
+# mit takes the dative: the scene's other copy of the line has $Stamm6d and $Stamm5d (Sigambrern, Brukterern)
+script 1073	mit den $Stamm6, den $Stamm3, $Stamm2 und den $Stamm5,	mit den $Stamm6d, den $Stamm3d, $Stamm2d und den $Stamm5d,
+# mit takes the dative, as the scene's first copy of the line has it
+script 1051	aus. Vereint mit den $Stamm6, den $Stamm3, $Stamm2 und den $Stamm5 können	aus. Vereint mit den $Stamm6d, den $Stamm3d, $Stamm2d und den $Stamm5d können
+# mit takes the dative, as the scene's first copy of the line has it
+script 1051	Dank! Vereint mit den $Stamm6, den $Stamm3, $Stamm2 und den $Stamm5 können	Dank! Vereint mit den $Stamm6d, den $Stamm3d, $Stamm2d und den $Stamm5d können
+# mit takes the dative: Brukterern, as the label of scene 2700 has it
+script 1051	##Verteidigungsbündnis mit $Stamm5{	##Verteidigungsbündnis mit $Stamm5d{
+# Mühe is feminine: unsere Mühe
+script 3000	für unser Mühe	für unsere Mühe
+# Prophezeihungen is a misspelling of Prophezeiungen
+script 1051	ihre Prophezeihungen nicht	ihre Prophezeiungen nicht
+# prophezeiht is a misspelling of prophezeit
+script 2015	##$N27 prophezeiht Sieg	##$N27 prophezeit Sieg
+# Prophezeihungen is a misspelling of Prophezeiungen
+script 2015	Bei solchen Prophezeihungen	Bei solchen Prophezeiungen
+# Prophezeihung is a misspelling of Prophezeiung
+script 1050	diese Prophezeihung kennt	diese Prophezeiung kennt
+# Prophezeihung is a misspelling of Prophezeiung
+script 1050	ihre Prophezeihung über	ihre Prophezeiung über
+# Prophezeihung is a misspelling of Prophezeiung
+script 1050	$N27s Prophezeihung keinen	$N27s Prophezeiung keinen
+# Schloss is the spelling of 1996, where the German follows the rules of 1901 (encyclopedia2 23)
+script 2022	das Schloss so	das Schloß so
+# Schloss is the spelling of 1996: walkthrough 23 names the action Schloß öffnen
+script 2022	##Schloss öffnen{	##Schloß öffnen{
+# Gewissheit is the spelling of 1996, where the German writes gewiß
+script 2700	mit Gewissheit	mit Gewißheit
+# Lass is the spelling of 1996, where the German writes laß
+script 3104	Lass uns	Laß uns
+# esst is the spelling of 1996, where the German writes eßt
+script 1098	und esst	und eßt
+# zuende is a misspelling of zu Ende
+script 3105	geht's zuende	geht's zu Ende
+# zuende is a misspelling of zu Ende
+script 2027	bald zuende	bald zu Ende
+# verbesseren is a misspelling of verbessern
+walkthrough 2	verbesseren	verbessern
+# the preposition im is missing
+walkthrough 7	Ihr Nachbarstamm Süden	Ihr Nachbarstamm im Süden
+# Volkversammlung is a misspelling of Volksversammlung
+walkthrough 8	Volkversammlung	Volksversammlung
+# Spitzhacke is feminine: eine
+walkthrough 13	Sie ein Spitzhacke	Sie eine Spitzhacke
+# the second sie names the things, not the player, and Taschware is a misspelling of Tauschware
+walkthrough 14	nutzen Sie Sie nur als Taschware	nutzen Sie sie nur als Tauschware
+# wichstigsten is a misspelling of wichtigsten
+walkthrough 16	wichstigsten	wichtigsten
+# the apposition to den Stämmen is dative: $Stamm6 prints Sigambrer, $Stamm6d Sigambrern
+walkthrough 16	den $Stamm6 im Westen	den $Stamm6d im Westen
+# einschalten takes the accusative: den Kampfmodus
+walkthrough 18	schalten Sie dem Kampfmodus ein	schalten Sie den Kampfmodus ein
+# ihrer means the player's weapon, which takes the formal Ihrer
+walkthrough 18	mit ihrer Waffe	mit Ihrer Waffe
+# ihnen addresses the player, who takes the formal Ihnen
+walkthrough 19	werden ihnen alle	werden Ihnen alle
+# um takes zu before the infinitive
+walkthrough 20	um $N30 alles berichten	um $N30 alles zu berichten
+# Gefhöft is a misspelling of Gehöft
+walkthrough 21	Gefhöft	Gehöft
+# ihnen addresses the player, who takes the formal Ihnen
+walkthrough 21	verspricht, ihnen	verspricht, Ihnen
+# ihnen addresses the player, who takes the formal Ihnen
+walkthrough 21	wird ihnen vorschlagen	wird Ihnen vorschlagen
+# $Stamm without a number prints unbekannter Stamm: Adalmar becomes king of the $Stamm2, as topic 23 says
+walkthrough 22	König der $Stamm zu werden	König der $Stamm2 zu werden
+# $Ort17 is the Roman troop with the hostages: Adalmar waits in $Ort16, his farm, as quest string 1810 says
+walkthrough 23	Reisen Sie nach $Ort17	Reisen Sie nach $Ort16
+# the infinitive lacks its zu
+walkthrough 24	so lange durchgehalten haben	so lange durchgehalten zu haben
+# $N1 is Teudogar: the sword of Brandolf demoralizes $N10, Ortwin, whom the player fights, as scene 1050 says
+walkthrough 31	$N1 wird durch den Anblick	$N10 wird durch den Anblick
+# um takes zu before the infinitive: auszuziehen
+manual 3	Um ein Kleidungsstück ausziehen	Um ein Kleidungsstück auszuziehen
+# ihren means the player's spear, which takes the formal Ihren
+manual 9	daß Sie ihren Speer werfen	daß Sie Ihren Speer werfen
+# zuende is a misspelling of zu Ende
+manual 9	ist zuende	ist zu Ende
+# ihren means the player's spear, which takes the formal Ihren
+manual 16	schleudern Sie ihren Speer	schleudern Sie Ihren Speer
+# seßhafe is a misspelling of seßhafte
+encyclopedia1 2	eine seßhafe Lebensweise	eine seßhafte Lebensweise
+# Gürtel is masculine: trug man einen Gürtel
+encyclopedia1 15	trug man ein Gürtel	trug man einen Gürtel
+# the superlative of verbreitet is verbreitetste
+encyclopedia1 16	Die verbreiteteste Waffe	Die verbreitetste Waffe
+# zugespitze is a misspelling of zugespitzte
+encyclopedia1 16	zugespitze	zugespitzte
+# aufbewaren is a misspelling of aufbewahren
+encyclopedia1 19	aufbewaren	aufbewahren
+# heuten is a misspelling of heutigen
+encyclopedia1 22	im heuten Europa	im heutigen Europa
+# eingedringenden mixes eindringenden and eingedrungenen
+encyclopedia1 22	eingedringenden	eindringenden
+# anstrengensten is a misspelling of anstrengendsten
+encyclopedia1 24	anstrengensten	anstrengendsten
+# aussähen is a form of aussehen, and to sow is aussäen
+encyclopedia1 24	Roggen aussähen	Roggen aussäen
+# Überschuss is the spelling of 1996, where the German follows the rules of 1901 (encyclopedia2 23)
+encyclopedia1 24	der Überschuss	der Überschuß
+# the quote that opens ss is missing
+encyclopedia1 30	'hh', ss'.	'hh', 'ss'.
+# befasste is the spelling of 1996, where the German follows the rules of 1901 (encyclopedia2 23)
+encyclopedia2 0	befasste sich	befaßte sich
+# Sklavin is feminine: wie eine Sklavin
+encyclopedia2 2	wie ein Sklavin	wie eine Sklavin
+# im takes the weak form: im gleichen Alter
+encyclopedia2 2	im gleichem Alter	im gleichen Alter
+# umfasste is the spelling of 1996, where the German follows the rules of 1901 (encyclopedia2 23)
+encyclopedia2 2	Personen umfasste	Personen umfaßte
+# Adelsfamile is a misspelling of Adelsfamilie
+encyclopedia2 4	Adelsfamile	Adelsfamilie
+# göttinen is a misspelling of göttinnen
+encyclopedia2 8	-göttinen	-göttinnen
+# entscheidene is a misspelling of entscheidende
+encyclopedia2 8	entscheidene	entscheidende
+# GÖETTER is a misspelling of GÖTTER
+encyclopedia2 8	ANDERE GÖETTER	ANDERE GÖTTER
+# Auktionar is a misspelling of Auktionator
+encyclopedia2 8	des Auktionars	des Auktionators
+# Ziu's day is Tiu's day in English, as the topic writes Thor's day
+encyclopedia2 8	englisch Ziu's day	englisch Tiu's day
+# Apellen is a misspelling of Appellen
+encyclopedia2 9	Apellen	Appellen
+# jahrhunderlang is a misspelling of jahrhundertelang
+encyclopedia2 11	jahrhunderlang	jahrhundertelang
+# leichenübersäht is a misspelling of leichenübersät
+encyclopedia2 14	leichenübersäht	leichenübersät
+# Friedenschluß is a misspelling of Friedensschluß
+encyclopedia2 17	Friedenschluß	Friedensschluß
+# the words kein and anderer are swapped
+encyclopedia2 18	Da anderer kein Stamm	Da kein anderer Stamm
+# Befehlt is a misspelling of Befehl
+encyclopedia2 18	dieser Befehlt	dieser Befehl
+# Domitus is a misspelling of Domitius, as the topic names him elsewhere
+encyclopedia2 18	versuchte Domitus	versuchte Domitius
+# Yugoslawien is a misspelling of Jugoslawien
+encyclopedia2 18	Yugoslawien	Jugoslawien
+# ware is a misspelling of waren
+encyclopedia2 19	Verwandten ware treue	Verwandten waren treue
+# the passive takes the participle angegriffen
+encyclopedia2 19	Hinterhalt angriffen wurden	Hinterhalt angegriffen wurden
+# the pluperfect passive takes worden: waren getötet worden
+encyclopedia2 19	Tage getötet wurden	Tage getötet worden
+# gemanische is a misspelling of germanische
+encyclopedia2 22	gemanische Sagen	germanische Sagen
+# Frontius is a misspelling of Frontinus, the author of the Strategemata
+encyclopedia2 22	Frontius	Frontinus
+# the publisher in Munich is Oldenbourg, and Oldenburg a town in Lower Saxony
+encyclopedia2 22	Oldenburg Wissenschaftsverlag	Oldenbourg Wissenschaftsverlag
+# Nackheit is a misspelling of Nacktheit
+readme	durch Nackheit	durch Nacktheit
+# alle takes the weak plural: alle anderen Spiele, as the sentence has for Programme
+readme	alle andere Spiele	alle anderen Spiele
+# exclusiv is a misspelling of exklusiv
+readme	DirectX-exclusiv-Zugriffsrechte	DirectX-exklusiv-Zugriffsrechte
+
+# The facts that the German states wrongly.
+# Noricum lay in today's Austria
+encyclopedia2 17	Noricum (heutige Schweiz)	Noricum (heutiges Österreich)
+# the sack of Athens that the anecdote tells was in 267
+encyclopedia2 11	Noch 257 n.Chr.	Noch 267 n.Chr.
+# Augustine was the bishop of Hippo, which the Vandals besieged as he died in 430, and was born in Thagaste
+encyclopedia2 20	seiner Heimatstadt Karthago	seiner Bischofsstadt Hippo
+# Drusus and Tiberius were Augustus's stepsons, as the encyclopedia calls him Tiberius's Stiefvater
+strings 573	seine Söhne Drusus	seine Stiefsöhne Drusus
+# Drusus and Tiberius were Augustus's stepsons, and Augustus adopted Tiberius in 4 A.D.
+encyclopedia1 6	seinen Adoptivsöhnen Drusus	seinen Stiefsöhnen Drusus
+# Drusus was Augustus's stepson: Augustus adopted Tiberius alone, in 4 A.D.
+encyclopedia2 17	seinen Adoptivsohn Drusus	seinen Stiefsohn Drusus
+# the third war against Carthage began in 149 and ended with the city's fall in 146
+encyclopedia1 5	endete 149 v.Chr.	endete 146 v.Chr.
+# the Frankish empire was divided at Verdun in 843, and the name came later
+encyclopedia1 10	entstand im 11.Jh.n.Chr., als das Frankenreich geteilt wurde	entstand, nachdem das Frankenreich im 9.Jh.n.Chr. geteilt worden war
+# Caesar conquered the rest of Gaul in the wars of 58 to 50 B.C.
+encyclopedia2 17	Doch 58 v.Chr. eroberte	Doch ab 58 v.Chr. eroberte

@@ -334,6 +334,11 @@ extern int startlevel;
 extern int noprinter;
 extern int featuresoff;
 char *pick(char *de, char *en, char *fr, char *es, char *it, char *pl);
+// FEATURE: features: the languages and texts of the build, in src/feature/feature.cpp
+#ifdef FEATURES
+int featlang(int c);
+char *feattext(char *s);
+#endif
 
 extern int cachelevel;
 extern int i2i;
@@ -916,10 +921,18 @@ fmttime(char *buf, FILETIME *ft, int full)
 		;
 	else
 		m = 1;
+	// FEATURE: features: the build's own formats and months of a date
+#ifdef FEATURES
+	if (full)
+		wsprintf(buf, feattext(T(0x9e01)), st.wDay, feattext(months[m]), st.wYear, st.wHour, st.wMinute, st.wSecond);
+	else
+		wsprintf(buf, feattext(T(0x9e1a)), st.wDay, feattext(months[m]), st.wYear);
+#else
 	if (full)
 		wsprintf(buf, T(0x9e01), st.wDay, months[m], st.wYear, st.wHour, st.wMinute, st.wSecond);
 	else
 		wsprintf(buf, T(0x9e1a), st.wDay, months[m], st.wYear);
+#endif
 }
 
 /* n into buf with a separator every three digits */
@@ -1296,7 +1309,12 @@ menudir(char *buf, int size)
 void
 checklang(void)
 {
+	// FEATURE: features: the languages of the build
+#ifdef FEATURES
+	if (featlang(lang))
+#else
 	if (lang == 1 || lang == 0 || lang == 4)
+#endif
 		;
 	else
 		lang = 1;
@@ -1400,7 +1418,12 @@ langtexts(HWND w)
 {
 	checklang();
 	SetDlgItemText(w, 0x3f2, pick(T(0xf2), T(0x112), T(0x130), T(0x131), T(0x132), T(0x154)));
+	// FEATURE: features: the languages of the build
+#ifdef FEATURES
+	if (featlang(lang))
+#else
 	if (lang == 1 || lang == 0 || lang == 4)
+#endif
 		CheckRadioButton(w, 0x3fd, 0x402, lang + 0x3fd);
 }
 
@@ -1749,7 +1772,12 @@ makelinks(void)
 	if (mklink(linktarget, instdir, linkname, setupbuf) < 0)
 		ok = 0;
 	for (i = 0; i < 6; i++) {
+		// FEATURE: features: the readmes of the build's languages
+#ifdef FEATURES
+		if (featlang(i)) {
+#else
 		if (i == 1 || i == 0 || i == 4) {
+#endif
 			wsprintf(setupbuf, T(0x9c20), i == 0 ? 'D' : i == 2 ? 'F' : i == 3 ? 'S' : i == 4 ? 'I' : i == 5 ? 'P' : 'E');
 			wsprintf(linkname, T(0xa33b), instmenu, setupbuf);
 			pathjoin(linktarget, instdir, setupbuf);

@@ -3,6 +3,10 @@
 
 DWORD unpack(void *dst, DWORD dstlen, void *src, DWORD srclen);
 void clearrow(int i);
+// FEATURE: features: the plumbing of the feature builds, in src/feature/feature.cpp
+#ifdef FEATURES
+void featunpack(void);
+#endif
 
 extern unsigned char packed[0x8038];
 
@@ -51,6 +55,10 @@ unpack(void)
 	if (!unpack(entrysizes, sizeof entrysizes, packed + 0x3a57, 0x93c))
 		return 0;
 	memset(packed, 0, sizeof packed);
+	// FEATURE: features: the build's tables of entries and sums, its grammar, and its fonts
+#ifdef FEATURES
+	featunpack();
+#endif
 	return 1;
 }
 

@@ -329,6 +329,10 @@ extern unsigned char keys[256];
 extern int text3width;
 extern unsigned long gametime;
 extern char texts[47942];
+// FEATURE: features: the texts of the build, in src/feature/feature.cpp
+#ifdef FEATURES
+char *feattext(char *s);
+#endif
 extern unsigned char targetkind;
 extern unsigned long targetitem;
 extern int targetidx;
@@ -699,7 +703,12 @@ msgf(short prio, char *fmt, ...)
 	va_list ap;
 
 	va_start(ap, fmt);
+	// FEATURE: features: the build's own format of a message
+#ifdef FEATURES
+	wvsprintf(msgfmt, feattext(fmt), ap);
+#else
 	wvsprintf(msgfmt, fmt, ap);
+#endif
 	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
 #ifdef PORT
 	va_end(ap);
@@ -717,7 +726,12 @@ msgcat(short prio, char *a, char *b)
 {
 	if (playerdead())
 		return 0;
+	// FEATURE: features: the build's own format of a message
+#ifdef FEATURES
+	wsprintf(msgfmt, feattext(texts + 0xb079), a, b);
+#else
 	wsprintf(msgfmt, texts + 0xb079, a, b);
+#endif
 	if (msgfmt[0] == 0)
 		return 0;
 	cleartip();
@@ -734,10 +748,18 @@ prependmsg(char *s)
 		return;
 	prependw = text3w(msgtext[nmsgs - 1]);
 	prependw += text3w(s);
+	// FEATURE: features: the build's own formats of a message
+#ifdef FEATURES
+	if (prependw >= 600)
+		wsprintf(msgfmt, feattext(texts + 0xb080), s, msgtext[nmsgs - 1]);
+	else
+		wsprintf(msgfmt, feattext(texts + 0xb079), s, msgtext[nmsgs - 1]);
+#else
 	if (prependw >= 600)
 		wsprintf(msgfmt, texts + 0xb080, s, msgtext[nmsgs - 1]);
 	else
 		wsprintf(msgfmt, texts + 0xb079, s, msgtext[nmsgs - 1]);
+#endif
 	msgfmt[0] = upper(msgfmt[0]);
 	wsprintf(msgtext[nmsgs - 1], msgfmt);
 	layoutmsgs();
@@ -784,7 +806,12 @@ nosuccess(char *s)
 {
 	if (playerdead())
 		return 0;
+	// FEATURE: features: the build's own format of a message
+#ifdef FEATURES
+	wsprintf(msgfmt, feattext(texts + 0xb079), s, strs[0x1b4]);
+#else
 	wsprintf(msgfmt, texts + 0xb079, s, strs[0x1b4]);
+#endif
 	if (msgfmt[0] == 0)
 		return 0;
 	cleartip();
@@ -804,7 +831,12 @@ denymsg(char *fmt, ...)
 	va_list ap;
 
 	va_start(ap, fmt);
+	// FEATURE: features: the build's own format of a message
+#ifdef FEATURES
+	wvsprintf(msgfmt, feattext(fmt), ap);
+#else
 	wvsprintf(msgfmt, fmt, ap);
+#endif
 	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
 #ifdef PORT
 	va_end(ap);
@@ -827,7 +859,12 @@ notworking(char *s)
 {
 	if (playerdead())
 		return 0;
+	// FEATURE: features: the build's own format of a message
+#ifdef FEATURES
+	wsprintf(msgfmt, feattext(texts + 0xb079), s, strs[0x11f]);
+#else
 	wsprintf(msgfmt, texts + 0xb079, s, strs[0x11f]);
+#endif
 	if (msgfmt[0] == 0)
 		return 0;
 	cleartip();

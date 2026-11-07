@@ -22,11 +22,12 @@ ARCH = $(or $(ARCH_$(word 2,$(HOST))),amd64)
 CC = $(if $(filter macos,$(OS)),clang,gcc)
 SANITIZE =
 
-# FEATURES lists the features of the game that all builds: faults, the
-# fixes of the code's faults, pace, the game's pace at any refresh, and
-# fixes, the fixes of the gameplay, which takes faults and pace with
-# it. A program on SDL3 takes faults and pace whatever the list holds.
-FEATURES = fixes
+# FEATURES lists the features of the game that all builds: errata, the
+# fixes of the German, English, and Italian texts, faults, the fixes of
+# the code's faults, pace, the game's pace at any refresh, and fixes,
+# the fixes of the gameplay, which takes faults and pace with it. A
+# program on SDL3 takes faults and pace whatever the list holds.
+FEATURES = errata fixes
 
 # ZIP is the author's release, and PASSWORD the file whose first line is
 # its password.
@@ -77,12 +78,12 @@ PROGRAM = $(D)$(PROGDIR_$(OS))/teudogar$(EXE)
 unexport OS ARCH CC SANITIZE
 
 .DELETE_ON_ERROR:
-.PHONY: usage all dist test original ddraw check lint fetch tools fmtref clean distclean FORCE
+.PHONY: usage all dist test original ddraw check lint fetch tools text fmtref clean distclean FORCE
 
 # usage lists the goals.
 usage::
 	@echo 'usage: make goal ... [OS=linux|macos|windows] [ARCH=386|amd64|arm64] [CC=gcc|clang|watcom]'
-	@echo '                     [FEATURES=fixes]'
+	@echo "                     [FEATURES='errata fixes']"
 	@echo ''
 	@echo "the game, for the target that OS, ARCH, and CC name (the host's, with gcc,"
 	@echo 'or clang on macOS):'
@@ -104,6 +105,7 @@ usage::
 	@echo 'inputs and tools:'
 	@echo '  fetch      download what the builds need into dl/'
 	@echo '  tools      build the Go commands into build/bin'
+	@echo '  text       write the texts of the release into build/text'
 	@echo '  fmtref     build build/fmtref.exe, the reference of the fmt test'
 	@echo ''
 	@echo '  clean      remove build/ and dist/'
@@ -127,6 +129,13 @@ tools: $(patsubst cmd/%,$(BIN)/%,$(wildcard cmd/*))
 # a build with other features compiles again.
 build/features: FORCE
 	@mkdir -p build && echo 'FEATURES=$(FEATURES)' | cmp -s - $@ || echo 'FEATURES=$(FEATURES)' >$@
+
+# cmd/lang checks the sources of the features in lang/ and writes into
+# build/lang what the features change: data/, the files of the game's
+# folder, and include/, the headers of src/feature.
+build/lang/.ok: build/features build/zip/.ok $(shell find lang -type f) $(wildcard src/teudogar/*.cpp) $(BIN)/lang
+	rm -rf build/lang && $(BIN)/lang -o build/lang -f '$(filter errata,$(FEATURES))' -r lang/buffers.txt $(RELEASE) src/teudogar lang
+	touch $@
 
 # SWAP puts the folder $(D).new in the place of $(D) under the lock of
 # dist/.lock. A program that runs under bin/lock -s dist/.lock keeps its
@@ -153,6 +162,17 @@ build/ddraw/ddraw.dll: src/ddraw/ddraw.c
 build/ddraw/test.exe: src/ddraw/test.c
 	mkdir -p $(@D) && i686-w64-mingw32-gcc -std=gnu99 -O2 -Wall -Wextra -static-libgcc \
 		-Wl,--no-insert-timestamp -o $@ $< -luser32
+
+# text writes the German, English, and Italian texts of the release into
+# build/text in the source forms that the errata quote:
+# build/text/<code>/<name>.txt for each text and readme, and the
+# language's strings of the program's texts by offset in
+# build/text/<code>/texts.txt (cmd/lang -x).
+text: build/text/.ok
+
+build/text/.ok: build/zip/.ok $(wildcard src/teudogar/*.cpp) $(BIN)/lang
+	rm -rf build/text && $(BIN)/lang -x build/text $(RELEASE) src/teudogar
+	touch $@
 
 # lint runs shellcheck on bin/, and gofmt and go vet on cmd/ and
 # internal/.

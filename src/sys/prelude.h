@@ -1,7 +1,7 @@
 /*
  * The prelude of the game's files in the port. make compiles each
- * module of src/base and src/teudogar as C99 with -include of this
- * file, before the module's own includes.
+ * module of src/base, src/teudogar, and src/feature as C99 with
+ * -include of this file, before the module's own includes.
  *
  * It includes every header the modules include, so that each later
  * #include finds its guard set, then gives the names of the game the

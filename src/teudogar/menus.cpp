@@ -339,6 +339,10 @@ extern char tmpbuf[2500];
 extern char progdir[];
 extern int lang;
 extern char langchar;
+// FEATURE: features: the languages of the build, in src/feature/feature.cpp
+#ifdef FEATURES
+int featlang(int c);
+#endif
 extern short nofoes;
 extern int shown;
 extern int cheat;
@@ -1737,7 +1741,12 @@ openurl(char *url)
 void
 readmename(char *s)
 {
+	// FEATURE: features: the readmes of the build's languages
+#ifdef FEATURES
+	if (featlang(lang))
+#else
 	if (lang == 1 || lang == 0 || lang == 4)
+#endif
 		wsprintf(s, texts + 0x9c20, langchar);
 	else
 		wsprintf(s, texts + 0x9c20, 'E');

@@ -1,0 +1,128 @@
+// Package lang reads the errata kept in lang/ and turns them into the
+// entries of the game's data files and the tables of the feature build.
+// An erratum replaces a text in a unit of the release's German,
+// English, or Italian, in the unit's source form: UTF-8 with LF line
+// ends, as Source returns it. The package also checks each fixed text
+// against the release's German, English, and Italian.
+package lang
+
+import (
+	"bytes"
+	"errors"
+	"fmt"
+
+	"github.com/draxinar/teudogar/internal/text"
+)
+
+// The languages, in the order of setlang (lang.cpp): a text's entry for
+// language l is its group's first id plus l.
+const (
+	German = iota
+	English
+	French
+	Spanish
+	Italian
+	Polish
+	NLangs
+)
+
+// Codes names the languages as the directories of lang/ do.
+var Codes = [NLangs]string{"de", "en", "fr", "es", "it", "pl"}
+
+// A Kind is the layout of a text entry.
+type Kind int
+
+const (
+	Strings Kind = iota // strs[] (loadstrs, lang.cpp), XORed with text.Key
+	Doc                 // a document of showtext (mainmenu.cpp), plain
+	Script              // the dialog script (loadscript, dialog.cpp), XORed
+)
+
+// A Text is a group of six entries, one per language, that the game
+// reads by adding the language to the group's first id (langentry,
+// datfile.cpp).
+type Text struct {
+	Name string // the file's name in lang/<code>/, less .txt
+	ID   int    // the group's first id, the German entry
+	Kind Kind
+}
+
+// Texts lists the groups of entries that the release fills in German.
+var Texts = []Text{
+	{"strings", 5003, Strings},
+	{"manual", 5009, Doc},
+	{"encyclopedia1", 8106, Doc},
+	{"encyclopedia2", 8113, Doc},
+	{"script", 8205, Script},
+	{"walkthrough", 8341, Doc},
+}
+
+// Source returns the source form of the decoded entry b of kind k: its
+// text in UTF-8, with LF line ends.
+func Source(k Kind, b []byte) (string, error) {
+	t := b
+	if k != Doc {
+		t = unxor(b)
+	}
+	if err := crlfOnly(t); err != nil {
+		return "", err
+	}
+	return FromCP1252(bytes.ReplaceAll(t, []byte("\r\n"), []byte("\n"))), nil
+}
+
+// Entry returns the decoded entry of kind k that holds the source text
+// s, the inverse of Source. It checks the result as the game's readers
+// will parse it, through package text.
+func Entry(k Kind, s string) ([]byte, error) {
+	b, err := ToCP1252(s)
+	if err != nil {
+		return nil, err
+	}
+	if bytes.IndexByte(b, '\r') >= 0 {
+		return nil, errors.New("CR in the source, want LF line ends")
+	}
+	b = bytes.ReplaceAll(b, []byte("\n"), []byte("\r\n"))
+	if k == Doc {
+		if _, err := text.DecodeDoc(b); err != nil {
+			return nil, err
+		}
+		return b, nil
+	}
+	b = unxor(b)
+	switch k {
+	case Strings:
+		_, err = text.DecodeStrings(b)
+	case Script:
+		_, err = text.DecodeScript(b)
+	default:
+		err = fmt.Errorf("lang: kind %d", k)
+	}
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+// unxor returns a copy of b with each byte XORed with text.Key, which
+// undoes the XOR and makes it again.
+func unxor(b []byte) []byte {
+	t := make([]byte, len(b))
+	for i, c := range b {
+		t[i] = c ^ text.Key
+	}
+	return t
+}
+
+// crlfOnly reports an error for a CR that no LF follows or an LF that no
+// CR precedes, which the source form, LF alone, could not keep.
+func crlfOnly(t []byte) error {
+	for i, c := range t {
+		switch {
+		case c == '\r' && (i+1 == len(t) || t[i+1] != '\n'):
+			return fmt.Errorf("lang: CR at %#x without LF", i)
+		case c == '\n' && (i == 0 || t[i-1] != '\r'):
+			return fmt.Errorf("lang: LF at %#x without CR", i)
+		}
+	}
+	return nil
+}

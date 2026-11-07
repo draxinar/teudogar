@@ -1,0 +1,845 @@
+# sufficent is a misspelling of sufficient
+texts 787a	allocate sufficent memory	allocate sufficient memory
+# tree snag renders Baumstumpf, a tree stump
+strings 4	tree snag	tree stump
+# leggins is a misspelling of leggings
+strings 36	leather leggins	leather leggings
+# Insuffient is a misspelling of Insufficient
+strings 266	Insuffient RAM.	Insufficient RAM.
+# Beserk is a misspelling of Berserk
+strings 1421	Beserk potion	Berserk potion
+# grinded is a wrong past participle of grind: ground
+strings 1564	can't be grinded.	can't be ground.
+strings 1565	is already grinded sharply.	is already ground sharp.
+strings 1566	%s grinded!	%s ground!
+# the is a stray word: get to know
+strings 1833	get to the know all the characters	get to know all the characters
+# bellow is a misspelling of bellows, for Blasebalg
+strings 82	bellow	bellows
+# Wodan stands in an English that names the god Woden everywhere else
+strings 366	again invoked Wodan for help	again invoked Woden for help
+# taste takes an adjective: taste good
+strings 397	did not taste that well.	did not taste that good.
+# one breaks a spell on a thing, not at it
+strings 421	Break spell at what?	Break spell on what?
+# Ihr is the polite singular here: You are a coward
+strings 640	You all are a coward!	You are a coward!
+# a Waldschrat is a forest spirit, and giant is Riese (753)
+strings 739	giant	forest spirit
+# Gefolgsmann is henchman in string 1790 and the script, and warrior is Krieger (722)
+strings 747	warrior	henchman
+# within tolerable lacks its noun
+strings 876	is just within tolerable.	is just within tolerable limits.
+strings 877	is just within tolerable.	is just within tolerable limits.
+# Gift keeps the German capital among lowercase meanings of the runes
+strings 1217	a Gift	a gift
+# travel is a mass noun: a journey, for eine Reise
+strings 1235	a travel	a journey
+# neither belongs before the verb's objects
+strings 1354	He neither spared women nor children.	He spared neither women nor children.
+# to stupid is a misspelling of too stupid
+strings 1367	but to stupid to tell	but too stupid to tell
+# too lazy takes an infinitive
+strings 1368	too lazy for having success	too lazy to have success
+# Wichtige Aufgaben are the important quests, and the heading before them (1435) names the most important ones
+strings 1436	Most Important Quest:	Important Quests:
+# %d. is the German ordinal: on day %d
+strings 1452	on the %d. day at	on day %d at
+strings 1482	%d. program start	program start no. %d
+# unexpected modifies died: unexpectedly
+strings 1543	suddenly and unexpected.	suddenly and unexpectedly.
+# unsere Nachkommen are our descendants
+strings 1557	For your descendants	For our descendants
+# one throws a spear at a target
+strings 1562	Throw your spear on it.	Throw your spear at it.
+# to to doubles the word
+strings 1567	glad to to leave	glad to leave
+# definitively not for ganz sicher nicht: definitely not
+strings 1735	definitively not	definitely not
+# definitively only stands for eindeutig nur: definitely only
+strings 1737	in our era, definitively only	in our era, definitely only
+# herunterhandeln is to haggle a price down, and to trade down is to swap for something cheaper
+strings 1793	trade down priest	haggle down priest's price
+strings 1798	trade down $N30	haggle down $N30s price
+# gras is a misspelling of grass
+strings 1839	earthen soil, gras, plants	earthen soil, grass, plants
+# a compound adjective takes the singular: a 650-yard trail
+strings 1839	a 650-yards paper trail	a 650-yard paper trail
+# the English drops the German's sentence on how to reach the translator's company
+strings 1839	as well as proofreading and editing services.\n+	as well as proofreading and editing services.\n\nIf you'd like to have your texts translated, please send an e-mail with a description of your project to info@emersonkennedy.com.\n+
+# castings is a typo of casting
+walkthrough 2	by castings spells	by casting spells
+# you is a typo of your
+walkthrough 7	(drag to you inventory)	(drag to your inventory)
+# one exchanges a thing for another, and jewelry is a mass noun
+walkthrough 8	into gold or jewelries	for gold or jewelry
+# Ort9 lacks its $, so the heading prints the word Ort9
+walkthrough 13	$N36s Wife, Ort9	$N36s Wife, $Ort9
+# außer Hörweite is out of earshot
+walkthrough 13	is out of sight), where	is out of earshot), where
+# close lacks its to: the camps lie near the place of the hold-up
+walkthrough 14	robbers' camps close the road	robbers' camps close to the road
+# Make your is a typo of Make sure, and Put an a Romen of Put on a Roman
+walkthrough 15	Make your you're not overburdened	Make sure you're not overburdened
+walkthrough 15	Put an a Romen segmented cuirass	Put on a Roman segmented cuirass
+# describe takes its listener with to
+walkthrough 16	$N31 described you the exact location	$N31 described to you the exact location
+walkthrough 33	$N1 describes you the way	$N1 describes to you the way
+# find out of the cave lacks his way, and theses is a typo of these
+walkthrough 18	in order to find out of the cave	in order to find his way back out of the cave
+walkthrough 18	follow theses small stones	follow these small stones
+# you is a typo of your, and every lacks its thing
+walkthrough 19	facilitate you quest	facilitate your quest
+walkthrough 19	every the defeated carried	everything the defeated carried
+# $Stamm5s prints the nominative, and the English needs the genitive $Stamm5g
+walkthrough 19	the $Stamm5s popular assembly	the $Stamm5g popular assembly
+# a stray space before the comma, find doubled, and a before another
+walkthrough 21	return to $Ort1 , and talk	return to $Ort1, and talk
+walkthrough 21	you can find find a magic neck ring	you can find a magic neck ring
+walkthrough 21	is a another cave	is another cave
+# $Stamm lacks its number, a slip copied from the German: the tribe is the $Stamm2
+walkthrough 22	king of the $Stamm.	king of the $Stamm2.
+# the line lost its and, and takes the German's order: armor off, then sleep
+walkthrough 23	sleep for a while take off your armor, in order	take off your armor and sleep for a while, in order
+# $N26 waits at $Ort16 (topic 22, string 1810), and $Ort17 is a slip copied from the German
+walkthrough 23	Travel to $Ort17 and tell $N26	Travel to $Ort16 and tell $N26
+# you is a typo of your
+walkthrough 24	defend you tribe's freedom	defend your tribe's freedom
+# the sword demoralizes $N10, the opponent, and $N1 is a slip copied from the German
+walkthrough 31	will totally demoralize $N1:	will totally demoralize $N10:
+# the English drops the leather cap (Lederhelm) that marks $N2
+walkthrough 31	wearing leather armor and a shield)	wearing leather armor, a leather cap, and a shield)
+# a doubled period, and each takes the singular
+manual 7	you want to barter with..	you want to barter with.
+manual 7	under each bartering windows.	under each bartering window.
+# the doubles the word
+manual 10	exposed to the the second	exposed to the second
+# Angriffs-Fähigkeit is the Attack skill, and running attacks are a charge
+manual 14	your skills for running attacks and fighting	your skills for attacking and fighting
+# the scale of skill values starts with none (gar nicht), as the game shows it
+manual 14	Skill values range from very bad,	Skill values range from none, very bad,
+# the sentence says the action fails: Etwas geht nicht wie gewünscht
+manual 16	Something does not show the success as you would like	Something does not work as you would like
+# Bild< and Bild> are the two page keys: PgUp and PgDn
+manual 19	PgDn<, PgDn>	PgUp<, PgDn>
+# Speicherbelegung is Memory Use in the five places of the readme that name this menu
+strings 932	Memory Load	Memory Use
+# adepts is a misspelling of adapts
+readme	automatically adepts to your hardware	automatically adapts to your hardware
+# Vollversion is left in German
+readme	Version 1.05 Vollversion now downloadable	Version 1.05 Full Version now downloadable
+# the option is Untergrund Dialogtexte, which the game shows as Dialog text background (string 973)
+readme	select 'Background for Dialog-Text': 'black'	select 'Dialog text background': 'black'
+readme	select 'Dialogues Text Background': 'none'	select 'Dialog text background': 'none'
+# to off lacks its verb
+readme	make sure to off a number of features	make sure to turn off a number of features
+# or. is a stray period after or, for bzw.
+readme	(or. "C:	(or "C:
+# chose is the past tense of choose
+readme	Now chose a greater value	Now choose a greater value
+# you is a typo of your
+readme	100% perfect on you system	100% perfect on your system
+# one takes clothes off: ausziehen
+readme	when you put off all of your clothes	when you take off all of your clothes
+# the doubles the word
+readme	people of the the game world	people of the game world
+# word-wide is a typo of world-wide
+readme	We deliver word-wide	We deliver world-wide
+# Connecions is a misspelling of Connections, and ist is German for is
+readme	Slow Internet Connecions	Slow Internet Connections
+readme	installer file ist split	installer file is split
+# z.B. Internet Explorer gives an example: e.g.
+readme	Web Browser (i.e. Internet Explorer), and download	Web Browser (e.g. Internet Explorer), and download
+readme	Web Browser (i.e. Internet Explorer).	Web Browser (e.g. Internet Explorer).
+# similar lacks its to
+encyclopedia1 2	were so similar the Celtic tribes	were so similar to the Celtic tribes
+# Britannien is Britain, and Brittany is the Bretagne
+encyclopedia1 4	since 600 B.C. in Brittany, Spain	since 600 B.C. in Britain, Spain
+# die Schrift is the script, and the Greek are the Greeks
+encyclopedia1 4	the writings of the Greek.	the writing of the Greeks.
+encyclopedia1 4	by the Romans and Greek.	by the Romans and Greeks.
+# Kettenhemd is chain mail, as the game names it
+encyclopedia1 4	the chain link shirt	the chain mail shirt
+# superior takes to
+encyclopedia1 4	often superior over the southern tribes	often superior to the southern tribes
+# Wehe den Besiegten (vae victis) curses the vanquished
+encyclopedia1 4	('Down with the defeated!')	('Woe to the vanquished!')
+# a doubled period after B.C.
+encyclopedia1 5	in the year of 753 B.C..	in the year of 753 B.C.
+# Storm keeps the German capital
+encyclopedia1 5	in a Storm in 255 B.C.	in a storm in 255 B.C.
+# agreement: any other state, the loot was, the homeland was
+encyclopedia1 5	Any other states would have capitulated	Any other state would have capitulated
+encyclopedia1 5	The loot of the war were so immense	The loot of the war was so immense
+encyclopedia1 5	the Cimbrians and Teutons, were no longer habitable	the Cimbrians and Teutons, was no longer habitable
+# a before army: an army
+encyclopedia1 5	into a army of mercenaries	into an army of mercenaries
+# ließ sich zum Diktator auf Lebenszeit ernennen: had himself appointed dictator for life
+encyclopedia1 5	he appointed himself to a lifetime dictator	he had himself appointed dictator for life
+# 500 hundred is a slip for 500
+encyclopedia1 6	for the next 500 hundred years	for the next 500 years
+# der damals siebte Monat: the month that was seventh then
+encyclopedia1 6	and the seventh month is still called Sept-ember	and the then seventh month is still called Sept-ember
+# the English drops 45 Jahre lang
+encyclopedia1 6	Emperor Augustus reigned in total peace	Emperor Augustus reigned for 45 years in total peace
+# verspotten is to mock
+encyclopedia1 6	death penalty for criticizing the Emperor	death penalty for mocking the Emperor
+# tausende von politischen Gegnern: thousands
+encyclopedia1 6	Octavian had many of his political enemies put to death	Octavian had thousands of his political enemies put to death
+# a before members
+encyclopedia1 8	i.e. as a members of a tribe	i.e. as members of a tribe
+# Weichsel is the German name of the Vistula
+encyclopedia1 9	Danube and Weichsel rivers	Danube and Vistula rivers
+# the English names of the Sarmaten and Skythen, and Kasachstan is Kazakhstan
+encyclopedia1 9	the Sarmates (Russia), Skythes (today's Kasakhstan)	the Sarmatians (Russia), Scythians (today's Kazakhstan)
+# had to always have lived for müßten schon immer gelebt haben: must always have lived
+encyclopedia1 9	had to always have lived here	must always have lived here
+# Ebenen are plains
+encyclopedia1 9	clearings, plateaus, river valleys	clearings, plains, river valleys
+# consisted takes of
+encyclopedia1 10	which consisted out of several related families	which consisted of several related families
+# 4. Century is the German ordinal, as the topic's 3rd Century shows
+encyclopedia1 10	But even in the 4. Century A.D.	But even in the 4th Century A.D.
+encyclopedia1 10	since the 6. Century A.D.	since the 6th Century A.D.
+encyclopedia1 10	In the 5. Century A.D.	In the 5th Century A.D.
+encyclopedia1 10	In the 12. Century A.D.	In the 12th Century A.D.
+# der Völkerwanderungszeit: the conquests of the Migration Period ran into the 5th century
+encyclopedia1 10	of Roman provinces during 4. century A.D. were possible	of Roman provinces during the Migration Period were possible
+# the Hessen are the Hessians, and Hesse is their land
+encyclopedia1 10	the Cattans the Hesse;	the Cattans the Hessians;
+# Lombardy is named after the Lombards, as the other lands of the sentence
+encyclopedia1 10	named by the Lombards	named after the Lombards
+# des fränkischen Kaisers: the Frankish emperor, Louis the Pious
+encyclopedia1 10	One of the king's sons received	One of the Frankish emperor's sons received
+# build is a typo of built
+encyclopedia1 11	houses had to be build closer together	houses had to be built closer together
+# the English drops manchmal: sometimes
+encyclopedia1 12	the people would decide to give up their settlements	the people would sometimes decide to give up their settlements
+# cattle takes a plural verb, as die Rinder waren has it
+encyclopedia1 12	Furthermore, cattle was the most	Furthermore, cattle were the most
+# cattle takes a plural verb, and Zugtiere und Milchproduzenten are plural
+encyclopedia1 12	for cattle was indispensable as a working animal and as milk producer	for cattle were indispensable as working animals and as milk producers
+# 1.50 m is 4'11", and 4'9" is 1.45 m
+encyclopedia1 14	only 4'9" (1.50m)	only 4'11" (1.50m)
+# verächtlich here is contemptible: the Romans' small stature earns the contempt
+encyclopedia1 14	seems contemptuous in comparison	seems contemptible in comparison
+# the quoted translation of Tacitus reads thirst and heat
+encyclopedia1 14	endure thrift and heat	endure thirst and heat
+# 1.70 m is 5'7", and 1.60 m is 5'3"
+encyclopedia1 14	about 5'6" (1.70m), women were about 5'2" (1.60m)	about 5'7" (1.70m), women were about 5'3" (1.60m)
+# Perlen of silver, bronze, iron, and glass are beads
+encyclopedia1 15	needles or pearls made from silver	needles or beads made from silver
+# the Romans wore a kind of loincloth (Lendenschurz) as underpants, and did wear underwear contradicts the sentence it closes
+encyclopedia1 15	(many Romans did wear underwear)	(many Romans did, however, wear a kind of loincloth as 'underpants')
+# the English drops how the shoes were made
+encyclopedia1 15	Germanic men and women wore leather shoes.	Shoes were made from a single piece of leather, without a firm sole or heel, and looked the same for men and women.
+# agreement: clothing was
+encyclopedia1 15	quite expensive and were often patched up	quite expensive and was often patched up
+# years lacks its apostrophe
+encyclopedia1 15	a years worth of work	a year's worth of work
+# the English cuts the German's three paragraphs on Roman dress to one sentence, and drops the Gauls, and Skythen are the Scythians
+encyclopedia1 15	The Germanic doublet looked like the Roman tunica, the Germanic cloak resembled the Roman military cloak: The only thing that was truly disconcerting to the Romans were the pants. The Germanic people probably adopted the pants from the neighbors to the east, the Scythes, who were an equestrian people.	Originally, the clothing of the Romans had looked quite different from that of the Germanic people: Roman men wore a toga, i.e. a white piece of cloth up to 6 meters long, which was artfully wrapped around the body (over the left shoulder, from there covering the back, under the right arm, over the left shoulder again, under the right arm again, and finally the end was fastened in front at the right hip). This left the right shoulder and the right arm free, while the left shoulder and the left arm were covered. Underneath, they wore a tunica (a kind of T-shirt that reached down to the knees), with a belt around the waist - practically the same as the Germanic doublet.\n\nSince the toga was rather uncomfortable, from about the 1st century B.C. on most Romans began to wear just the tunica and perhaps a light cloak in everyday life, and put on a toga only on festive or official occasions. Soldiers wore only a tunica anyway, with a breastplate over it if needed, and a cloak that looked just like the Germanic one. Over the tunica, Roman women wore a dress called stola, tied at the waist, and a cloak over that. Sandals were the common shoes.\n\nSo most Romans were dressed quite similarly to the Germanic people - with one difference, though: The Romans had never worn pants, i.e. in Roman dress the legs remained bare (the thighs were covered by the tunica, the lower legs remained free).\n\nThe Germanic people probably adopted the pants from the neighbors to the east, the Scythians, who were an equestrian people. The Gauls wore pants as well.
+# Beschlagnahmung is confiscation
+encyclopedia1 15	repossession of all property	confiscation of all property
+# since many centuries copies seit vielen Jahrhunderten: people had stopped wearing hides centuries before
+encyclopedia1 15	no longer covered themselves with animal hides since many centuries	had stopped covering themselves with animal hides many centuries before
+# 1.80 m is 5'11", and 2.40 m is 7'10"
+encyclopedia1 16	5'9" to 7'9" (1.80 to 2.40 m)	5'11" to 7'10" (1.80 to 2.40 m)
+# aus Brettern aus Eichenholz: planks of oak, and häufig nicht einmal mit Leder bezogen applies to all the shields
+encyclopedia1 16	The Germanic shields were either made out of wood planks or oak wood, sometimes they were just wicker shields not even covered by leather.	The Germanic shields were made out of oak planks, some of them just out of wicker, often not even covered by leather.
+# had to lacks its be
+encyclopedia1 16	One had to very rich	One had to be very rich
+# one lives on a food, and the parenthesis lost its close
+encyclopedia1 19	lived predominantly of a grain mush	lived predominantly on a grain mush
+encyclopedia1 19	of grain as a daily ration.	of grain as a daily ration.)
+# gepökelt oder an der Luft getrocknet: salted or air-dried
+encyclopedia1 19	The meat was salted and air-dried.	The meat was salted or air-dried.
+# Honey keeps the German capital
+encyclopedia1 19	(1 kg) of Honey	(1 kg) of honey
+# cattle takes a plural verb
+encyclopedia1 19	Besides cattle, which was mostly	Besides cattle, which were mostly
+# the heading lost the { that every other heading carries
+encyclopedia1 20	Roman Cooking\n\nOriginally	Roman Cooking{\n\nOriginally
+# vergoren is fermented
+encyclopedia1 20	a salty sauce made from wilted fish	a salty sauce made from fermented fish
+# Flamingos are flamingos
+encyclopedia1 20	seasoned flamencos and parrots	seasoned flamingos and parrots
+# Lorbeerbeeren are laurel berries, Cypergras is cyperus, and Kostwurz, left in German, is costus
+encyclopedia1 20	ginger, bayleaf, marjoram, cypergrass, kostwurz, tarragon	ginger, laurel berries, marjoram, cyperus, costus, tarragon
+# Liegen are the dining couches
+encyclopedia1 20	three or four canopies, each	three or four couches, each
+# a Garküche sells cooked food, and a soup kitchen feeds the poor for free
+encyclopedia1 20	go to a soup kitchen, which existed	go to a cookshop, which existed
+# binnen weniger Jahrzehnte: within a few decades
+encyclopedia1 21	within a few years: A mix	within a few decades: A mix
+# pot ash is a misspelling of potash
+encyclopedia1 21	wool fat, pot ash, and soda	wool fat, potash, and soda
+# spend is the present of spent
+encyclopedia1 21	Both sexes spend a lot of time	Both sexes spent a lot of time
+# a clause as subject takes whether
+encyclopedia1 21	If the Germanic people were as diligent	Whether the Germanic people were as diligent
+# the sentence lost its grammar, and the fairytales tell of a nobleman (einen Adeligen)
+encyclopedia1 22	Fairytales of the Middle Ages still describe the way to recognize royalty at first sight is by their size and strength.	Fairytales of the Middle Ages still tell that a nobleman could be recognized at first sight by his size and strength.
+# Etsch is the German name of the Adige
+encyclopedia1 22	crossing the Etsch river	crossing the Adige river
+# the opening lost its sense: there was a lack of technical aids
+encyclopedia1 24	the technical facility was lacking in effective fertilization, pesticides and the improved culturing of plants	there was a lack of technical aids, effective fertilization, pesticides and improved culturing of plants
+# etwa die Hälfte der Menschen: about half of the people
+encyclopedia1 24	up to the middle ages most people had to work as farmers	up to the middle ages about half of the people had to work as farmers
+# qm is the German abbreviation of square meters
+encyclopedia1 24	30,000 qm or 170m x 170m	30,000 sq m or 170m x 170m
+# Hirse is millet
+encyclopedia1 24	barley, wheat, sorghum, oat or rye	barley, wheat, millet, oat or rye
+# a Viehweide is a pasture, and a feedlot fattens penned cattle
+encyclopedia1 24	used as a feedlot for cattle	used as a pasture for cattle
+# Cattle keeps the German capital and a singular verb, and or doubles
+encyclopedia1 24	Especially Cattle was kept	Especially cattle were kept
+encyclopedia1 24	any surplus or or an ample supply	any surplus or an ample supply
+# jedes Rind is each head of cattle, as cattle is a plural
+encyclopedia1 24	Because each cattle would need	Because each head of cattle would need
+# Kittel are smocks, as the topic Clothing renders them
+encyclopedia1 25	Dresses, pants, aprons and overcoats	Dresses, pants, smocks and overcoats
+# Sheepwool is sheep's wool
+encyclopedia1 25	Sheepwool had to be sheared	Sheep's wool had to be sheared
+# Malve gives wine red (Weinrot)
+encyclopedia1 25	or hollyhock (mauve)	or hollyhock (wine red)
+# Flechten is wickerwork, and weaving is the cloth of the paragraph above
+encyclopedia1 25	included pottery and weaving:	included pottery and wickerwork:
+# a Nut in joinery is a groove
+encyclopedia1 25	Squarehead-pegs, nuts, wooden nails	Squarehead-pegs, grooves, wooden nails
+# place takes the plural, and Kilograms keeps the German capital
+encyclopedia1 25	found in many place in northern Germany	found in many places in northern Germany
+encyclopedia1 25	a few Kilograms of poor iron	a few kilograms of poor iron
+# erneut zum Glühen brachte: heated to a glow again, and to smoulder is to burn slowly with smoke
+encyclopedia1 25	or it was smouldered again and with a hammer	or it was heated to a glow again and with a hammer
+# had to lacks its be
+encyclopedia1 25	chain mail armor had to imported	chain mail armor had to be imported
+# Even since is a typo of Ever since, and the verb comes before its subject as in German
+encyclopedia1 26	Even since the stone-age have the peoples of Europe traded.	Ever since the stone-age, the peoples of Europe have traded.
+# the Nordsee is the North Sea, archeologist takes the plural, and there is a typo of their
+encyclopedia1 26	from the Northsea area	from the North Sea area
+encyclopedia1 26	archeologist even found silk	archeologists even found silk
+encyclopedia1 26	because of there outlandish blue eyes	because of their outlandish blue eyes
+# germanic lacks its capital
+encyclopedia1 27	The actual germanic 'currency'	The actual Germanic 'currency'
+# Kettenhemd is chain mail, as the game names it
+encyclopedia1 27	9 oxen for a chain-link armored shirt	9 oxen for a chain mail shirt
+# 8 g of gold were worth 90 Euro
+encyclopedia1 27	around 100 Euros or 100 US$	around 90 Euros or 100 US$
+# between takes and
+encyclopedia1 27	between 1/2 or 1 Denar	between 1/2 and 1 Denar
+# workrobe is two words
+encyclopedia1 27	a workrobe was 10 Denar	a work robe was 10 Denar
+# between takes and
+encyclopedia1 27	between 1/2 to 1 Denar	between 1/2 and 1 Denar
+# services takes its article and a plural verb
+encyclopedia1 27	services of a prostitute was	the services of a prostitute were
+# a Webstuhl is a loom, as the game names it
+encyclopedia1 28	axes, weaving-chair, ceramics-oven	axes, loom, ceramics-oven
+# Glasperlen are glass beads
+encyclopedia1 28	jewelry (glass pearls)	jewelry (glass beads)
+# siehe Stichwort Herkunft: the entry on origins is Prehistory in the English
+encyclopedia1 30	(see the Origin prompt)	(see the entry Prehistory)
+# the sentence lacks its preposition
+encyclopedia1 30	The tribes that settled in Northern Europe, beginning around 500 B.C.	Among the tribes that settled in Northern Europe, beginning around 500 B.C.
+# Betonung is stress, as the paragraph above says, and Peoples keeps a German capital
+encyclopedia1 30	other newly created Peoples the pronunciation and inflection	other newly created peoples the pronunciation and stress
+# Sanscrit and Slavik are misspellings of Sanskrit and Slavic
+encyclopedia1 30	In Sanscrit it was 'bharami', Old-Slavik 'bera'	In Sanskrit it was 'bharami', Old-Slavic 'bera'
+# diese neu entstandenen Sprachen are several languages
+encyclopedia1 30	This newly created language also changed over time.	These newly created languages also changed over time.
+# Evolution and Dialect keep German capitals
+encyclopedia1 30	the following Evolution:	the following evolution:
+encyclopedia1 30	The Eastern-Germanic Dialect	The Eastern-Germanic dialect
+# Friesian is the cattle, Frisian the language, and Nothern a typo of Northern
+encyclopedia1 30	Dutch and Friesian evolved	Dutch and Frisian evolved
+encyclopedia1 30	from the Nothern-Germanic dialect	from the Northern-Germanic dialect
+# the English drops bis: the sounds came in until 500 A.D.
+encyclopedia1 30	where 500 A.D. many fricatives	where until 500 A.D. many fricatives
+# gutteral is a misspelling of guttural, and latin lacks its capital
+encyclopedia1 30	a rough, gutteral quality	a rough, guttural quality
+encyclopedia1 30	The melodic latin word	The melodic Latin word
+# the ellipsis lost a period
+encyclopedia1 30	winters sixty)\n..\n	winters sixty)\n...\n
+# romanische Worte are Romance words, from the Normans' French
+encyclopedia1 30	countless Roman words	countless Romance words
+# Heerführer wählen: the army leaders were elected
+encyclopedia2 0	it was customary to appoint army leaders	it was customary to elect army leaders
+# Erbmonarchie is hereditary monarchy
+encyclopedia2 0	(Automatic succession of the eldest son to the throne would only establish itself	(Hereditary monarchy would only establish itself
+# bei Vollmond oder Neumond: at full moon or new moon, and the assembly gathered the free men
+encyclopedia2 0	mostly at half moon or full moon, all men of a gau came together	mostly at full moon or new moon, all free men of a gau came together
+# schlugen sie begeistert ihre Waffen aneinander: they clashed their weapons together
+encyclopedia2 0	they banged their weapons against their shields	they enthusiastically clashed their weapons together
+# with doubles
+encyclopedia2 0	only dealt with with cases	only dealt with cases
+# during times of peace is an addition: the German says crimes were rare
+encyclopedia2 0	were relatively infrequent during times of peace	were relatively infrequent
+# zu welchem Grundstück eine Quelle: to which property a spring belonged, and entitled takes an infinitive
+encyclopedia2 0	who was owner of a spring running nearby a property? Was someone entitled to droving his cattle	which property did a spring belong to? Was someone entitled to drive his cattle
+# ein entlaufenes Vieh is runaway livestock, as cattle is a plural
+encyclopedia2 0	Whom did a runaway cattle belong to	Whom did runaway livestock belong to
+# gebildet is formed: derived from
+encyclopedia2 1	names that are inferred from the word Theudis	names that are derived from the word Theudis
+# Heil is fortune, as the strings render it (string 1700), and salvation is Christian
+encyclopedia2 1	Salvation and skills of her ancestors	The good fortune and skills of her ancestors
+encyclopedia2 4	Their members had 'salvation', i.e. 'fortune'	Their members had 'Heil', i.e. 'fortune'
+encyclopedia2 4	his salvation would benefit the community	his fortune would benefit the community
+# abgeleitet is derived
+encyclopedia2 2	- inferred from this are the German words	- derived from this are the German words
+# Gabentausch is an exchange of gifts, and a tradeoff is a compromise
+encyclopedia2 2	to have a tradeoff in conclusion of a contract	to have an exchange of gifts in conclusion of a contract
+# Knechte und Mägde are servants and maids, as the English renders Knechte elsewhere
+encyclopedia2 2	to give instructions to slaves and maids	to give instructions to servants and maids
+encyclopedia2 2	they commanded their slaves and maids	they commanded their servants and maids
+encyclopedia2 2	the women, their children and their slaves retreated	the women, their children and their servants retreated
+# Ammen are wet nurses, and nanas a misspelling
+encyclopedia2 2	to have nanas and maids do that	to have wet nurses and maids do that
+# Heerkönig is army leader and king, as the topic Magic renders it, and an army leader is a Heerführer
+encyclopedia2 2	Ariovist, army leader of the Germanic tribe	Ariovist, army leader and king of the Germanic tribe
+# a dozen takes its noun directly: a dozen people
+encyclopedia2 2	a dozen of people	a dozen people
+# das Recht jedes freien Mannes: every free man's right
+encyclopedia2 3	abolish every man's right to seek revenge	abolish every free man's right to seek revenge
+# tapferer und großzügiger: braver and more generous
+encyclopedia2 4	They had to be brave and more generous	They had to be braver and more generous
+# influencable is a misspelling of influenceable
+encyclopedia2 7	predictable and even influencable for themselves	predictable and even influenceable for themselves
+# Hausgeister are household spirits, and a poltergeist is a noisy ghost
+encyclopedia2 7	As a sacrifice for the poltergeists	As a sacrifice for the household spirits
+# Wotan is a third name for the god the English calls Woden
+encyclopedia2 8	You would bring Wotan sacrifice	You would bring Woden sacrifice
+# the English drops Fricka
+encyclopedia2 8	FRIJA, or Frigg, was the goddess	FRIJA, or Frigg, or Fricka, was the goddess
+# alle Lebewesen are all living beings
+encyclopedia2 9	not only every animal, but also all things had a soul	not only all living beings, but also all things had a soul
+# Heil is fortune, as above
+encyclopedia2 9	some of the salvation of its owner	some of the fortune of its owner
+# dieses Eigenleben is the life of their own that things have
+encyclopedia2 9	you could strengthen such momentum by carving	you could strengthen this life of their own by carving
+# von Bären beseelt zu sein: to be possessed by the souls of bears
+encyclopedia2 9	the warriors really believed to have their souls from the bears	the warriors really believed they were possessed by the souls of bears
+# Carthagians is a misspelling of Carthaginians
+encyclopedia2 9	against the Carthagians	against the Carthaginians
+# verschönert is embellished, and refurbished is renovated
+encyclopedia2 10	virtually every commodity was fondly refurbished	virtually every commodity was fondly embellished
+# Dachbalken und Stühle: roof beams and chairs
+encyclopedia2 10	roof beams and trusses had elaborate carvings	roof beams and chairs had elaborate carvings
+# wild wuchernde Linien are lines
+encyclopedia2 10	wildly sprawling liliacs and plant-like ornaments	wildly sprawling lines and plant-like ornaments
+# the English drops the arms of inserted branches
+encyclopedia2 10	branched off like a fork, and the head by notches	branched off like a fork, the arms by inserted branches, and the head by notches
+# Depite is a misspelling of Despite, and the German says presumably (vermutlich)
+encyclopedia2 10	Depite frequent contact with Romans and Celts the Germanic people remained illiterate for centuries, for they didn't need writing.	Despite frequent contact with Romans and Celts the Germanic people remained illiterate for centuries, presumably because they didn't need writing.
+# and therefore in Latin is an addition: in lateinischer Schrift is in the Latin alphabet
+encyclopedia2 10	after the Roman example, and therefore in Latin, using the Roman alphabet	after the Roman example, using the Roman alphabet
+# allitations is a misspelling of alliterations
+encyclopedia2 10	performed in allitations (headrhymes)	performed in alliterations (headrhymes)
+# fiendslike is a misspelling of fiendlike, for teuflisch
+encyclopedia2 10	being pagan and fiendslike	being pagan and fiendlike
+# text takes the plural
+encyclopedia2 10	Most of these text are re-narratives	Most of these texts are re-narratives
+# the date of the burning is missing: 830 n.Chr.
+encyclopedia2 10	But his son Louis the Pious ordered	But in 830 A.D. his son Louis the Pious ordered
+# motive is a typo of motif
+encyclopedia2 11	a popular gravestone motive	a popular gravestone motif
+# Andererseits is on the other hand
+encyclopedia2 11	Otherwise, the Romans preserved a certain openness	On the other hand, the Romans preserved a certain openness
+# verlustreich is costly in lives: heavy losses
+encyclopedia2 11	tasks involving danger and substantial suffering	tasks involving danger and heavy losses
+# jedes Volk is each people
+encyclopedia2 11	each army depended on indigenous scouts	each people depended on indigenous scouts
+# Haushaltshilfen are domestic servants, and Gutsverwalter land agents, as the topic renders them below
+encyclopedia2 13	miners, homemakers, cooks	miners, domestic servants, cooks
+encyclopedia2 13	clerks, or commissioners.	clerks, or land agents.
+# cattle is a plural noun: a head of cattle
+encyclopedia2 13	as much as a cattle or a sword	as much as a head of cattle or a sword
+# did lacks its do
+encyclopedia2 13	most slaves did not too badly	most slaves did not do too badly
+# Oft is often
+encyclopedia2 13	Mostly slaves stood by their masters	Often slaves stood by their masters
+# verächtlich here is contemptible, and Altersschwäche is old age
+encyclopedia2 14	slowly dying away scornful	slowly dying away contemptible
+encyclopedia2 14	dying from illness or physical weakness	dying from illness or old age
+# Wurfspeere are javelins
+encyclopedia2 15	short swords, lances and shields	short swords, javelins and shields
+# eine Palisade is a palisade
+encyclopedia2 15	built up a cover from the pickets	built up a palisade from the pickets
+# die zurückgeschlagenen Legionäre had been beaten back, and struck back reads as hit back
+encyclopedia2 15	those legionaries struck back were able	those legionaries who had been beaten back were able
+# Offiziere are officers
+encyclopedia2 15	the Roman generals led the battle	the Roman officers led the battle
+# bedrängt is hard-pressed
+encyclopedia2 15	Pressurized army units	Hard-pressed army units
+# die Germanen are the Germanic tribes
+encyclopedia2 17	were attractive to the Barbarians	were attractive to the Germanic tribes
+# Zuidersee and IJsselmeer are names
+encyclopedia2 17	to the Zuider lake (Ijsselsea)	to the Zuiderzee (IJsselmeer)
+# Gaullic is a misspelling of Gallic
+encyclopedia2 17	several Gaullic tribes	several Gallic tribes
+encyclopedia2 17	the Gaullic chieftains	the Gallic chieftains
+# Tribes keeps a German capital
+encyclopedia2 17	the Suebian Tribes along the Rhine	the Suebian tribes along the Rhine
+# Kaiser is German for Emperor
+encyclopedia2 17	by Emperor Kaiser Augustus	by Emperor Augustus
+# had doubles
+encyclopedia2 17	whom he had had been unable to fight	whom he had been unable to fight
+# düster is gloomy
+encyclopedia2 17	his uncanny brother Tiberius	his gloomy brother Tiberius
+# once again is the English's addition to überquerte er mit einem großen Heer den Rhein
+encyclopedia2 18	he once again crossed the Rhine	he crossed the Rhine
+# Romanes is a typo of Romans
+encyclopedia2 18	Now the Romanes concluded	Now the Romans concluded
+# the English drops the Batavians, and Lehmhütten are mud huts
+encyclopedia2 18	A loyal and brave squad of Germanic warriors exchanged their Barbarian huts	A loyal and brave squad of Germanic warriors from the tribe of the Batavians exchanged their mud huts
+# probable is a typo of probably
+encyclopedia2 18	they probable passed	they probably passed
+# forcibly is the English's addition to zurückzuführen
+encyclopedia2 18	tried to forcibly repatriate	tried to repatriate
+# set out is intransitive here: sent out
+encyclopedia2 18	Rome set out up to 100,000 legionaries	Rome sent out up to 100,000 legionaries
+# the topic introduces him as Marbod, the German's name, and Maroboduus reads as another man
+encyclopedia2 18	break up Maroboduus's empire	break up Marbod's empire
+encyclopedia2 18	a hasty peace with Maroboduus	a hasty peace with Marbod
+encyclopedia2 18	Marcomanian kingdom of Maroboduus	Marcomanian kingdom of Marbod
+# E.g. lacks its second period
+encyclopedia2 18	E.g, Domitius	E.g., Domitius
+# Er habe die Ansicht gehabt is reported speech: he was of the opinion
+encyclopedia2 19	He, Varus, be of the opinion that the Germanic tribes be 'humans	He, Varus, was of the opinion that the Germanic tribes were 'humans
+# Velleius' quotation runs on to the sweetness of peace, and the English closes it early and leaves a stray quote
+encyclopedia2 19	subdued by the law.' With such resolutions	subdued by the law. With such resolutions
+encyclopedia2 19	the sweetness of peace'.	the sweetness of peace.'
+# die freiheitsgewohnten, unzivilisierten Stämme: uncivilized tribes used to liberty
+encyclopedia2 19	The tribes - used to liberty and savageness - felt	The uncivilized tribes - used to liberty - felt
+# zogen sich über drei Tage hin: over three days
+encyclopedia2 19	stretched over more than three days	stretched over three days
+# captivated is charmed: captured
+encyclopedia2 19	were captivated and handed over	were captured and handed over
+# Similarily is a misspelling of Similarly
+encyclopedia2 20	Similarily destructive	Similarly destructive
+# the gods are Jupiter and the others, not gods of Jupiter
+encyclopedia2 20	to worship the gods of Jupiter, Juno	to worship Jupiter, Juno
+# Athen's lacks its s
+encyclopedia2 20	Finally, Athen's philosophy schools	Finally, Athens' philosophy schools
+# nachdrängende Stämme press in after them, and where is a typo of were
+encyclopedia2 20	from other tribes who where covetous of acquiring the Roman standard of living.	from other tribes pressing in after them.
+# 80.000 Menschen: the people with their women and children
+encyclopedia2 20	North Africa with 80,000 men	North Africa with 80,000 people
+# Gemanic is a typo of Germanic, and Byzance is French for Byzantium
+encyclopedia2 20	the Gemanic people's transition	the Germanic people's transition
+encyclopedia2 20	Constantinople (Byzance)	Constantinople (Byzantium)
+# man is the people of Britain, and we makes the reader British
+encyclopedia2 20	Instead we would still speak a variety of Latin	Instead people there would still speak a variety of Latin
+# the English drops zwanglos und von selbst
+encyclopedia2 20	remained politically united in a single state.	remained politically united in a single state, naturally and of its own accord.
+# either takes or
+encyclopedia2 25	without either criticizing nor romanticizing	without either criticizing or romanticizing
+# the sentence lost the period that the German ends it with
+strings 271	%s is locked	%s is locked.
+strings 287	Does not work	Does not work.
+strings 1134	I will repair the things	I will repair the things.
+# können Sie dann auch ohne Internet bestellen: the form lets you order, which the English states as done
+strings 1838	you place your order without Internet	you can place your order without Internet
+# recommend takes its listener with to
+walkthrough 14	he'll recommend you the witch	he'll recommend to you the witch
+# a German book title keeps its own words: n.Chr.
+encyclopedia2 22	vom 1. bis 4. Jh. A.D.,	vom 1. bis 4. Jh. n.Chr.,
+# Frontius is a misspelling of Frontinus, the author of the Strategemata
+encyclopedia2 22	Frontius	Frontinus
+# the publisher in Munich is Oldenbourg, and Oldenburg a town in Lower Saxony
+encyclopedia2 22	Oldenburg Wissenschaftsverlag	Oldenbourg Wissenschaftsverlag
+# the English drops the German's sentence on the spelling of its German texts
+encyclopedia2 23	contained in the text.\n\nEnglish translation:	contained in the text.\n\nAll German texts follow the spelling rules of the imperial reform commission of 1901.\n\nEnglish translation:
+# the German asks whether and which Cheruscans sought the alliance, and why the tribe fought Rome after all, and the English asks for their motives and their failure
+encyclopedia2 25	Also unknown is which members of the Cheruscans tribe tried to form an alliance with Rome already at this time, what their precise motives were, and why they weren't successful. (In the end, the tribe allied with the Sugambrians and Suebians in order to resist the Romans.)	Also unknown is whether and which members of the Cheruscans tribe had tried to form an alliance with Rome already at this time, and why the tribe in the end fought against the Romans together with the Sugambrians and Suebians.
+# Buße here is the price of a killing, blood money, as the script has it, where penance is an act of contrition
+walkthrough 29	(don't accept a penance)	(don't accept the blood money)
+# You'remuch lacks its space
+script 9967	You'remuch stronger	You're much stronger
+# Barbarians is the adjective Barbarian: Barbaren-Fürsten
+script 5000	of Barbarians rulers	of Barbarian rulers
+# luke warm is one word
+script 5021	hot, luke warm, cold	hot, lukewarm, cold
+# dürfen is allowed to, not ordered to
+script 5021	we'll be ordered to plunder your villages and rape	we'll be allowed to plunder your villages and rape
+# dürfen is allowed to, not ordered to
+script 5021	we'll be ordered to plunder your villages. Perhaps	we'll be allowed to plunder your villages. Perhaps
+# soweit is insofar as, and bei uns eingekauft is bought from us
+script 1091	and as long they bought with us	and insofar as they bought from us
+# ever since takes the perfect
+script 9954	Ever since I'm free	Ever since I've been free
+# I rather don't is I'd rather not
+script 2028	I rather don't worry	I'd rather not worry
+# leggins is a misspelling of leggings
+script 2040	##Leather leggins{	##Leather leggings{
+# to cowardly is too cowardly
+script 2040	were to cowardly to fight	were too cowardly to fight
+# then is than
+script 2060	Much nicer then your old one.	Much nicer than your old one.
+# Kundschafter are scouts or spies, not messengers
+script 2060	scouts and messengers	scouts and spies
+# swordblows is two words
+script 2093	from swordblows, stabs	from sword blows, stabs
+# Palisade is a palisade, not a cover
+script 2093	surrounded by a cover and a trench	surrounded by a palisade and a trench
+# Hunderttausend Tote is a hundred thousand dead, and zehntausende Versklavte tens of thousands enslaved
+script 2093	Hundreds of thousands dead, ten thousands enslaved	A hundred thousand dead, tens of thousands enslaved
+# the line lacks it
+script 3011	no matter if was her wish	no matter if it was her wish
+# schrecklich is terrible, and heinous means wicked
+script 3012	and heinous to his enemies!	and terrible to his enemies!
+# than is that
+script 3012	so powerful than no one dares	so powerful that no one dares
+# the line lacks as
+script 3012	But as long you haven't formed	But as long as you haven't formed
+# Beserk is a misspelling of Berserk
+script 3200	#T&%kd==%kds#Beserk potion{	#T&%kd==%kds#Berserk potion{
+# take is have: welche Wirkung haben
+script 3200	plants and potions take which effects	plants and potions have which effects
+# the line lacks I
+script 3500	What can do for you this time?	What can I do for you this time?
+# auf einer Lichtung is in a clearing
+script 3500	close to the river, on top of a clearing,	close to the river, in a clearing,
+# several ones is several
+script 3014	he married several ones.	he married several.
+# I better shouldn't is I'd better not
+script 3020	I better shouldn't talk about it	I'd better not talk about it
+# susceptible takes to
+script 3021	susceptible you'll be against hostile	susceptible you'll be to hostile
+# the German says she lives in the place: wohnt in $Ort13
+script 3015	she lives near $Ort13	she lives in $Ort13
+# a storage is a storeroom, and the line drops buried: vergraben
+script 3015	this cave has a storage. That's where the treasure is said to be.	this cave has a storeroom. That's where the treasure is said to be buried.
+# the line lacks a
+script 3104	takes such risk in hostile	takes such a risk in hostile
+# That one follow is Follow that one: Dem mußt Du folgen
+script 3104	That one follow west	Follow that one west
+# the line lacks a
+script 3110	I am henchman of $N31.	I am a henchman of $N31.
+# wish takes the subjunctive were
+script 3111	I wish I'd be back home.	I wish I were back home.
+# mustn't forbids, where the German says that the tribune is the wrong man to talk to
+script 5011	You mustn't talk to me, but to our general.	You must talk not to me, but to our general.
+# the line lacks a
+script 5011	unfortunately I'm just tribune.	unfortunately I'm just a tribune.
+# the line lacks do
+script 1070	better things to than to mediate	better things to do than to mediate
+# flock takes a preposition: kommen hierher in unser Land
+script 1070	They just flock our land	They just flock into our land
+# want to me to is want me to
+script 1070	You want to me to give you	You want me to give you
+# the line lacks do
+script 1071	better things to than to mediate	better things to do than to mediate
+# the line lacks be
+script 1071	he could a bit more generous	he could be a bit more generous
+# as many takes as, not than
+script 1071	as many warriors than there are	as many warriors as there are
+# fight clashes with we'd, and the German says kämpfen, haben
+script 1071	If we fight we'd have at least	If we fight we'll have at least
+# über achtzig Kämpfe is more than eighty
+script 1081	He has fought in eighty battles	He has fought in more than eighty battles
+# knew is the conditional would know: wüßte
+script 2700	and then I knew such things as well.	and then I'd know such things as well.
+# the line lacks the: mit den $Stamm3d
+script 2700	allied with $Stamm3, no?	allied with the $Stamm3, no?
+# den Gott is the god Tiu, not God
+script 2700	you insulted God with	you insulted the god with
+# Tius is Tiu's
+script 2700	Tius favor will	Tiu's favor will
+# For of is a stray of: the term expands to the price
+script 2710	For of %P_KampfSeg	For %P_KampfSeg
+# a dozen of amphorae is a dozen amphorae
+script 2710	a dozen of amphorae	a dozen amphorae
+# the count runs from 2 to 10, so amphora takes the plural
+script 2710	%SpWeinAnz amphora with	%SpWeinAnz amphorae with
+# the line lacks an
+script 1082	give you endless amount of advice	give you an endless amount of advice
+# Humilation is a misspelling of Humiliation
+script 1083	##Humilation{	##Humiliation{
+# the line lacks a
+script 1095	When I was warrior	When I was a warrior
+# the line lacks to
+script 1073	want join him	want to join him
+# the wife speaks of her own husband: meinem Mann
+script 1073	Speak with your husband.	Speak with my husband.
+# that is than
+script 1073	dead that lead	dead than lead
+# the German speaks of the hostages: ihrer Geiseln
+script 1052	well-being of their people	well-being of their hostages
+# Ich is German
+script 4300	tribes. Ich don't	tribes. I don't
+# the line lacks been
+script 4300	as they so far have for the Romans	as they so far have been for the Romans
+# the line lacks a
+script 4300	to offer such measly gift	to offer such a measly gift
+# Ich is German
+script 4300	\\@100\n\nIch don't	\\@100\n\nI don't
+# dare takes the bare infinitive
+script 4301	How dare you entering	How dare you enter
+# henchman is henchmen
+script 3103	my two henchman!	my two henchmen!
+# the line lacks out, and see to it means take care of it where the German says go and look
+script 3103	To find about it it'd be best to see to it.	To find out about it, it'd be best to go and see.
+# Gaullic is a misspelling of Gallic, and the German says the tribes are ready now: sind
+script 3103	the Gaullic tribes were ready	the Gallic tribes are ready
+# they is the
+script 3103	if they Romans	if the Romans
+# be off badly is be badly off
+script 2000	he'll be off badly!	he'll be badly off!
+# the line lacks of
+script 2000	That causes a lot damage to us	That causes a lot of damage to us
+# the line lacks 'd
+script 2000	We rather keep	We'd rather keep
+# since alone reads as because, where the German says seitdem, which takes the perfect
+script 2050	and since the village resembles more and more a Roman settlement.	and since then the village has become more and more like a Roman settlement.
+# to old is too old
+script 2050	were to old to fight	were too old to fight
+# the line lacks a
+script 6000	after such bloody deed?	after such a bloody deed?
+# Prietesses is a misspelling of Priestesses
+script 6000	Prietesses are sacred	Priestesses are sacred
+# the plural of son-in-law is sons-in-law
+script 6000	great aunt's son-in-laws.	great aunt's sons-in-law.
+# went clashes with will, and the German says gehe
+script 6000	If I went there right now	If I go there right now
+# murder is murderer: Feiger Mörder
+script 2020	Coward, murder!	Coward, murderer!
+# the line is Italian
+script 2027	In alcun caso, i romani non li ricompensano con grano pestato e birra, ma con buone armi e argento!	In any case, the Romans don't reward them with grain porridge and beer, but with good arms and silver!
+# is takes the tag isn't he
+script 2027	$N21{\n$N21 is coming along as chief, doesn't he?	$N21{\n$N21 is coming along as chief, isn't he?
+# the line lacks as
+script 2027	a more suitable man successor!	a more suitable man as successor!
+# is takes the tag isn't he
+script 2027	man{\n$N21 is coming along as chief, doesn't he?	man{\n$N21 is coming along as chief, isn't he?
+# murder is murderer: Feiger Mörder
+script 2021	Coward, murder!	Coward, murderer!
+# be off better is be better off
+script 2021	will be off better and better.	will be better and better off.
+# a entire is an entire
+script 3010	for a entire group	for an entire group
+# Partie is a match in marriage, and the German has the player find it
+script 4540	Not that you reproach me for finding better company later on...	Not that you reproach me when you find a better match later on...
+# do you think takes the order of a statement
+script 4540	Why do you think am I so severely wounded?	Why do you think I am so severely wounded?
+# the German urges the player to talk to her husband: Du mußt unbedingt mit meinem Mann sprechen
+script 4541	Have you already talked to my husband?	You really must talk to my husband.
+# What is think is What I think
+script 4505	What is think of it	What I think of it
+# umso besser is all the better
+script 4500	But even the better	But all the better
+# you skull is your skull
+script 4500	split you skull	split your skull
+# nobleman is noblemen
+script 4500	all nobleman who	all noblemen who
+# the participle of sink is sunk
+script 4545	I haven't yet sunken so deep	I haven't yet sunk so deep
+# tried clashes with will, and the German says versuche, werden
+script 4545	If I tried to heal you, the warriors will slay you!\n}-{	If I try to heal you, the warriors will slay you!\n}-{
+# tried clashes with will, and the German says versuche, werden
+script 4545	If I tried to heal you, the warriors will slay you! And	If I try to heal you, the warriors will slay you! And
+# do you think takes the order of a statement
+script 2500	With whom do you think did you fight just now?!	With whom do you think you fought just now?!
+# Ich is German
+script 2500	accomplished.\n\nIch don't	accomplished.\n\nI don't
+# Ich is German
+script 2500	tribes. Ich don't	tribes. I don't
+# cattle takes the plural
+script 2500	The cattle dies, friends die	The cattle die, friends die
+# Gaullic is a misspelling of Gallic
+script 2500	Italic, Gaullic, and Rhetian	Italic, Gallic, and Rhetian
+# the line drops east: noch viel weiter östlich und südlich
+script 2500	countries even further south:	countries even further east and south:
+# image is imagine
+script 3000	You can image what	You can imagine what
+# the line lacks be
+script 3000	That we'd victorious.	That we'd be victorious.
+# the line lacks be sure
+script 3000	Or how could you that	Or how could you be sure that
+# have had demanded is have demanded
+script 3000	I'd have had demanded	I'd have demanded
+# more more is more
+script 3000	victory more more certain	victory more certain
+# the German has the player make the tribes deliver: veranlasse
+script 3000	In that case I have the $Stamm2	In that case have the $Stamm2
+# succeed takes in and the gerund
+script 1049	I may still succeed to win over	I may still succeed in winning over
+# Gaullic is a misspelling of Gallic
+script 1049	Several Gaullic tribes	Several Gallic tribes
+# Romans troops is Roman troops
+script 1049	attacked the Romans troops	attacked the Roman troops
+# Gaullic is a misspelling of Gallic
+script 1049	the Gaullic chieftains	the Gallic chieftains
+# Gaullic is a misspelling of Gallic
+script 1049	the Gaullic shore	the Gallic shore
+# the line swaps the persons: Die Götter schicken Dich zu mir
+script 1066	The gods sent me to you!	The gods sent you to me!
+# news takes the singular
+script 1051	These are really good news.	This is really good news.
+# the line lacks the twice: dem Gold der $Stamm4g, die $Stamm3a
+script 1051	With $Stamm4g gold we'll win over $Stamm3 as allies.	With the $Stamm4g gold we'll win over the $Stamm3 as allies.
+# $N30s writes a genitive into a relative clause: every nobleman Name's surrounds
+script 1051	every nobleman $N30s surrounds	every nobleman $N30 surrounds
+# you mind is your mind
+script 1051	Changed you mind?!	Changed your mind?!
+# Gaullic is a misspelling of Gallic
+script 1051	Every Gaullic tribe	Every Gallic tribe
+# can clashes with would, and the German says können, wird
+script 1051	the Roman rule would collapse everywhere	the Roman rule will collapse everywhere
+# nonsense takes no article
+script 2017	What a nonsense!	What nonsense!
+# Gaullic is a misspelling of Gallic
+script 2017	The Gaullic tribes	The Gallic tribes
+# the German puts the smith in the southwest: im Südwesten des Ortes
+script 2022	in the southeastern part of town	in the southwestern part of town
+# müßige Vermutung is idle speculation, and tedious means boring
+script 2015	remains tedious speculation	remains idle speculation
+# the line lacks a
+script 2015	Or in hundred years	Or in a hundred years
+# the ellipsis lacks a dot
+script 1050	give it to the envoy..	give it to the envoy...
+# a alliance is an alliance
+script 1050	instead of a alliance	instead of an alliance
+# what's in for us lacks it
+script 1050	but what's in for us?	but what's in it for us?
+# succeed takes in and the gerund
+script 1050	##save our tribe{\nWithout $N10, Rome's enemies won't succeed to entice	##save our tribe{\nWithout $N10, Rome's enemies won't succeed in enticing
+# succeed takes in and the gerund
+script 1050	save our tribe:\n\nWithout $N10, Rome's enemies won't succeed to entice	save our tribe:\n\nWithout $N10, Rome's enemies won't succeed in enticing
+# the line lacks will
+script 1050	Then our tribe join forces	Then our tribe will join forces
+# I'd is It'd: Es wäre so leicht
+script 1060	I'd be so easy to avoid	It'd be so easy to avoid
+# I'll rather is I'd rather
+script 9991	I'll rather fight until death!	I'd rather fight until death!
+# Buße here is the price of a killing, blood money, where penance is an act of contrition
+script 1051	I'll pay you a penance for compensation	I'll pay you blood money as compensation
+script 1051	##Penance?{	##Blood money?{
+script 1051	I accept your penance.{  @235	I accept your blood money.{  @235
+script 1051	I accept your penance.{\n\\@234	I accept your blood money.{\n\\@234
+script 1051	I accept your penance.{\n\\g@235	I accept your blood money.{\n\\g@235
+script 1051	I want a higher penance.{\nAlright, six	I want more blood money.{\nAlright, six
+script 1051	I want a higher penance.{\nI'm still	I want more blood money.{\nI'm still
+script 1051	pay a higher penance.	pay more blood money.
+# Buße here is the price of a killing, blood money, where penance is an act of contrition
+script 1050	You accepted a penance from	You accepted blood money from
+
+# The facts that the German states wrongly, and the English repeats.
+# Noricum lay in today's Austria
+encyclopedia2 17	Noricum (today's Switzerland)	Noricum (today's Austria)
+# the sack of Athens that the anecdote tells was in 267
+encyclopedia2 11	Even in 257 A.D.	Even in 267 A.D.
+# Augustine was the bishop of Hippo, which the Vandals besieged as he died in 430, and was born in Thagaste
+encyclopedia2 20	his hometown Carthage	his episcopal city Hippo
+# Drusus and Tiberius were Augustus's stepsons
+strings 573	his sons Drusus	his stepsons Drusus
+# Drusus and Tiberius were Augustus's stepsons, and Augustus adopted Tiberius in 4 A.D.
+encyclopedia1 6	his adopted sons, Drusus	his stepsons, Drusus
+# Drusus was Augustus's stepson: Augustus adopted Tiberius alone, in 4 A.D.
+encyclopedia2 17	his adoptive son Drusus	his stepson Drusus
+# the third war against Carthage began in 149 and ended with the city's fall in 146
+encyclopedia1 5	ended in 149 B.C.	ended in 146 B.C.
+# the Frankish empire was divided at Verdun in 843, and the name came later
+encyclopedia1 10	was created in the 11. Century A.D., when the Kingdom of the Franks was divided	was created after the Kingdom of the Franks was divided in the 9th Century A.D.
+# Caesar conquered the rest of Gaul in the wars of 58 to 50 B.C.
+encyclopedia2 17	In 58 B.C. Julius Caesar,	From 58 B.C. on, Julius Caesar,

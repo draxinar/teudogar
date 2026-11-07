@@ -70,10 +70,15 @@ WARN_clang_amd64 = -Wno-keyword-macro
 WARN_clang_arm64 = -Wno-keyword-macro
 WARN = $(WARN_$(CC)_$(ARCH)) $(WARN_$(CC))
 
-# MACROS gives the modules FEATURE_<NAME> for each feature. With an
-# empty list the program keeps the original's gameplay, with faults and
-# pace, which every program on SDL3 takes.
-MACROS := $(patsubst %,-DFEATURE_%,$(shell echo $(FEATURES) | tr '[:lower:]' '[:upper:]'))
+# MACROS gives the modules FEATURES and FEATURE_<NAME> for each feature,
+# and FEATURE_MODULES lists the modules of src/feature: feature.cpp, the
+# plumbing of the features. With an empty list the program keeps the
+# original's texts and gameplay, with faults and pace, which every
+# program on SDL3 takes.
+ifneq ($(strip $(FEATURES)),)
+MACROS := -DFEATURES $(patsubst %,-DFEATURE_%,$(shell echo $(FEATURES) | tr '[:lower:]' '[:upper:]'))
+FEATURE_MODULES = feature
+endif
 
 # The flags. The game's modules compile as C99 with the prelude of
 # src/sys, which gives their names Watcom's meaning, and with
@@ -88,7 +93,7 @@ GAME_CFLAGS = $(CFLAGS) -Werror -fpack-struct=1 -ftrivial-auto-var-init=zero \
 	-Wno-address-of-packed-member -Wno-missing-braces -Wno-dangling-else \
 	-Wno-unused-function -Wno-unused-label \
 	-include src/sys/prelude.h -DPORT -DFEATURE_FAULTS -DFEATURE_PACE $(MACROS) \
-	-Isrc/sys/include -Isrc/base
+	-Isrc/sys/include -Isrc/base -Ibuild/lang/include
 SYS_CFLAGS = $(CFLAGS) -Wextra -Werror -DPORT -Isrc/sys/include -Isrc/sys
 
 # The objects, in their link order: the modules of the game, in sys/ the
@@ -96,7 +101,7 @@ SYS_CFLAGS = $(CFLAGS) -Wextra -Werror -DPORT -Isrc/sys/include -Isrc/sys
 # bytes and icon.
 SYS_MODULES = main win draw sound midi file reg kernel fmt zlib replay
 SYS_OBJS = $(SYS_MODULES:%=$(O)/sys/%.o)
-OBJS = $(patsubst %,$(O)/%.o,$(BASE_MODULES) $(GAME_MODULES)) $(SYS_OBJS) $(O)/sold.o $(O)/icon.o
+OBJS = $(patsubst %,$(O)/%.o,$(BASE_MODULES) $(GAME_MODULES) $(FEATURE_MODULES)) $(SYS_OBJS) $(O)/sold.o $(O)/icon.o
 
 $(O) $(O)/sys $(O)/test build/gen:
 	mkdir -p $@
@@ -120,6 +125,10 @@ $(O)/%.o: src/base/%.cpp build/features | $(O)
 	$(COMPILE) -x c $(GAME_CFLAGS) $(WARN) -MMD -MP -c -o $@ $<
 
 $(O)/%.o: src/teudogar/%.cpp build/features | $(O)
+	$(COMPILE) -x c $(GAME_CFLAGS) $(WARN) -MMD -MP -c -o $@ $<
+
+# feature.cpp reads the headers that cmd/lang writes.
+$(O)/%.o: src/feature/%.cpp build/features build/lang/.ok | $(O)
 	$(COMPILE) -x c $(GAME_CFLAGS) $(WARN) -MMD -MP -c -o $@ $<
 
 $(O)/%.o: build/gen/%.c | $(O)
@@ -167,21 +176,22 @@ $(O)/teudogar$(EXE): $(OBJS) $(RES_$(OS)) $(DLLS_$(OS)) bin/symcheck
 # all builds the program.
 all: $(O)/teudogar$(EXE)
 
-# The distribution holds the program, the release's data files, the
-# SoundFont and its licence, the libraries of a Windows or macOS program
-# with theirs, and LICENSE, the licence of this tree's code, as
-# license.txt, each in its place (Makefile), which SEAL ends for a macOS
-# app (mk/macos.mk). DATA is the place of the data in the new folder.
-# The folder is read only for the game, which keeps its saved games in
-# the user's own.
+# The distribution holds the program, the release's data files with
+# those that the features rewrite, the SoundFont and its licence, the
+# libraries of a Windows or macOS program with theirs, and LICENSE, the
+# licence of this tree's code, as license.txt, each in its place
+# (Makefile), which SEAL ends for a macOS app (mk/macos.mk). DATA is the
+# place of the data in the new folder. The folder is read only for the
+# game, which keeps its saved games in the user's own.
 DATA = $(D).new$(DATADIR_$(OS))
-$(PROGRAM): $(O)/teudogar$(EXE) build/zip/.ok $(SOUNDFONT) $(SOUNDFONT_LICENCE) \
+$(PROGRAM): $(O)/teudogar$(EXE) build/zip/.ok build/lang/.ok $(SOUNDFONT) $(SOUNDFONT_LICENCE) \
 		$(LICENCES_$(OS)) $(APPFILES_$(OS)) LICENSE bin/lock
 	rm -rf $(D).new && mkdir -p $(D).new$(PROGDIR_$(OS)) $(D).new$(LIBDIR_$(OS)) $(DATA)
 	for f in $(RELEASE)/*; do \
 		case $$f in *.exe | *'not for use'*) continue ;; esac; \
 		cp -p "$$f" $(DATA)/ || exit 1; \
 	done
+	cp -R build/lang/data/. $(DATA)/
 	$(call CHECK,$(SOUNDFONT))
 	$(call CHECK,$(SOUNDFONT_LICENCE))
 	ln -f $(SOUNDFONT) $(DATA)/generaluser-gs.sf2 2>/dev/null || cp $(SOUNDFONT) $(DATA)/generaluser-gs.sf2

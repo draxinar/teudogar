@@ -166,6 +166,10 @@ extern char itembuf[64];
 extern char itembuf[32];
 #endif
 extern char yourbuf[40];
+// FEATURE: features: the entries that the build fills, in src/feature/feature.cpp
+#ifdef FEATURES
+int featfilled(int id);
+#endif
 
 /* the offset of *id in [base, base + 6), *id set to base, else -1 */
 int
@@ -186,6 +190,11 @@ langentry(int id)
 {
 	int n;
 
+	// FEATURE: features: an entry that the build fills is read as it is
+#ifdef FEATURES
+	if (featfilled(id))
+		return id;
+#endif
 	n = langof(&id, 12);
 	if (n >= 0) {
 		if (n != 1 && n != 0 && n != 4)

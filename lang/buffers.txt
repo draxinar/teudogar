@@ -1,0 +1,46 @@
+# The strings of strs that the errata make longer than the longest of
+# the release's German, English, and Italian, and that the game
+# composes into buffers: the string's index, a tab, the most bytes
+# (code page 1252, without the NUL) that the string may take, and a tab
+# and the reckoning, which names each buffer with its size and the
+# inserts. cmd/lang -r reads it, and reports a string longer than its
+# room.
+
+# The strings that the errata of the English and the Italian make
+# longer than the release's. printbuf, picbuf, packbuf, and workbuf hold
+# far more, and the character sheet's text grows at scrbuf + 0x88b8 in
+# char scrbuf[309700]. sheetepitaph[240] takes the player's name (16
+# bytes) or a number (up to 11 digits) besides the string.
+287	169	msgfmt[200] of denymsg (combat.cpp), after the longest action name (27 bytes) and the 3 bytes of texts b079, actfail (menus.cpp)
+911	2000	picbuf[308200], with two strings of the texts and a button, controls (mainmenu.cpp)
+940	60	a row of scrbuf, char [100], options (mainmenu.cpp)
+1137	200	the expansion of wrkz into speech[4000] or a scene's expansion (2,000), expand (dialog.cpp)
+1329	200	printbuf[4800], then the character sheet's text in scrbuf, charsheet (mainmenu.cpp)
+1338	200	printbuf[4800], then the character sheet's text in scrbuf, charsheet (mainmenu.cpp)
+1341	200	printbuf[4800], then the character sheet's text in scrbuf, charsheet (mainmenu.cpp)
+1421	31	itembuf[32]
+1491	200	sheetepitaph[240], with the player's name, epitaph (texts.cpp)
+1512	200	sheetepitaph[240], with a number, epitaph (texts.cpp)
+1821	1000	printbuf[4800], then workbuf, aboutfull (mainmenu.cpp)
+1839	5000	packbuf[616000], aboutgame (mainmenu.cpp)
+
+# The texts that a choice of the options menu or an ending inserts. A
+# choice of the options (mainmenu.cpp) fills a row of 100 bytes of
+# scrbuf, where string 973 takes at most 26 bytes beside its state.
+# fatetext (texts.cpp) writes the endings into scrbuf (char [309700]) or
+# workbuf (char [616000]).
+974	73	a row of scrbuf, char [100], with string 973, options (mainmenu.cpp)
+1545	2000	scrbuf or workbuf, fatetext (texts.cpp)
+
+# The messages of msgf, msgcat, addmsg, denymsg, failmsg, askmsg,
+# nosuccess, notworking, and usefail (combat.cpp), which compose a
+# message in msgfmt[200] and copy it into a row of msgtext, as many
+# bytes. Each room leaves the worst message of the string, its inserts
+# at their longest in the three languages (an item's or a unit's name
+# 31 bytes, a string of strs its longest, or 60 where an expression
+# picks it, and any other insert 40), within 169 bytes: 199 less 30 for
+# an action's name that prependmsg puts before it.
+274	140	msgfmt[200], 57 bytes at most with its inserts, useitem (actions.cpp)
+317	169	msgfmt[200], 36 bytes at most with its inserts, useitem (actions.cpp)
+343	131	msgfmt[200], 69 bytes at most with its inserts, hurt (combat.cpp)
+1286	169	msgfmt[200], 61 bytes at most with its inserts, pickup (input.cpp)

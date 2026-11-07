@@ -91,6 +91,10 @@ unsigned long baselook(unsigned long item);
 unsigned short gearof(unsigned long item);
 short immobility(Unit *u);
 char *itemname(unsigned long item);
+// FEATURE: features: the texts that the build replaces, in src/feature/feature.cpp
+#ifdef FEATURES
+char *feattext(char *s);
+#endif
 
 extern char *strs[];
 extern int lang;
@@ -196,6 +200,10 @@ pick(char *de, char *en, char *fr, char *es, char *it, char *pl)
 			s = pl;
 		break;
 	}
+	// FEATURE: features: the build's own string in place of this one, where it has one
+#ifdef FEATURES
+	s = feattext(s);
+#endif
 	return s;
 }
 

@@ -35,6 +35,10 @@ typedef struct Saved Saved;
 #endif
 
 extern char texts[];
+// FEATURE: features: the texts of the build, in src/feature/feature.cpp
+#ifdef FEATURES
+char *feattext(char *s);
+#endif
 
 #define T(off) (texts + (off))
 
@@ -5000,7 +5004,12 @@ text3greyn(int n, int x, int y, char *fmt, ...)
 	va_list ap;
 
 	va_start(ap, fmt);
+	// FEATURE: features: the build's own format of a text
+#ifdef FEATURES
+	wvsprintf(printbuf, feattext(fmt), ap);
+#else
 	wvsprintf(printbuf, fmt, ap);
+#endif
 	va_end(ap);
 	return text3grey(n, x, y, printbuf);
 }

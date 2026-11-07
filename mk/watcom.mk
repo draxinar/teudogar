@@ -108,13 +108,15 @@ ifneq ($(OS)-$(ARCH),windows-386)
 $(error CC=watcom builds OS=windows ARCH=386)
 endif
 
-# The game with FEATURES. wpp386 takes FEATURE_<NAME> for each feature
-# from its variable WPP386, since DOS holds a command line to 127
-# characters.
+# The game with FEATURES. wpp386 takes FEATURES and FEATURE_<NAME> for
+# each feature from its variable WPP386, since DOS holds a command line
+# to 127 characters. FEATURE_MODULES lists the modules of src/feature:
+# feature.cpp, the plumbing of the features.
 GAME_FEATURES = $(sort $(FEATURES) $(if $(filter fixes,$(FEATURES)),faults pace))
-FEATURE_MACROS := $(patsubst %,-dFEATURE_%=1,$(shell echo $(GAME_FEATURES) | tr '[:lower:]' '[:upper:]'))
+FEATURE_MACROS := -dFEATURES=1 $(patsubst %,-dFEATURE_%=1,$(shell echo $(GAME_FEATURES) | tr '[:lower:]' '[:upper:]'))
 FEATURE_ENV = -e 'WPP386=$(FEATURE_MACROS)'
-FEATURE_OBJS = $(patsubst %,$(O)/%.obj,$(BASE_MODULES) $(GAME_MODULES))
+FEATURE_MODULES = feature
+FEATURE_OBJS = $(patsubst %,$(O)/%.obj,$(BASE_MODULES) $(GAME_MODULES) $(FEATURE_MODULES))
 FEATURE_DEPS = src/base/base.h build/features build/dos/.ok bin/dos
 
 # A module compiles in C:\FEAT\<module>, as long as C:\GAME\<module>.
@@ -124,22 +126,31 @@ $(O)/%.obj: src/base/%.cpp $(FEATURE_DEPS)
 $(O)/%.obj: src/teudogar/%.cpp $(FEATURE_DEPS)
 	$(call WCC,wpp386,$(BASE_CFLAGS),feat/$*,src/base/*.h,$(FEATURE_ENV))
 
-# The game with FEATURES links in C:\WORK\GAME at DATE, as the original
-# does in its own directory.
+# feature.cpp reads the headers that cmd/lang writes.
+$(O)/%.obj: src/feature/%.cpp $(FEATURE_DEPS) build/lang/.ok
+	$(call WCC,wpp386,$(BASE_CFLAGS),feat/$*,src/base/*.h build/lang/include/*.h,$(FEATURE_ENV))
+
+# The game with FEATURES links in C:\WORK\GAME at DATE, with the
+# original's resources, in the order of teudogar.lnk with the modules of
+# src/feature after screen.
 $(WORK)/game/teudogar.exe: $(ZLIB_OBJS) $(FEATURE_OBJS) src/teudogar/teudogar.lnk src/teudogar/teudogar.rc \
 		build/zip/.ok bin/dos bin/wlink $(BIN)/pe $(BIN)/rc
-	rm -rf $(@D) && mkdir -p $(@D) && cp $(filter %.obj %.lnk %.rc,$^) $(@D)/
+	rm -rf $(@D) && mkdir -p $(@D) && cp $(filter %.obj %.rc,$^) $(@D)/
+	awk -v mods='$(FEATURE_MODULES)' '{ print } $$0 == "file screen.obj" { n = split(mods, m, " "); for (i = 1; i <= n; i++) print "file " m[i] ".obj" }' \
+		src/teudogar/teudogar.lnk >$(@D)/game.lnk
 	$(BIN)/rc $(RELEASE)/teudogar.exe $(@D) >/dev/null
 	bin/dos -d 'C:\WORK\GAME' wrc -r -q -bt=nt teudogar.rc >/dev/null
-	bin/wlink 'C:\WORK\GAME' teudogar.lnk $@ '$(DATE)'
+	bin/wlink 'C:\WORK\GAME' game.lnk $@ '$(DATE)'
 
 # cmd/seal does what the author's release step did: it copies the
 # licence bytes of sold.txt from the release, object by object, which
 # cmd/wmap's dumps of the two link maps place, seals the program, and
-# writes its copy word into teudogar.dat. The build starts from the
-# original's bytes (make original): a hook that changes them stops it.
-$(O)/teudogar.exe: $(WORK)/game/teudogar.exe $(ORIGINAL)/.ok src/teudogar/sold.txt $(BIN)/wmap $(BIN)/seal
+# writes its copy word into teudogar.dat, the release's or the one that
+# the features rewrite. The build starts from the original's bytes
+# (make original): a hook that changes them stops it.
+$(O)/teudogar.exe: $(WORK)/game/teudogar.exe $(ORIGINAL)/.ok build/lang/.ok src/teudogar/sold.txt $(BIN)/wmap $(BIN)/seal
 	cp $< $@.tmp && cp $(RELEASE)/teudogar.dat $(O)/teudogar.dat.tmp
+	[ ! -e build/lang/data/teudogar.dat ] || cp build/lang/data/teudogar.dat $(O)/teudogar.dat.tmp
 	$(BIN)/wmap $(WORK)/teudogar/teudogar.map >$(O)/release.syms && $(BIN)/wmap $(WORK)/game/teudogar.map >$(O)/game.syms
 	$(BIN)/seal src/teudogar/sold.txt $(O)/release.syms $(RELEASE)/teudogar.exe $(O)/game.syms $@.tmp $(O)/teudogar.dat.tmp
 	mv $(O)/teudogar.dat.tmp $(O)/teudogar.dat && mv $@.tmp $@
@@ -147,19 +158,20 @@ $(O)/teudogar.exe: $(WORK)/game/teudogar.exe $(ORIGINAL)/.ok src/teudogar/sold.t
 # all builds the sealed program.
 all: $(O)/teudogar.exe
 
-# The distribution is the release's folder with the sealed program, its
-# teudogar.dat, ddraw.dll, which runs it on Windows 8 and later, and
-# LICENSE, the licence of this tree's code, as license.txt, less the
-# release's labels that call its programs "not for use". uninstal.exe
-# stays, since checkfiles requires it. The program runs from it as the
-# release's does. Wine keeps its own ddraw unless WINEDLLOVERRIDES
-# names the folder's.
-$(D)/teudogar.exe: $(O)/teudogar.exe build/zip/.ok build/ddraw/ddraw.dll LICENSE bin/lock
+# The distribution is the release's folder with the files that the
+# features change, the sealed program, its teudogar.dat, ddraw.dll,
+# which runs it on Windows 8 and later, and LICENSE, the licence of
+# this tree's code, as license.txt, less the release's labels that call
+# its programs "not for use". uninstal.exe stays, since checkfiles
+# requires it. The program runs from it as the release's does. Wine
+# keeps its own ddraw unless WINEDLLOVERRIDES names the folder's.
+$(D)/teudogar.exe: $(O)/teudogar.exe build/lang/.ok build/zip/.ok build/ddraw/ddraw.dll LICENSE bin/lock
 	rm -rf $(D).new && mkdir -p $(D).new
 	for f in $(RELEASE)/*; do \
 		case $$f in *'not for use'*) continue ;; esac; \
 		cp -p "$$f" $(D).new/ || exit 1; \
 	done
+	cp -R build/lang/data/. $(D).new/
 	cp $(O)/teudogar.exe $(O)/teudogar.dat build/ddraw/ddraw.dll $(D).new/
 	cp LICENSE $(D).new/license.txt
 	$(SWAP)

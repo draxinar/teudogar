@@ -9,6 +9,10 @@ DWORD unpack(void *dst, DWORD dstlen, void *src, DWORD srclen);
 int text3w(char *s);
 int langentry(int id);
 int seekentry(int id);
+// FEATURE: features: the languages of the build, in src/feature/feature.cpp
+#ifdef FEATURES
+int featlang(int c);
+#endif
 
 extern char workbuf[616000];
 extern char packbuf[616000];
@@ -164,7 +168,12 @@ setlang(char c)
 #ifndef FEATURE_FIXES
 	copystr(langcode, c == 0 ? "de" : c == 2 ? "fr" : c == 3 ? "sp" : c == 4 ? "it" : c == 5 ? "pl" : "en");
 #endif
+	// FEATURE: features: the languages of the build
+#ifdef FEATURES
+	if (!(c == 0xff || featlang(c)))
+#else
 	if (!(c == 0xff || c == 1 || c == 0 || c == 4))
+#endif
 		c = 1;
 	// FIXED: as above, name the pages after the test.
 #if defined(FEATURE_FIXES)
@@ -186,7 +195,12 @@ extern int strsfromfile;
 void
 chooselang(char c)
 {
+	// FEATURE: features: the languages of the build
+#ifdef FEATURES
+	if (c != 0xff && !featlang(c))
+#else
 	if (c != 0xff && c != 1 && c != 0 && c != 4)
+#endif
 		c = 1;
 	setlang(c);
 	if (!poundsset) {
