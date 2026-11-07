@@ -105,7 +105,8 @@ $(ORIGINAL)/.ok: $(ORIGINAL)/teudogar.exe $(ORIGINAL)/uninstal.exe sum/rebuild.s
 # The game with FEATURES. wpp386 takes FEATURE_<NAME> for each feature
 # from its variable WPP386, since DOS holds a command line to 127
 # characters.
-FEATURE_MACROS := $(patsubst %,-dFEATURE_%=1,$(shell echo $(FEATURES) | tr '[:lower:]' '[:upper:]'))
+GAME_FEATURES = $(sort $(FEATURES) $(if $(filter fixes,$(FEATURES)),faults pace))
+FEATURE_MACROS := $(patsubst %,-dFEATURE_%=1,$(shell echo $(GAME_FEATURES) | tr '[:lower:]' '[:upper:]'))
 FEATURE_ENV = -e 'WPP386=$(FEATURE_MACROS)'
 FEATURE_OBJS = $(patsubst %,$(O)/%.obj,$(BASE_MODULES) $(GAME_MODULES))
 FEATURE_DEPS = src/base/base.h build/features build/dos/.ok bin/dos

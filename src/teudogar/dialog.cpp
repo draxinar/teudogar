@@ -2333,6 +2333,11 @@ setflag(unsigned n)
 {
 	if (n >= 0xf0)
 		return;
+	// FIXED: the reward comes before the test that refuses 0x1d to 0x1f under their opposites, so a refused action pays on every call. Refuse first.
+#if defined(FEATURE_FIXES)
+	if (n == 0x1d && getbit(game.known, 0x15) || n == 0x1e && getbit(game.known, 0x16) || n == 0x1f && getbit(game.known, 0x17))
+		return;
+#endif
 	if (!getbit(game.known, n)) {
 		addscore(0x8c);
 		learnaction();
@@ -2902,7 +2907,12 @@ runcmds(char *p)
 				for (cmdm = 0; cmdm < 10; cmdm++)
 					game.faces[cmdm] = game.faces[cmdm + 10];
 				game.faces[cmdm++] = units[curunit].face;
+				// FIXED: the loop that clears the faces after the new one starts at 11 and stops below 10, so it never runs and the list stays full. Clear up to 20.
+#if defined(FEATURE_FIXES)
+				for (; cmdm < 20; cmdm++)
+#else
 				for (; cmdm < 10; cmdm++)
+#endif
 					game.faces[cmdm] = 0;
 			}
 		mrdone:

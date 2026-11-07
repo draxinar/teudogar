@@ -4089,7 +4089,12 @@ gotkey:
 checkenter:
 	if (inkey == 0xd) {
 	enter:
+		// FIXED: Enter goes unheard with the cursor at the start of a text, where an empty text is meant. Refuse an empty text.
+#if defined(FEATURE_FIXES)
+		if (!(inlen == 0 && !nfields)) {
+#else
 		if (!(curpos == 0 && !nfields)) {
+#endif
 			if (inkey == 0xd)
 				clicksound();
 			while (s[curpos])

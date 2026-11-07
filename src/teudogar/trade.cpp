@@ -232,7 +232,12 @@ tradecost(void)
 				goodsprice += repaircost(tradeoffer[tcostslot]);
 			}
 		}
+		// FIXED: the index of the repairs wraps below 0 at the 24th, which passes the test for more than 6. Refuse the wrapped index too.
+#if defined(FEATURE_FIXES)
+		if (offerprice < 17 || offerprice > 23) {
+#else
 		if (offerprice < 17) {
+#endif
 			wsprintf(speech, strs[1132]);
 		done:
 			goodsprice = 0;

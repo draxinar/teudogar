@@ -1051,11 +1051,22 @@ open:
 	} else
 		msgf(99, texts + 0xb318, itemname(item), breaktext(flhard));
 award:
+	// FIXED: a tool's break-in (k 2) wears the weapon in hand by flhit, a value left from the last blow. Wear it after a blow alone, as the test of k above for the lock with both bits does.
+#if defined(FEATURE_FIXES)
+	if (k == 1) {
+		if ((units[0].hand & 0xfff) == 0x1ce)
+			weargear(0, units, &units[0].hand, flhit, 1);
+		else
+			for (flidx = 0; flidx < 4; flidx++)
+				weargear(0, units, &units[0].hand, flhit * 100, 1);
+	}
+#else
 	if ((units[0].hand & 0xfff) == 0x1ce)
 		weargear(0, units, &units[0].hand, flhit, 1);
 	else
 		for (flidx = 0; flidx < 4; flidx++)
 			weargear(0, units, &units[0].hand, flhit * 100, 1);
+#endif
 	if (flhard == 7) {
 	unlocked:
 		*flword &= ~0x8000000;
@@ -2303,6 +2314,11 @@ showquests(int)
 	textwin(workbuf, 0, 0xfe, 0, 0, 0, 0, 0xff);
 }
 
+// FIXED: keysaved holds savemenu's answer for keycmd's message of a save, as loadsave keeps lastslot on a cancel
+#if defined(FEATURE_FIXES)
+static short keysaved;
+#endif
+
 int
 keycmd(unsigned char key)
 {
@@ -2514,10 +2530,19 @@ keycmd(unsigned char key)
 		break;
 	case 0x1f:
 	case 0x3c:
+		// FIXED: the message of a save shows whenever lastslot is set, which loadsave keeps on a cancel. Show it after a save.
+#if defined(FEATURE_FIXES)
+		keysaved = savemenu(0);
+		if (keysaved)
+			aftersave();
+		leavemenu(1);
+		if (keysaved && lastslot) {
+#else
 		if (savemenu(0))
 			aftersave();
 		leavemenu(1);
 		if (lastslot) {
+#endif
 			msgf(0x63, strs[1147], (short)lastslot + 0x40);
 			drawscreen();
 			drawcursor();
@@ -3016,6 +3041,11 @@ pacetimes(void)
 }
 #endif
 
+// FIXED: as in gametick
+#if defined(FEATURE_FIXES)
+static unsigned short gtstep;	/* steptick at the start of this tick, or where a tick that ran inside it left steptick */
+#endif
+
 void
 gametick(void)
 {
@@ -3097,6 +3127,10 @@ gametick(void)
 		return;
 	gtunused = 0;
 	gtdepth++;
+	// FIXED: a step of 8 ticks moves steptick by 3 a tick, which lands on a multiple of 4 twice a cell, where every other steplen lands six times, so the world takes one turn to three cells. Test for a multiple of 4 reached or passed.
+#if defined(FEATURE_FIXES)
+	gtstep = steptick;
+#endif
 	stepinc = 1;
 	if (steptick < 0x17) {
 		if (units[0].pose == 1) {
@@ -3154,7 +3188,12 @@ gametick(void)
 		else
 			waterframe++;
 	}
+	// FIXED: as above
+#if defined(FEATURE_FIXES)
+	if (steptick / 4 != gtstep / 4) {
+#else
 	if ((steptick & 3) == 0) {
+#endif
 		stepframe++;
 		fightmusic();
 		if ((stepframe & 1) == 0) {
@@ -3170,7 +3209,12 @@ gametick(void)
 			}
 		}
 	}
+	// FIXED: as above
+#if defined(FEATURE_FIXES)
+	if (steptick / 4 != gtstep / 4)
+#else
 	if ((steptick & 3) == 0)
+#endif
 		stepanims();
 	if (playmode != 1 || talkactive || lostcontrol)
 		stepframe = steptick / 4;
@@ -3250,6 +3294,10 @@ gametick(void)
 		noflip = 0;
 #endif
 	}
+	// FIXED: as above, a tick that runs inside another, as at a map change with a button held, counts its own steps, and leaves the other its steptick to count from
+#if defined(FEATURE_FIXES)
+	gtstep = steptick;
+#endif
 	gtdepth--;
 }
 

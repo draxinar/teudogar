@@ -671,6 +671,12 @@ carrytext(Unit *u, short n)
 	carrybuf[0] = 0;
 	if (badunit(u))
 		return carrybuf;
+	// FIXED: carrymax rounds by the remainder of kindof(u)->strength but divides u->strength, and in pounds the remainders of 45 never reach 50, so nothing rounds up. Round each quotient to the nearest by adding half its divisor.
+#if defined(FEATURE_FIXES)
+	r = pounds ? 45 : 100;
+	carryload = (u->load + r / 2) / r;
+	carrymax = (u->strength * 25 + r / 2) / r;
+#else
 	if (pounds == 0) {
 		r = u->load % 100 >= 50 ? 1 : 0;
 		carryload = u->load / 100 + r;
@@ -682,6 +688,7 @@ carrytext(Unit *u, short n)
 		r = kindof(u)->strength * 25 % 45 >= 50 ? 1 : 0;
 		carrymax = u->strength * 25 / 45 + r;
 	}
+#endif
 	if (n) {
 		wsprintf(carrybuf, texts + 0xb09e, carryload, strs[1290], carrymax,
 			strs[pounds ? 0x330 : 0x32f]);
@@ -719,7 +726,12 @@ daystext(short n)
 {
 	int h, d;
 
+	// FIXED: 24 hours fall to the half day of shorter spans, where 25 to 35 show as a day. Count a day from 24 hours.
+#if defined(FEATURE_FIXES)
+	if (n >= 24) {
+#else
 	if (n > 24) {
+#endif
 		h = n % 24;
 		d = n / 24;
 		if (h >= 12)

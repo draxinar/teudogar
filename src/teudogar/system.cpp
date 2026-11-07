@@ -2754,7 +2754,12 @@ inisys2(char *err)
 				i2len = unpack(packbuf, 0x4b320, packbuf + 0x4b320, i2len);
 			overcache[i2i] = (char *)GlobalAlloc(GMEM_FIXED, i2len);
 		} else
+			// FIXED: the entry cleared is facecache's, where overcache's is meant. Clear overcache's.
+#if defined(FEATURE_FIXES)
+			overcache[i2i] = NULL;
+#else
 			facecache[i2i] = NULL;
+#endif
 		if (overcache[i2i]) {
 			cachebytes += i2len;
 			overbytes += i2len;

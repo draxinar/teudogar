@@ -160,9 +160,16 @@ extern char langset;
 void
 setlang(char c)
 {
+	// FIXED: langcode names the help pages before the test below refuses a language, so a refused one keeps its pages' name. Name them after the test.
+#ifndef FEATURE_FIXES
 	copystr(langcode, c == 0 ? "de" : c == 2 ? "fr" : c == 3 ? "sp" : c == 4 ? "it" : c == 5 ? "pl" : "en");
+#endif
 	if (!(c == 0xff || c == 1 || c == 0 || c == 4))
 		c = 1;
+	// FIXED: as above, name the pages after the test.
+#if defined(FEATURE_FIXES)
+	copystr(langcode, c == 0 ? "de" : c == 2 ? "fr" : c == 3 ? "sp" : c == 4 ? "it" : c == 5 ? "pl" : "en");
+#endif
 	lang = c;
 	langchar = lang == 0 ? 'D' : lang == 2 ? 'F' : lang == 3 ? 'S' : lang == 4 ? 'I' : lang == 5 ? 'P' : 'E';
 }

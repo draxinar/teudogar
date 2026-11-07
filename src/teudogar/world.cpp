@@ -368,6 +368,10 @@ void setcombat(short n);
 void plotdepart(short a, short b);
 int autosave(void);
 int travel(unsigned short dest, int x, int y, unsigned long time, unsigned short depart, unsigned short a6, unsigned short mode, short a8);
+// FIXED: the option of the AutoSave, which travelmap reads below
+#if defined(FEATURE_FIXES)
+extern int autolevel;
+#endif
 
 extern int playerx;
 extern int playery;
@@ -1454,7 +1458,12 @@ stowspot(int k, int x, int y, unsigned long item)
 					}
 				}
 				if (randn(100) < 50) {
+					// FIXED: the bound of y subtracts spbx, the tile's x offset, where its y offset spby is meant, as in each other bound. Subtract spby.
+#if defined(FEATURE_FIXES)
+					for (y = 0; y < sph / 2 - spbh - spby; y++)
+#else
 					for (y = 0; y < sph / 2 - spbh - spbx; y++)
+#endif
 						for (x = 0; x < spw / 2 - spbw - spbx; x++) {
 							if (boxfree(k, spw / 2 + spx + x + spbx,
 							    sph / 2 + spy + y + spby,
@@ -1483,7 +1492,12 @@ stowspot(int k, int x, int y, unsigned long item)
 						}
 				} else {
 					for (x = 0; x < spw / 2 - spbw - spbx; x++)
+						// FIXED: as above, subtract spby.
+#if defined(FEATURE_FIXES)
+						for (y = 0; y < sph / 2 - spbh - spby; y++) {
+#else
 						for (y = 0; y < sph / 2 - spbh - spbx; y++) {
+#endif
 							if (boxfree(k, spw / 2 + spx + x + spbx,
 							    sph / 2 + spy - y + spby,
 							    spw / 2 + spx + x + spbx + spbw - 1,
@@ -1517,7 +1531,12 @@ stowspot(int k, int x, int y, unsigned long item)
 							return x + y * 320;
 			} else {
 				if (randn(100) < 50) {
+					// FIXED: the bound of y subtracts spbx, the tile's x offset, where its y offset spby is meant, as in each other bound. Subtract spby.
+#if defined(FEATURE_FIXES)
+					for (y = 0; y < sph / 2 - spbh - spby; y++)
+#else
 					for (y = 0; y < sph / 2 - spbh - spbx; y++)
+#endif
 						for (x = 0; x < spw / 2 - spbw - spbx; x++) {
 							if (boxfree(k, spw / 2 + spx + x + spbx,
 							    sph / 2 + spy + y + spby,
@@ -1546,7 +1565,12 @@ stowspot(int k, int x, int y, unsigned long item)
 						}
 				} else {
 					for (x = 0; x < spw / 2 - spbw - spbx; x++)
+						// FIXED: as above, subtract spby.
+#if defined(FEATURE_FIXES)
+						for (y = 0; y < sph / 2 - spbh - spby; y++) {
+#else
 						for (y = 0; y < sph / 2 - spbh - spbx; y++) {
+#endif
 							if (boxfree(k, spw / 2 + spx + x + spbx,
 							    sph / 2 + spy - y + spby,
 							    spw / 2 + spx + x + spbx + spbw - 1,
@@ -1649,7 +1673,12 @@ taketypes(int k, unsigned long a, unsigned long b, unsigned long c, int n, int w
 			if (tkitem == a || tkitem == b || tkitem == c)
 				goto found;
 		}
+		// FIXED: the search runs on into realm 5, the first container's, past the party's realms 0 to 4. Stop at 4, as counttypes and wealth do.
+#if defined(FEATURE_FIXES)
+		if (k >= 4)
+#else
 		if (k >= 5)
+#endif
 			break;
 		k++;
 		continue;
@@ -1742,6 +1771,26 @@ itemweight(unsigned long item)
 		if (iw[1] > 65000)
 			break;
 		iw[0] = idof(item);
+		// FIXED: the sum of a container's items runs in an unsigned short, so a load past 65,535 wraps to a light one. Sum in a long, up to 65,000, the weight that nothing moves.
+#if defined(FEATURE_FIXES)
+		{
+			unsigned long w = iw[1];
+
+			for (iwslot = 0; iwslot < 50; iwslot++) {
+				item = realms[iw[0]].items[iwslot];
+				if (item == 0)
+					continue;
+				iwcls = classof(item & 0xfff);
+				if (iwcls == 15)
+					w += (item >> 16) * 4 / 10;
+				else if (iwcls == 16)
+					w += (item >> 16) * 8 / 10;
+				else
+					w += weightof(item & 0xfff);
+			}
+			iw[1] = min(w, 65000);
+		}
+#else
 		for (iwslot = 0; iwslot < 50; iwslot++) {
 			item = realms[iw[0]].items[iwslot];
 			if (item == 0)
@@ -1754,6 +1803,7 @@ itemweight(unsigned long item)
 			else
 				iw[1] += weightof(item & 0xfff);
 		}
+#endif
 		break;
 	default:
 		iw[1] = weightof(iw[0]);
@@ -2885,7 +2935,12 @@ lookaround(void)
 	for (spreadrow = 1; spreadrow <= 15; spreadrow++)
 		spreadeast();
 	for (spreadrow = 15; spreadrow >= 1; spreadrow--)
+		// FIXED: the passes go east, west, east, and east again, the last over the rows of a west pass. Go west, as roofeast and roofwest pair.
+#if defined(FEATURE_FIXES)
+		spreadwest();
+#else
 		spreadeast();
+#endif
 	for (lookrow = 1; lookrow <= 15; lookrow++) {
 		lookp = &viewgrid[0][lookrow * 19 + 1];
 		for (lookcol = 1; lookcol <= 17; lookp++, lookcol++)
@@ -2927,8 +2982,14 @@ lookaround(void)
 		spreadmap = &map[looky * 150 + lookx];
 		lookflags = &mapflags[lookx + looky * 150];
 		for (lookcol = 1; lookcol <= 17; lookx++, lookcol++, lookp++, spreadmap++, lookflags++) {
+			// FIXED: a mark off the map's top or bottom goes, where the original's lands before or past mapflags on its neighbors
+#if defined(FEATURE_FIXES)
+			if (*lookp && lookx + looky * 150 >= 0 && lookx + looky * 150 < 22500)
+				*lookflags |= 0x200;
+#else
 			if (*lookp)
 				*lookflags |= 0x200;
+#endif
 			if (!(lookx >= regions[curregion].x0 && looky >= regions[curregion].y0
 			    && lookx <= regions[curregion].x1 && looky <= regions[curregion].y1)
 			    && *spreadmap & 0x2000)
@@ -3779,6 +3840,10 @@ produce(void)
 				}
 			}
 		found:
+			// FIXED: pdregion comes from the last need that a region's units met, so a need met another way takes the owner of a stale region. Take the realm's own region.
+#if defined(FEATURE_FIXES)
+			pdregion = realms[pdk].region;
+#endif
 			pdj = typenames[realms[pdk].needs[pdneed].item & 0xfff];
 			pdcount = 0;
 			for (pdi = 0; pdi < 50; pdi++)
@@ -4408,7 +4473,12 @@ unsigned long
 traveltime(unsigned long n)
 {
 	tvtime = n;
+	// FIXED: n * 100 / 15 makes the spread more than n, so the test n >= tvk / 2 never holds and every journey takes its time to the hour. Spread by 15% of n.
+#if defined(FEATURE_FIXES)
+	tvk = n * 15 / 100;
+#else
 	tvk = n * 100 / 15;
+#endif
 	if (tvk >= 2 && n >= tvk / 2)
 		tvtime = n - tvk / 2 + randn(tvk);
 	if (!tvtime)
@@ -4668,7 +4738,13 @@ draw:
 	units[0].dirx = tmdx;
 	units[0].diry = tmdy;
 	tmk = zones[tmsel].id;
+	// FIXED: the travel map saves the AutoSave whatever the option, whose off means none, and with the option on travel saves it again at the departure from another map. Leave that to travel, and save it here for a journey inside the map, whose departure travel passes by, when the option asks.
+#if defined(FEATURE_FIXES)
+	if (autolevel >= 1 && tmk == curmap)
+		autosave();
+#else
 	autosave();
+#endif
 	travel(tmk, tmx, tmy, cheat && (keys['W'] & 0x80) ? 1 : tmtime, 1, 1, 1, 1);
 	nop();
 out:
@@ -4703,6 +4779,11 @@ visited(int n)
 void
 markvisited(void)
 {
+	// FIXED: the clock's test leaves a new game's first map unmarked until a later travel, so the first save re-enters it from the release's records, which hang up what the hero took and undo what he did there. Mark it on its first arrival, where the saves that follow write its records.
+#if defined(FEATURE_FIXES)
+	if (curmap < 0x100u)
+		setbit(game.visited, curmap, 1);
+#endif
 	if (gametime < 2)
 		return;
 	if (isbasemap(curmap))

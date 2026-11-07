@@ -2761,7 +2761,12 @@ weighttext(unsigned long item)
 		} else {
 			weightch = fracchar(weightfrac / 10);
 			if (!weightfrac || weightch == '1' || weightch == '/')
+				// FIXED: a fraction of 0.9 or more prints as a whole, and the whole printed is the part below it, so 2.95 kg shows 2 kg. Round it up.
+#if defined(FEATURE_FIXES)
+				wsprintf(printbuf + 0x1f4, texts + 0xb08d, weightint + (weightch == '1' ? 1 : 0));
+#else
 				wsprintf(printbuf + 0x1f4, texts + 0xb08d, weightint);
+#endif
 			else
 				wsprintf(printbuf + 0x1f4, texts + 0xb1f1, weightint, weightch);
 		}

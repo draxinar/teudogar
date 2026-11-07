@@ -124,6 +124,11 @@ void closeborder(void);
 int cdprog(void);
 int cdsaves(void);
 extern char texts[47942];
+// FIXED: the whole write of saveobjs, in mainmenu.cpp
+#if defined(FEATURE_FIXES)
+int openwhole(HANDLE *h);
+int closewhole(HANDLE *h, char *name, int ok);
+#endif
 extern char trvfailmsg;
 extern int maploaded;
 extern char packbuf[];
@@ -3019,7 +3024,12 @@ saveobjs(unsigned short map, char flag)
 			return 0;
 		}
 	}
+	// FIXED: as savegame does (npc.cpp), saveobjs writes the map's record in place. Write it whole.
+#if defined(FEATURE_FIXES)
+	openwhole(&h);
+#else
 	fopenw(&h, buf);
+#endif
 	if (h == 0)
 		return 0;
 	v = 0xf4f9f4f9;
@@ -3052,9 +3062,15 @@ saveobjs(unsigned short map, char flag)
 	memwrite(&c, 1, 1, &p);
 	v = p - workbuf;
 	v = pack(packbuf, 0x96640, workbuf, v);
+	// FIXED: saveobjs reports success whatever its writes and its close did, so a slot's save takes a record that the disk refused. Report the last write, which a full disk fails as it fails the first, and the close, and put the file in place once whole.
+#if defined(FEATURE_FIXES)
+	v = filewrite(packbuf, v, 1, h);
+	return closewhole(&h, buf, v != 0);
+#else
 	filewrite(packbuf, v, 1, h);
 	fileclose(&h);
 	return 1;
+#endif
 }
 
 short

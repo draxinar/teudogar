@@ -2109,6 +2109,11 @@ talked:
 			talktop = 0;
 		if (hovery < 452)
 			statshown = 0;
+		// FIXED: leaving the bottom edge clears statshown, as edgemenus does, and leaves talkbottom set, so a return to the bottom never ends the talk. Clear talkbottom too, as for the other edges.
+#if defined(FEATURE_FIXES)
+		if (hovery < 452)
+			talkbottom = 0;
+#endif
 		if (hoverx > 28)
 			talkleft = 0;
 		if (hoverx < 610)
@@ -2849,9 +2854,16 @@ workfor(int t)
 			units[0].pose = 0;
 	}
 	setunitmode(units, 0);
+	// FIXED: the work succeeds when an ambush, a fight, or death stops the time short, and when passtime kills the spent hero at its end. Succeed when the whole time passed and the hero lives.
+#if defined(FEATURE_FIXES)
+	t = passtime(t - 2, 0, 0) >= t - 2 && units[0].health > 0;
+	tire(-1);
+	return t;
+#else
 	passtime(t - 2, 0, 0);
 	tire(-1);
 	return 1;
+#endif
 }
 
 int
@@ -3527,10 +3539,20 @@ useitem(short ask)
 			break;
 		if (targetkind != 1)
 			denymsg(strs[287]);
+		// FIXED: after "Does not work" for a target off the map, the tool goes on to force a lock or dig at the target's coordinates. Stop, as the other refusals do.
+#if defined(FEATURE_FIXES)
+		if (targetkind != 1)
+			break;
+#endif
 		if ((targetcls == 1 || targetcls == 4) && (targetitem & 0x10000000) == 0 && (targetitem & 0x8000000) != 0
 		|| targetcls == 10 && (realms[idof(targetitem)].item & 0x8000000)) {
 			if (!outofreach(targetkind, targetx, targety, targetitem, 1, 1)) {
 				passtime(hourticks / 3 - 2, 0, 0);
+				// FIXED: the lock breaks when a foe in view or death stops the time short. Break it when the whole time passed and the hero lives, as workfor does.
+#if defined(FEATURE_FIXES)
+				if (passdone < hourticks / 3 - 2 || units[0].health <= 0)
+					break;
+#endif
 				forceopen(2);
 			}
 			break;
@@ -3562,6 +3584,11 @@ useitem(short ask)
 			setunitmode(units, 0);
 			passtime(hourticks / 3 - 2, 0, 0);
 			tire(9);
+			// FIXED: as above, dig and count the attempt when the whole time passed and the hero lives.
+#if defined(FEATURE_FIXES)
+			if (passdone < hourticks / 3 - 2 || units[0].health <= 0)
+				break;
+#endif
 			dig(1);
 			if (game.tries < 250)
 				game.tries++;

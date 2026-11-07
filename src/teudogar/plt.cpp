@@ -348,6 +348,10 @@ extern short forcedfate;
 extern char *strs[];
 extern char texts[47942];
 extern short nmarks;
+// FIXED: the labels that the Labels view reaches past nmarks
+#if defined(FEATURE_FIXES)
+extern char marks[23][20];
+#endif
 extern unsigned long mapflags[150 * 150];
 extern int appactive;
 extern int wasactive;
@@ -1672,7 +1676,13 @@ turnover(Unit *u)
 				v = 0x4f5;
 			else
 				v = 0x4f2;
+			// FIXED: buyfor keeps the proceeds when the unit cannot stow the item, so the loop runs forever. Stop at the first purchase that fails.
+#if defined(FEATURE_FIXES)
+			if (!buyfor(u, v))
+				break;
+#else
 			buyfor(u, v);
+#endif
 		} while (valueof(0x514) * 2 < proceeds);
 	}
 	if (selloff(u, 0x10, 10))
@@ -1685,7 +1695,13 @@ turnover(Unit *u)
 			v <<= 16;
 			v |= 0x503;
 			addcoins(&v, randn(4) << 16 | 0x503);
+			// FIXED: as above, stop at the first purchase that fails.
+#if defined(FEATURE_FIXES)
+			if (!buyfor(u, v))
+				break;
+#else
 			buyfor(u, v);
+#endif
 			if (valueof(0x514) * 2 / 3 >= proceeds)
 				break;
 			v = 0;
@@ -2157,22 +2173,40 @@ bruglowfeast(void)
 {
 	if (curmap != 0x2d || !getbit(game.flags, 0x1dc) || getbit(game.flags, 0x1cc) || gamehour < 20 || units[4].health <= 0)
 		return;
+	// FIXED: the skip past units 2 to 4 comes after the test of life, so with unit 2 alive unit 5's life goes untested. Skip first.
+#if defined(FEATURE_FIXES)
+	for (feasti = 1; feasti <= 12; feasti++) {
+		while (feasti > 1 && feasti < 5)
+			feasti++;
+		if (units[feasti].health <= 0)
+			continue;
+#else
 	for (feasti = 1; feasti <= 12; feasti++) {
 		if (units[feasti].health <= 0)
 			continue;
 		while (feasti > 1 && feasti < 5)
 			feasti++;
+#endif
 		if (units[feasti].sympathy <= 0)
 			return;
 	}
 	feastreg = regionat(units[4].x, units[4].y);
 	if (!feastreg || regions[feastreg].id != 0x1195)
 		return;
+	// FIXED: as above, skip first.
+#if defined(FEATURE_FIXES)
+	for (feasti = 1; feasti <= 12; feasti++) {
+		while (feasti > 1 && feasti < 5)
+			feasti++;
+		if (units[feasti].health <= 0)
+			continue;
+#else
 	for (feasti = 1; feasti <= 12; feasti++) {
 		if (units[feasti].health <= 0)
 			continue;
 		while (feasti > 1 && feasti < 5)
 			feasti++;
+#endif
 		if (regionat(units[feasti].x, units[feasti].y) != feastreg)
 			continue;
 		if (units[feasti].drunk >= 0x78)
@@ -2294,6 +2328,10 @@ tribefate(void)
 		game.fate = savedfate;
 		return 2;
 	case 0x14:
+	// FIXED: ending 0x1a, an alliance formed and then lost to the southern tribe's attacks, falls to the default, so the sheet can say "He died without having really lived." Count it with the failed alliance of 0x14.
+#if defined(FEATURE_FIXES)
+	case 0x1a:
+#endif
 		game.fate = savedfate;
 		return 1;
 	case 0x10:
@@ -2470,9 +2508,24 @@ addlabel(int a, int b, int c)
 
 	x = a;
 	y = b;
+	// FIXED: a new label takes slot nmarks, which holds a label after a deletion below it. Take the first free slot, as the automap does, and name nmarks and marks.
+#if defined(FEATURE_FIXES)
+	{
+		int k;
+
+		for (k = 0; k < 23 && marks[k][0]; k++)
+			;
+		if (k == 23)
+			return;
+		wsprintf(marks[k], texts + 0xb32c, c);
+		setmark(k, x, y);
+		nmarks++;
+	}
+#else
 	wsprintf((*(Labels *)&nmarks).text[(*(Labels *)&nmarks).n], texts + 0xb32c, c);
 	setmark((*(Labels *)&nmarks).n, x, y);
 	(*(Labels *)&nmarks).n++;
+#endif
 }
 
 void
@@ -2482,9 +2535,18 @@ labelseen(int x, int y, int c, int flag)
 
 	x += 4;
 	y += 4;
+	// FIXED: a label above a hole that the automap's delete leaves lies past nmarks, so the place gets a second label beside it. Walk every slot, as drawmarks does, and name nmarks.
+#if defined(FEATURE_FIXES)
+	if (nmarks >= 23 || getbit(game.flags, flag))
+		return;
+	for (i = 0; i < 23; i++) {
+		if (!marks[i][0])
+			continue;
+#else
 	if ((*(Labels *)&nmarks).n >= 23 || getbit(game.flags, flag))
 		return;
 	for (i = 0; i < (*(Labels *)&nmarks).n; i++) {
+#endif
 		px = markposx(i);
 		py = markposy(i);
 		if (x >= px - 12 && x <= px + 24 && py - 10 <= y && py + 20 >= y)

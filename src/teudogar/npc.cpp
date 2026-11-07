@@ -1459,6 +1459,11 @@ extern char daytext[64];
 #else
 extern char daytext[32];
 #endif
+// FIXED: the whole writes of savegame and savemap, in mainmenu.cpp
+#if defined(FEATURE_FIXES)
+int openwhole(HANDLE *h);
+int closewhole(HANDLE *h, char *name, int ok);
+#endif
 extern int shown;
 extern short lastwarm;
 extern unsigned char cmbautooff;
@@ -1949,9 +1954,15 @@ deedsink(unsigned long item)
 void
 deedbooty(unsigned long item)
 {
+	// FIXED: bootyval keeps the value in a short, so an item worth 32,768 or more adds a negative booty. Add the value as valueof returns it.
+#if defined(FEATURE_FIXES)
+	addscore(valueof(item));
+	game.booty += valueof(item);
+#else
 	bootyval = valueof(item);
 	addscore(bootyval);
 	game.booty += bootyval;
+#endif
 	if (game.booty > 0xffff0000)
 		game.booty = 0xffff0000;
 }
@@ -2472,7 +2483,12 @@ hastarget(Unit *u, unsigned char a, unsigned char b)
 	if (badunit(u))
 		return 0;
 	if (u->mode == 0x14 || u->mode == 0x15) {
+		// FIXED: 0xff, no foe, matches the 0xff of a unit with one foe, so findheir takes any fighter. Match a foe alone.
+#if defined(FEATURE_FIXES)
+		if (a != 0xff && (a == u->modeb || a == u->modec) || b != 0xff && (b == u->modeb || b == u->modec))
+#else
 		if (a == u->modeb || a == u->modec || b == u->modeb || b == u->modec)
+#endif
 			return 1;
 	}
 	return 0;
@@ -2592,10 +2608,18 @@ setarea(Unit *u, short j)
 		u->sched[7][j] = regions[areareg].x1;
 		u->sched[8][j] = regions[areareg].y1;
 	} else {
+		// FIXED: the bytes of the area wrap for a post within 15 cells of the edge, so the area empties. Keep it on the map.
+#if defined(FEATURE_FIXES)
+		u->sched[5][j] = max(u->sched[3][j] - 15, 0);
+		u->sched[6][j] = max(u->sched[4][j] - 15, 0);
+		u->sched[7][j] = min(u->sched[3][j] + 15, 149);
+		u->sched[8][j] = min(u->sched[4][j] + 15, 149);
+#else
 		u->sched[5][j] = u->sched[3][j] - 15;
 		u->sched[6][j] = u->sched[4][j] - 15;
 		u->sched[7][j] = u->sched[3][j] + 15;
 		u->sched[8][j] = u->sched[4][j] + 15;
+#endif
 	}
 }
 
@@ -3164,6 +3188,10 @@ setunitmode(Unit *u, unsigned char mode)
 					u->hand = u->items[smslot];
 					u->items[smslot] = 0;
 					smmoved = 1;
+					// FIXED: each item of the kind in the pack takes the one slot in turn, and all but the last are lost. Take the first and leave the others.
+#if defined(FEATURE_FIXES)
+					break;
+#endif
 				}
 		}
 		if (u->offhand == 0) {
@@ -3172,6 +3200,10 @@ setunitmode(Unit *u, unsigned char mode)
 					u->offhand = u->items[smslot];
 					smmoved = 1;
 					u->items[smslot] = 0;
+					// FIXED: as for the weapon, take the first and leave the others.
+#if defined(FEATURE_FIXES)
+					break;
+#endif
 				}
 		}
 		if (u->head == 0) {
@@ -3180,14 +3212,28 @@ setunitmode(Unit *u, unsigned char mode)
 					u->head = u->items[smslot];
 					smmoved = 1;
 					u->items[smslot] = 0;
+					// FIXED: as for the weapon, take the first and leave the others.
+#if defined(FEATURE_FIXES)
+					break;
+#endif
 				}
 		}
 		if (smarmor == 0) {
 			for (smslot = 0; smslot < 3; smslot++)
 				if (isarmor(u->items[smslot])) {
+					// FIXED: as for the weapon, take the first and leave the others. The armor also takes the slot of a doublet or a dress, which isarmor passes over, and that is lost. Leave it in the pack slot that the armor frees.
+#if defined(FEATURE_FIXES)
+					unsigned long worn = u->body;
+
+					u->body = u->items[smslot];
+					smmoved = 1;
+					u->items[smslot] = worn;
+					break;
+#else
 					u->body = u->items[smslot];
 					smmoved = 1;
 					u->items[smslot] = 0;
+#endif
 				}
 		}
 		if (smmoved)
@@ -3357,8 +3403,11 @@ placenear(Unit *u, short x, short y, int r)
 	if (badunit(u))
 		return;
 	pnprov = provat(x, y);
+	// FIXED: terrains holds the terrain of each of the 4,096 tiles, and the original indexes it by the cell, so the test of a field reads the terrain of tile x + y * 150, and past terrains other tables. Index it by the cell's tile, as the code does elsewhere.
 	// FIXED: from cell 4,096 on, the original reads past terrains the bytes of itemflags, weights, and classes, which WLINK places after it. Read them there, through terrainbyte.
-#ifdef FEATURE_FAULTS
+#if defined(FEATURE_FIXES)
+	pnterr = terrains[map[x + y * 150] & 0xfff];
+#elif defined(FEATURE_FAULTS)
 	pnterr = terrainbyte(x + y * 150);
 #else
 	pnterr = terrains[x + y * 150];
@@ -3388,8 +3437,11 @@ placenear(Unit *u, short x, short y, int r)
 			continue;
 		if (provat(x, y) != pnprov)
 			continue;
+		// FIXED: terrains by the cell's tile, as above
 		// FIXED: the bytes past terrains through terrainbyte, as above
-#ifdef FEATURE_FAULTS
+#if defined(FEATURE_FIXES)
+		if (pnterr != 4 && terrains[map[y * 150 + x] & 0xfff] == 4)
+#elif defined(FEATURE_FAULTS)
 		if (pnterr != 4 && terrainbyte(y * 150 + x) == 4)
 #else
 		if (pnterr != 4 && terrains[y * 150 + x] == 4)
@@ -3676,8 +3728,14 @@ residentnear(short x, short y)
 		for (rnunit = 1; rnunit < nunits; rnunit++) {
 			if (units[rnunit].health > 0 && !isanimal(&units[rnunit])) {
 				if (!scheduled(&units[rnunit])) {
+					// FIXED: a unit without a schedule counts within 15 cells on the first round, ahead of a nearer resident. Widen the square with rnrad, as for residents.
+#if defined(FEATURE_FIXES)
+					if (units[rnunit].x >= x - rnrad && units[rnunit].x <= x + rnrad
+					    && units[rnunit].y >= y - rnrad && units[rnunit].y <= y + rnrad) {
+#else
 					if (units[rnunit].x >= x - 15 && units[rnunit].x <= x + 15
 					    && units[rnunit].y >= y - 15 && units[rnunit].y <= y + 15) {
+#endif
 						if (rnreg) {
 							rnureg = regionat(units[rnunit].x, units[rnunit].y);
 							if (rnureg != rnreg)
@@ -3784,7 +3842,12 @@ valuefor(unsigned long item, Unit *u)
 		vfpct = armorpct(u);
 		break;
 	case 0x46:
+		// FIXED: the test of armor takes the hero's worn garment for the item priced. Test the item, as isarmor's other callers split class 0x46.
+#if defined(FEATURE_FIXES)
+		if (isarmor(item)) {
+#else
 		if (isarmor(units[0].body)) {
+#endif
 			vfpct = armorpct(u);
 			break;
 		}
@@ -5075,7 +5138,12 @@ again:
 	if (goodsroll < 14)
 		return 0x4f2;
 	if (goodsroll < 20)
+		// FIXED: the pairs of jewelry take 0x4f4 and 0x4f7, then 0x4f3 and 0x4f6, then 0x4f2 twice. Take 0x4f5 second, as plt.cpp's ladder buys it.
+#if defined(FEATURE_FIXES)
+		return 0x4f5;
+#else
 		return 0x4f2;
+#endif
 	if (goodsroll < 30) {
 		if (n)
 			goto again;
@@ -5306,7 +5374,12 @@ place:
 			if (!freenear(i, j, &x, &y))
 				return;
 			if (randn(100) < 60)
+				// FIXED: each sleeper's cloak lands on the camp's own cell, where freenear has found a free one. Lay it there.
+#if defined(FEATURE_FIXES)
+				putclear(x, y, randcloak());
+#else
 				putclear(i, j, randcloak());
+#endif
 		}
 	}
 }
@@ -5377,9 +5450,22 @@ addcave(void)
 		&& openground(accell + 300) && openground(accell + 301)
 		&& !(mapflags[accell + 301] & 0x80)
 		&& openground(accell + 302) && openground(accell + 451)) {
+			// FIXED: the count of tries doubles as the index of the caves, and a spot near a cave starts over uncounted, so the search can run forever. Count every try.
+#if defined(FEATURE_FIXES)
+			{
+				int k;
+
+				for (k = 0; k < game.ncaves; k++)
+					if (celldist(game.cavex[k], game.cavey[k], accell % 150, accell / 150) < 20)
+						break;
+				if (k < game.ncaves)
+					continue;
+			}
+#else
 			for (aci = 0; aci < game.ncaves; aci++)
 				if (celldist(game.cavex[aci], game.cavey[aci], accell % 150, accell / 150) < 20)
 					goto again;
+#endif
 			aci = nearcave(acx, acy);
 			caveused[aci] = 1;
 			game.cavemap[game.ncaves] = curmap;
@@ -5612,7 +5698,12 @@ fillcaves(void)
 short
 addrobber(short x, short y)
 {
+	// FIXED: the robber stands near the hero wherever travel scatters it. Search near x and y, which travel keeps on the map.
+#if defined(FEATURE_FIXES)
+	if (!freenear(x, y, &x, &y))
+#else
 	if (!freenear(playerx, playery, &x, &y))
+#endif
 		return 0;
 	if (game.defeated < 4) {
 		ari = 0;
@@ -5693,7 +5784,12 @@ addroman(short x, short y, unsigned char kind)
 short
 addavenger(short x, short y, short v)
 {
+	// FIXED: the avenger stands near the hero wherever travel scatters it. Search near x and y, which travel keeps on the map.
+#if defined(FEATURE_FIXES)
+	if (!freenear(x, y, &x, &y))
+#else
 	if (!freenear(playerx, playery, &x, &y))
+#endif
 		return 0;
 	avunit = newunit(randn(21), 0);
 	units[avunit].courage = 3;
@@ -7426,6 +7522,10 @@ freesteps(Unit *u)
 	if (nfreedirs == 0) {
 		if (u->mode == 0 || u->mode == 2 || u->mode == 0x5a || u->mode == 4)
 			return;
+		// FIXED: the tests of the neighbors read around fscell, the last cell the loop tried, where unitat looks around u. Test around stepcell, u's cell.
+#if defined(FEATURE_FIXES)
+		fscell = stepcell;
+#endif
 		if (mapflags[fscell + 1] & 4) {
 			fsunit = unitat(u->x + 1, u->y);
 			if (fsunit != 0xff && fsunit != 0) {
@@ -7513,7 +7613,12 @@ beststep(Unit *u, short mode)
 				dirscores[bsdir] += 3;
 			if (!(u->mode == 0x14 || u->mode == 0x19)) {
 				if (isanimal(u)) {
+					// FIXED: an animal's test reads the terrain of its goal, the same for every step, so it changes no choice. Read the step's cell, as the other tests do.
+#if defined(FEATURE_FIXES)
+					bsv = terrains[bscell & 0xfff];
+#else
 					bsv = terrains[map[u->nexty * 150 + u->nextx] & 0xfff];
+#endif
 					if (bsv == 5)
 						dirscores[bsdir] += 0x4b;
 				} else if (!isherder(u) || bsprov) {
@@ -8150,7 +8255,12 @@ winodds(Unit *u, Unit *v)
 	wov = prowess(v);
 	if (!wou && !wov)
 		return 50;
+	// FIXED: the product takes a short, so above a prowess of 327 the odds turn negative. Multiply in an int.
+#if defined(FEATURE_FIXES)
+	return (int)wou * 100 / (wou + wov);
+#else
 	return (short)(wou * 100) / (wou + wov);
+#endif
 }
 
 unsigned long
@@ -8947,6 +9057,19 @@ rununits(short mode)
 				utc = 1;
 			else if (!isfemale(curu) && randn(100) < 33 && (utb = womannear(curu, 2, uta)) != 0xff)
 				;
+			// FIXED: ownerat gives 0 off a site as on the hero's land, and the test takes both for unit 0, so idle people walk up to the hero in the wild. Take 0 for him on a site alone, and leave 0xff when no one is found.
+#if defined(FEATURE_FIXES)
+			else if (uta != 0 && (utb = regions[uta].lord) != 0xff)
+				;
+			else if (uta == 0 && (utb = ownerat(curu->x, curu->y)) != 0xff
+			    && (utb != 0 || provat(curu->x, curu->y) != 0)
+			    && postdist(curu, &units[utb]) <= 10)
+				;
+			else if (!isfemale(curu) && (utb = womannear(curu, 3, uta)) != 0xff)
+				utc = 2;
+			else
+				utb = 0xff;
+#else
 			else if (uta != 0 && (utb = regions[uta].lord) != 0xff)
 				;
 			else if (uta == 0 && (utb = ownerat(curu->x, curu->y)) != 0xff
@@ -8954,6 +9077,7 @@ rununits(short mode)
 				;
 			else if (!isfemale(curu) && (utb = womannear(curu, 3, uta)) != 0xff)
 				utc = 2;
+#endif
 			if (utb != 0xff && utb != curi
 			    && regionat(units[utb].x, units[utb].y) == uta) {
 				curu->nextx = units[utb].x + units[utb].dirx;
@@ -9149,8 +9273,17 @@ rununits(short mode)
 			}
 			if (curu->incoming != 0xff) {
 				cleartrail(curu);
+				// FIXED: a unit asked to step aside with no free step loses its blow, on every pass that the unit behind it stays stuck. Step aside when a step is free, and strike otherwise.
+#if defined(FEATURE_FIXES)
+				freesteps(curu);
+				if (nfreedirs) {
+					utwalk = 1;
+					break;
+				}
+#else
 				utwalk = 1;
 				break;
+#endif
 			}
 			uta = abs(curu->nextx - curu->x);
 			utb = abs(curu->nexty - curu->y);
@@ -9241,6 +9374,12 @@ rununits(short mode)
 			if (curu->incoming == 0xff)
 				goto shoot;
 			cleartrail(curu);
+			// FIXED: as above, shoot when no step is free.
+#if defined(FEATURE_FIXES)
+			freesteps(curu);
+			if (!nfreedirs)
+				goto shoot;
+#endif
 			utwalk = 1;
 			break;
 		case 8:
@@ -9276,8 +9415,11 @@ rununits(short mode)
 		stuck:
 			uta = unitat(curu->sched[3][gamehour], curu->sched[4][gamehour]);
 			/* a defect: the original tests == 0xff where it means != 0xff */
+			// FIXED: with uta 0xff the test reaches units[255], past the 150 units, and it holds for no other unit. Test != 0xff, as the code means.
 			// FIXED: with uta 0xff the test reaches units[255], past the 150 units, and it holds for no other unit. Leave it false, as for every other unit.
-#ifdef FEATURE_FAULTS
+#if defined(FEATURE_FIXES)
+			if (uta != 0xff && uta && units[uta].incoming == 0xff)
+#elif defined(FEATURE_FAULTS)
 			if (0)
 #else
 			if (uta == 0xff && uta && units[uta].incoming == 0xff)
@@ -9549,8 +9691,14 @@ statesum(void)
 int
 savegame(void)
 {
+	// FIXED: savegame writes D0000000.DAT in place, which CREATE_ALWAYS empties at its open, so a write that fails, as on a full disk, leaves a part of the saved game, which the next start reads. Write it whole (openwhole, mainmenu.cpp).
+#if defined(FEATURE_FIXES)
+	if (!openwhole(&savefh))
+		return 0;
+#else
 	if (!fopenw(&savefh, texts + 0xa435))
 		return 0;
+#endif
 	memset(packbuf, 0, sizeof packbuf);
 	saveat = packbuf;
 	savex = 0;
@@ -9679,11 +9827,24 @@ savegame(void)
 	memwrite(&savesum, 4, 1, &saveat);
 	for (savep = (unsigned char *)packbuf; savep < (unsigned char *)saveat; savep++)
 		*savep ^= 0xff;
+	// FIXED: savegame reports success whatever its write and its close did, so a slot's save takes a saved game that the disk refused. Report them, and put the file in place once whole.
+#if defined(FEATURE_FIXES)
+	{
+		int ok;
+
+		ok = filewrite(packbuf, saveat - packbuf, 1, savefh) != 0;
+		ok = closewhole(&savefh, texts + 0xa435, ok);
+		otherver = 0;
+		deletefile(texts + 0xa583);
+		return ok;
+	}
+#else
 	filewrite(packbuf, saveat - packbuf, 1, savefh);
 	fileclose(&savefh);
 	otherver = 0;
 	deletefile(texts + 0xa583);
 	return 1;
+#endif
 }
 
 int
@@ -9919,6 +10080,24 @@ fixitems(void)
 		}
 }
 
+// FIXED: the first corpse of a cell past item after, for the search of scavenge below
+#if defined(FEATURE_FIXES)
+static short
+nextcorpse(int cell, short after)
+{
+	short k;
+
+	if (!(map[cell] & 0x1000))
+		return 0;
+	for (k = map[cell] >> 16;; k++) {
+		if (k > after && classof(mapitems[k] & 0xfff) == 0x15)
+			return k;
+		if (!(mapitems[k] & 0x8000))
+			return 0;
+	}
+}
+#endif
+
 void
 scavenge(short all)
 {
@@ -9945,8 +10124,15 @@ scavenge(short all)
 				continue;
 			lootcell = looty * 150 + lootx;
 			lootn = 0;
+			// FIXED: findclass finds a cell's first corpse each time, so a corpse passed over comes back 30 times and those behind it stay. Search past the last corpse passed, and from the start after a take.
+#if defined(FEATURE_FIXES)
+			lootobj = 0;
+			for (;;) {
+				lootobj = nextcorpse(lootcell, lootobj);
+#else
 			for (;;) {
 				lootobj = findclass(lootcell, 0x15);
+#endif
 				if (lootobj == 0 || lootn++ >= 30)
 					break;
 				lootunit = mapitems[lootobj] >> 16;
@@ -9969,6 +10155,10 @@ scavenge(short all)
 				if ((mapitems[lootobj] & 0x8000) && classof(mapitems[lootobj + 1] & 0xfff) == 0x3c)
 					lootnext = takeitem(lootcell, lootobj + 1);
 				takeitem(lootcell, lootobj);
+				// FIXED: as above, search from the start after a take.
+#if defined(FEATURE_FIXES)
+				lootobj = 0;
+#endif
 				loothow = 1;
 				if (hasowned(lootunit)) {
 					units[lootunit].home = units[lootunit].mercy;
@@ -10175,6 +10365,11 @@ settimeback(unsigned long t)
 			gameday = 0;
 		backhour = gamehour;
 		backhour -= backhours;
+		// FIXED: an hour that wraps past midnight leaves the day as it was. Go back a day with it.
+#if defined(FEATURE_FIXES)
+		if (backhour < 0 && gameday > 0)
+			gameday--;
+#endif
 		if (backhour < 0)
 			backhour += 24;
 		gametime = t;
@@ -10960,11 +11155,19 @@ sacrifice(int n, unsigned a)
 	if ((sacclass == 0x49 || sacclass == 0x4a) && blessof(*sacp) == 0)
 		return 0;
 	msgf(0x63, strs[364], itemname(*sacp));
+	// FIXED: sacval keeps the value in an unsigned short, so an offering worth 65,536 or more counts its value modulo 65,536. Count the value as valueof returns it.
+#if defined(FEATURE_FIXES)
+	game.sacrificed += valueof(*sacp);
+	if (game.sacrificed > 0xffff0000)
+		game.sacrificed = 0xffff0000;
+	addfavor(valueof(*sacp) / 10);
+#else
 	sacval = valueof(*sacp);
 	game.sacrificed += sacval;
 	if (game.sacrificed > 0xffff0000)
 		game.sacrificed = 0xffff0000;
 	addfavor(sacval / 10);
+#endif
 	if (sacgear) {
 		*sacp = broken(*sacp);
 		if (*sacp == 0)
@@ -11707,7 +11910,12 @@ again:
 				goto again;
 			}
 done:
+	// FIXED: ggn starts at 6 and only grows, so the test for no goods never holds and barter opens empty. Test 6, so that strs[897] says the goods are gone.
+#if defined(FEATURE_FIXES)
+	if (ggn == 6)
+#else
 	if (ggn == 3)
+#endif
 		return 0;
 	return 1;
 }
@@ -11963,8 +12171,12 @@ sackarea(int x0, int y0, int x1, int y1, int n, int mode)
 				if (sackclass != 0xff) {
 					for (;; sackobj++) {
 						sackitem = mapitems[sackobj];
+						// FIXED: the test for a container takes the class of the cell's first item for every item, so the id of a later item can reach past the 125 realms. Take each item's class.
 						// FIXED: the test for a container takes the class of the cell's first item for every item, so the id of a later item can reach past the 125 realms. Keep to the realms.
-#ifdef FEATURE_FAULTS
+#if defined(FEATURE_FIXES)
+						sackclass = classof(sackitem & 0xfff);
+						if ((mode == -1 || mode == -2) && sackclass == 10) {
+#elif defined(FEATURE_FAULTS)
 						if ((mode == -1 || mode == -2) && sackclass == 10 && idof(sackitem) < 125) {
 #else
 						if ((mode == -1 || mode == -2) && sackclass == 10) {
@@ -12927,7 +13139,12 @@ savemap(unsigned short map)
 {
 	syncrealms();
 	wsprintf(smapname, texts + 0xa44f, map);
+	// FIXED: as savegame does, savemap writes the map's record in place. Write it whole.
+#if defined(FEATURE_FIXES)
+	openwhole(&smapfh);
+#else
 	fopenw(&smapfh, smapname);
+#endif
 	if (!smapfh)
 		return 0;
 	memset(workbuf, 0, sizeof workbuf);
@@ -12946,10 +13163,36 @@ savemap(unsigned short map)
 	*(unsigned long *)packbuf = 0xf4f9f4f9;
 	smaplen = smapp - workbuf;
 	smaplen = pack(packbuf + 4, sizeof packbuf - 4, workbuf, smaplen) + 4;
+	// FIXED: savemap reports success whatever its write and its close did, so a slot's save takes a record that the disk refused. Report them, and put the file in place once whole.
+#if defined(FEATURE_FIXES)
+	smaplen = filewrite(packbuf, smaplen, 1, smapfh);
+	return closewhole(&smapfh, smapname, smaplen != 0);
+#else
 	filewrite(packbuf, smaplen, 1, smapfh);
 	fileclose(&smapfh);
 	return 1;
+#endif
 }
+
+// FIXED: the records hold the areas that setarea leaves for a post within 15 cells of the edge, whose low bound wraps past 150 and whose high bound runs past 149, as for 25 units of the release. atpost, fillunits, and residentnear read them as they stand, so unit 18 of map 15, with 252,71,26,101 for its post at 11,86, is never inside its area. Keep them on the map, as setarea's fix does.
+#if defined(FEATURE_FIXES)
+static void
+keeparea(Unit *u)
+{
+	int h;
+
+	for (h = 0; h < 24; h++) {
+		if (u->sched[5][h] > u->sched[7][h])
+			u->sched[5][h] = 0;
+		if (u->sched[6][h] > u->sched[8][h])
+			u->sched[6][h] = 0;
+		if (u->sched[7][h] > 149)
+			u->sched[7][h] = 149;
+		if (u->sched[8][h] > 149)
+			u->sched[8][h] = 149;
+	}
+}
+#endif
 
 int
 unpackmap(char *buf, int size, char *src, int n, int keep)
@@ -12969,6 +13212,10 @@ unpackmap(char *buf, int size, char *src, int n, int keep)
 	memread(&nunits, 2, 1, &umapp);
 	memread(&units[1], 0x1b8, nunits - 1, &umapp);
 	for (umapi = 1; umapi < nunits; umapi++) {
+		// FIXED: as above, keep the record's areas on the map.
+#if defined(FEATURE_FIXES)
+		keeparea(&units[umapi]);
+#endif
 		units[umapi].picset = units[umapi].part + 15;
 		if (units[umapi].x >= 150)
 			units[umapi].x = 75;

@@ -1329,7 +1329,16 @@ savecfg(void)
 	memwrite(&blasterirq, 1, 1, &p);
 	memwrite(&blasterdma, 1, 1, &p);
 	memwrite(&cfgbyte2, 1, 1, &p);
+	// FIXED: quitnow adds 2 to the prompt option, which mayquit takes back, so a quit through quitnow saves the option plus 2. Save the option.
+#if defined(FEATURE_FIXES)
+	{
+		char q = quitprompt >= 2 ? quitprompt - 2 : quitprompt;
+
+		memwrite(&q, 1, 1, &p);
+	}
+#else
 	memwrite(&quitprompt, 1, 1, &p);
+#endif
 	memwrite(&cfglong2, 4, 1, &p);
 	memwrite(&cfglong3, 4, 1, &p);
 	memwrite(&cfglong4, 4, 1, &p);
@@ -1897,6 +1906,11 @@ palkey(void *, char c)
 int
 gfxkey(void *, char c)
 {
+	// FIXED: items 5 and 6 are the delays only while optextra shows them, and otherwise the dialogs' and the pages' items, whose plus and minus keys change the hidden delays. Leave them alone.
+#if defined(FEATURE_FIXES)
+	if (!optextra && (menu1.sel == 5 || menu1.sel == 6))
+		return 0;
+#endif
 	if (c == '+') {
 		if (menu1.sel == 3) {
 			if (maxmsgs < 17) {
@@ -3409,6 +3423,22 @@ writedesc(HANDLE h, char *s)
 int
 writelook(HANDLE h)
 {
+	// FIXED: writelook reports success whatever its writes did, so safeslot would take a slot whose face the disk refused. Report them.
+#if defined(FEATURE_FIXES)
+	int ok;
+
+	lookword = 0xf10;
+	ok = filewrite(&lookword, 2, 1, h) != 0;
+	if (myface || game.look == 4) {
+		lookword = 4;
+		ok = filewrite(&lookword, 2, 1, h) && ok;
+		ok = filewrite(headicons, 0x900, 1, h) && ok;
+	} else
+		ok = filewrite(&game.look, 2, 1, h) && ok;
+	ok = filewrite(&units[0].head, 4, 1, h) && ok;
+	ok = filewrite(&photosum, 4, 1, h) && ok;
+	return ok;
+#else
 	lookword = 0xf10;
 	filewrite(&lookword, 2, 1, h);
 	if (myface || game.look == 4) {
@@ -3420,6 +3450,7 @@ writelook(HANDLE h)
 	filewrite(&units[0].head, 4, 1, h);
 	filewrite(&photosum, 4, 1, h);
 	return 1;
+#endif
 }
 
 int
@@ -3434,9 +3465,130 @@ savestr(HANDLE h, char *s)
 	return 1;
 }
 
+// FIXED: openwhole and closewhole write a file whole, for savegame, saveobjs, savemap, and safeslot below: under Teudogar_@.SAV, the name of slot 0, which serves them as the name of a file being written, then in the file's place in one rename, so that a write that fails, as on a full disk, leaves the old file whole, where CREATE_ALWAYS empties it at its open.
+#if defined(FEATURE_FIXES)
+/* openwhole opens Teudogar_@.SAV to write, emptied, and reports whether it could */
+int
+openwhole(HANDLE *h)
+{
+	char tmp[16];
+
+	wsprintf(tmp, texts + 0xa492, 0x40);
+	return fopenw(h, tmp);
+}
+
+/* closewhole closes h, which openwhole opened, puts its file in the place of name when ok holds and the close went through, and else deletes it, and reports whether the file took the place */
+int
+closewhole(HANDLE *h, char *name, int ok)
+{
+	char tmp[16];
+
+	if (*h == 0 || !fileclose(h)) {
+		*h = 0;
+		ok = 0;
+	}
+	wsprintf(tmp, texts + 0xa492, 0x40);
+	if (ok)
+		ok = MoveFileExA(tmp, name, MOVEFILE_REPLACE_EXISTING);
+	if (!ok)
+		deletefile(tmp);
+	return ok;
+}
+#endif
+
+// FIXED: safeslot saves as saveslot below does, through openwhole and closewhole, with every write and close checked.
+#if defined(FEATURE_FIXES)
+char slotfailed;	/* whether the last save or load of a slot failed */
+
+/* putfile appends the file name to the slot that h writes, its length and bytes, a length of 0 when it is missing, and reports whether the writes went through */
+static int
+putfile(HANDLE h, char *name)
+{
+	HANDLE in;
+
+	savelen = 0;
+	if (fopenr(&in, name)) {
+		savelen = fileread(workbuf, 1, 0x96640, in);
+		fileclose(&in);
+	}
+	if (!filewrite(&savelen, 4, 1, h))
+		return 0;
+	return savelen == 0 || filewrite(workbuf, savelen, 1, h);
+}
+
+/* safeslot saves the game into slot with the description desc, as saveslot does, and reports whether it did */
+static int
+safeslot(unsigned short slot, char *desc)
+{
+	unsigned short last;
+	short wasauto;
+	int ok;
+
+	if (slot == 0)
+		return 1;
+	closedat();
+	last = lastslot;
+	wasauto = autoslot;
+	lastslot = slot;
+	if ((int)slot == autoslot)
+		autoslot = 0;
+	ok = savegame();
+	if (!saveobjs(curmap, 0))
+		ok = 0;
+	if (!savemap(curmap))
+		ok = 0;
+	outsav = 0;
+	if (ok)
+		openwhole(&outsav);
+	cdsaves();
+	if (outsav == 0 || !writedesc(outsav, desc))
+		ok = 0;
+	if (ok && !writelook(outsav))
+		ok = 0;
+	if (ok) {
+		if (fopenr(&savein, texts + 0xa435)) {
+			fileclose(&savein);
+			ok = putfile(outsav, texts + 0xa435);
+		} else
+			ok = 0;
+	}
+	if (ok) {
+		savelen = 1;
+		memset(workbuf, 0, 1);
+		ok = filewrite(&savelen, 4, 1, outsav) && filewrite(workbuf, savelen, 1, outsav);
+	}
+	for (savemapi = 0; ok && savemapi < 80; savemapi++) {
+		if (modeset)
+			putgauge(1, 0x128, 0xf0, savemapi * 100 / 80);
+		for (savekind = 2; ok && savekind <= 3; savekind++) {
+			wsprintf(savename, texts + 0xa45c, savemapi, savekind);
+			ok = putfile(outsav, savename);
+		}
+	}
+	if (ok)
+		ok = putfile(outsav, texts + 0x9bfd);
+	wsprintf(savename, texts + 0xa492, slot + 0x40);
+	ok = closewhole(&outsav, savename, ok);
+	if (!ok) {
+		lastslot = last;
+		autoslot = wasauto;
+		wsprintf(workbuf, strs[1150], cancelbutton());
+		if (modeset)
+			msgbox(workbuf, 0, 1);
+		if (esckey != 0xff)
+			esckey = 0;
+	}
+	return ok;
+}
+#endif
+
 void
 saveslot(unsigned short slot, char *desc)
 {
+	// FIXED: saveslot writes over the slot itself, which CREATE_ALWAYS empties at its open, and goes on past the writes that fail, so a full disk loses the slot and keycmd says that the game saved. Save through safeslot.
+#if defined(FEATURE_FIXES)
+	slotfailed = !safeslot(slot, desc);
+#else
 	if (slot == 0)
 		return;
 	closedat();
@@ -3500,6 +3652,7 @@ saveslot(unsigned short slot, char *desc)
 	}
 	if (outsav)
 		fileclose(&outsav);
+#endif
 }
 
 DWORD
@@ -3605,6 +3758,49 @@ autocopy(void)
 	copyfile(texts + 0x9bfd, texts + 0xa485, workbuf, 0x96640);
 	return 1;
 }
+
+// FIXED: copyhdr gives the AutoSave the header of the slot that loadslot copies into it, where loadslot describes the game that ran before the load.
+#if defined(FEATURE_FIXES)
+/* copyhdr copies the header of slot, as readhdr reads it, into Teudogar_J.SAV, and reports whether it did */
+static int
+copyhdr(unsigned short slot)
+{
+	HANDLE h;
+	DWORD n, len;
+	unsigned short ver, look;
+	unsigned char *p;
+
+	wsprintf(hdrname, texts + 0xa492, slot + 0x40);
+	if (!fopenr(&h, hdrname))
+		return 0;
+	p = (unsigned char *)workbuf;
+	n = fileread(p, 1, 0x50 + 4 + 0x900 + 8, h);
+	fileclose(&h);
+	if (n < 0x52)
+		return 0;
+	ver = p[0x50] | p[0x51] << 8;
+	len = 0x52;
+	look = ver;
+	if (ver >= 0xf0f) {
+		look = p[0x52] | p[0x53] << 8;
+		len += 2;
+	}
+	if (look == 4)
+		len += 0x900;
+	if (ver >= 0xf0f)
+		len += 4;
+	if (ver >= 0xf10)
+		len += 4;
+	if (n < len)
+		return 0;
+	wsprintf(hdrname, texts + 0xa492, 0x4a);
+	if (!fopenw(&h, hdrname))
+		return 0;
+	n = filewrite(p, len, 1, h);
+	fileclose(&h);
+	return n != 0;
+}
+#endif
 
 int
 loadslot(unsigned short slot, unsigned short mode)
@@ -3725,7 +3921,13 @@ loadslot(unsigned short slot, unsigned short mode)
 		cdsaves();
 	if (loadauto) {
 		autoslot = slot;
+		// FIXED: autohdr describes the game in memory, the one before the load, while the E files now hold the slot's, so the menu shows for J the hero, place, day, and face of another game. Copy the slot's header.
+#if defined(FEATURE_FIXES)
+		if (slot == 0 || !copyhdr(slot))
+			autohdr();
+#else
 		autohdr();
+#endif
 	}
 	return 1;
 }
@@ -4480,12 +4682,20 @@ pick:
 			slotturn = 0;
 			continue;
 		}
+		// FIXED: Back is item sloti, 10 in the save menu and in a load menu without Teudogar_J.SAV, which the test takes for slot J: Back saves the game into Teudogar_J.SAV, or loads the AutoSave or the saved game. Cancel on Back.
+#if defined(FEATURE_FIXES)
+		if (slotsel == 0 || slotsel > 10 || slotsel == sloti) {
+#else
 		if (slotsel == 0 || slotsel > 10) {
+#endif
 			if (!b) {
 				fadefast(0);
 				nop();
 			}
+			// FIXED: a cancel clears lastslot, which hides keycmd's message of a save but leaves Shift+L without the slot that the manual promises it, the last saved or loaded. Keep it.
+#ifndef FEATURE_FIXES
 			lastslot = 0;
+#endif
 			return 0;
 		}
 		if (load) {
@@ -4501,10 +4711,26 @@ pick:
 	puthands();
 	hidecursor();
 	flip();
+	// FIXED: a load that fails, as of a Teudogar_J.SAV whose E0000000.DAT is gone, or a save that fails goes on to entergame, which enters the folder's saved game again and loses the progress since, and keycmd says that it loaded or saved. Leave the game as it was.
+#if defined(FEATURE_FIXES)
+	if (load)
+		slotfailed = !loadslot(slotsel, 0);
+	else
+		saveslot(slotsel, savedesc());
+	if (slotfailed) {
+		pagefx = 1;
+		fadefast(0);
+		if (!b)
+			nop();
+		drawcursor();
+		return 0;
+	}
+#else
 	if (load)
 		loadslot(slotsel, 0);
 	else
 		saveslot(slotsel, savedesc());
+#endif
 	pagefx = 1;
 	fadefast(0);
 	if (!b)
@@ -5712,6 +5938,11 @@ addnote(short id)
 void
 closenote(short id, short sound)
 {
+	// FIXED: a note closed before pays its score and training again, as a script's qgel may close it twice. Pay a note once.
+#if defined(FEATURE_FIXES)
+	if (noteclosed(id))
+		return;
+#endif
 	if (sound && !cur && !talkactive)
 		music(0x16, 0);
 	scorenote(id);

@@ -2042,7 +2042,12 @@ aimpast(Unit *u, int x, int y, short *dx, short *dy, short *d)
 		return;
 	*dx = x - u->x;
 	*dy = y - u->y;
+	// FIXED: the distance of a throw is dx alone once dx passes 1, so a throw 2 across and 10 down counts 2 cells. Take the longer of dx and dy.
+#if defined(FEATURE_FIXES)
+	if (abs(*dx) < abs(*dy))
+#else
 	if (*dx >= -1 && *dx <= 1)
+#endif
 		*d = *dy;
 	else
 		*d = *dx;
@@ -2366,7 +2371,10 @@ strike(Unit *a, Unit *u)
 				} else {
 					weargear(0, a, &a->hand, sdmg, 1);
 					weargear((int)a, u, &u->offhand, sdmg, 0);
+					// FIXED: the shield takes the blow twice, where the sparring branch and the parry wear each piece once. Wear it once.
+#ifndef FEATURE_FIXES
 					weargear((int)a, u, &u->offhand, sdmg, 0);
+#endif
 				}
 				goto next;
 			}
