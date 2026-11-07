@@ -514,7 +514,7 @@ extern POINT cursorpos;
 // PORT: the width that the polls saw, and the pointer's mode across a pause
 #ifdef PORT
 extern int surfslost;
-static int seenleft = 1;	/* the left edge that the last poll saw, or 1 before the first */
+int seenleft = 1;
 static int pauseroam;	/* whether the pointer roamed as the pause began */
 #endif
 extern char initerr[3000];

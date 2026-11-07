@@ -86,6 +86,8 @@ static SDL_Scancode lastsc[256];	/* the SDL scancode of each set-1 scan code */
 static RECT cliprect = { 0, 0, Gamew, Gameh };	/* the rectangle of ClipCursor */
 static int unclipped;	/* whether ClipCursor lifted it */
 
+static int refit;	/* whether the window waits to take the size of the view */
+
 /*
  * the flags of the window: on macOS it takes the display's own pixels,
  * two to a point on a Retina display, which SDL's render conversions
@@ -97,10 +99,12 @@ static const SDL_WindowFlags winflags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN
 static const SDL_WindowFlags winflags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN;
 #endif
 
+static void fitwindow(void);
 static void makerenderer(void);
 static void followoutput(void);
 static void setmouserect(void);
 static void setarrow(float x, float y);
+static void syncpointer(void);
 
 /* The keys: SDL's scancode, the set-1 scan code, whether it is extended, and the virtual key of a German keyboard. */
 static const struct {
@@ -513,6 +517,9 @@ translate(SDL_Event *e)
 	none = livecursor;
 	if (e->type != SDL_EVENT_QUIT && e->type != SDL_EVENT_WINDOW_CLOSE_REQUESTED)
 		replayrecord(e);
+	if (refit && (e->type == SDL_EVENT_WINDOW_LEAVE_FULLSCREEN || e->type == SDL_EVENT_WINDOW_RESTORED ||
+	    e->type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED))
+		fitwindow();
 	switch (e->type) {
 	case SDL_EVENT_QUIT:
 	case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
@@ -785,15 +792,15 @@ RegisterClassA(const WNDCLASSA *wc)
 	return 1;
 }
 
-/* windowsize returns the scale of the window, for sharp and integer alike: 2 where twice the screen and the window's borders fit the usable area, else 1. */
+/* windowsize returns the scale of a window on a screen of width sw, for sharp and integer alike: 2 where twice the screen and the window's borders fit the usable area, else 1. */
 static int
-windowsize(void)
+windowsize(int sw)
 {
 	SDL_Rect r;
 
 	if (!SDL_GetDisplayUsableBounds(SDL_GetPrimaryDisplay(), &r))
 		return 1;
-	return r.w >= 2 * sysscreenw + Borderw && r.h >= 2 * Gameh + Borderh ? 2 : 1;
+	return r.w >= 2 * sw + Borderw && r.h >= 2 * Gameh + Borderh ? 2 : 1;
 }
 
 #ifdef __APPLE__
@@ -874,7 +881,7 @@ wininit(void)
 
 	if (syswindow != NULL)
 		return 1;
-	scale = windowsize();
+	scale = windowsize(sysscreenw);
 	w = syssizew > 0 ? syssizew : scale * sysscreenw;
 	h = syssizew > 0 ? syssizeh : scale * Gameh;
 	flags = winflags;
@@ -897,6 +904,60 @@ wintogglefullscreen(void)
 	SDL_SetWindowFullscreen(syswindow, sysfullscreen);
 	setmouserect();
 	syssetregdword("Fullscreen", sysfullscreen);
+	drawexposed();
+}
+
+/* winviewwidth returns the width that a window opens at in the current view. */
+int
+winviewwidth(void)
+{
+	const SDL_DisplayMode *m;
+
+	if (!syswide)
+		return Gamew;
+	m = SDL_GetDesktopDisplayMode(SDL_GetPrimaryDisplay());
+	return m != NULL ? windowwidth(m->w, m->h) : Gamew;
+}
+
+/*
+ * fitwindow gives a floating window the size and the place that it opens
+ * at in the current view, since the width follows the window's shape. SDL
+ * ignores a resize of a full or maximized window, so refit keeps the
+ * request until the window floats.
+ */
+static void
+fitwindow(void)
+{
+	int w, scale;
+
+	refit = (SDL_GetWindowFlags(syswindow) & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_MAXIMIZED)) != 0;
+	if (refit)
+		return;
+	w = winviewwidth();
+	scale = windowsize(w);
+	SDL_SetWindowSize(syswindow, scale * w, scale * Gameh);
+	SDL_SetWindowPosition(syswindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+}
+
+/*
+ * wintogglewide switches between the classic and the wide view, unless a
+ * width is fixed. A floating window's new size comes later on some systems,
+ * so the width changes at once, and a full or maximized window gives it from
+ * the output.
+ */
+void
+wintogglewide(void)
+{
+	if (sysfixedwidth)
+		return;
+	syswide = !syswide;
+	syssetregdword("Wide", syswide);
+	drawsetwidth(winviewwidth());
+	setpresentation();
+	fitwindow();
+	if (refit)
+		followoutput();
+	syncpointer();
 	drawexposed();
 }
 

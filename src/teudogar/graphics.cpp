@@ -2552,11 +2552,6 @@ fillrect(int n, int l, int t, int r, int b, unsigned char color)
 void
 clrframe(void)
 {
-	// PORT: the frame's black border reaches the wide screen's edges
-#ifdef PORT
-	frameleft.left = sysscreen.left;
-	frameright.right = sysscreen.right;
-#endif
 	fillfx.dwFillColor = 0;
 	// PORT: DirectDraw through its C binding
 #ifdef PORT

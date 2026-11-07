@@ -34,7 +34,9 @@ extern SDL_Renderer *sysrenderer;
 int wininit(void);
 void winpump(int wait);
 void wintogglefullscreen(void);
+void wintogglewide(void);
 void wintogglescale(void);
+int winviewwidth(void);
 extern int sysroam;	/* whether the pointer roams the screen, prelude.h */
 void syssetroam(int on);
 void sysholdpointer(int x);

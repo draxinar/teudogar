@@ -1440,6 +1440,10 @@ loadcfg(void)
 	memread(&standdelay, 2, 1, &p);
 	memread(&scrolling, 2, 1, &p);
 	memread(&mapframed, 1, 1, &p);
+	// PORT: the map fills the screen, since the item of this byte drives the display
+#ifdef PORT
+	mapframed = 0;
+#endif
 	memread(&popupdelay, 2, 1, &p);
 	memread(&pounds, 1, 1, &p);
 	poundsset = 1;
@@ -2166,6 +2170,50 @@ nextlang(void)
 		lang = 0;
 }
 
+// PORT: the display's items of the graphics options
+#ifdef PORT
+static int fullshown;	/* the state of the full screen that the page shows, which Alt+Enter can change under it */
+
+static int
+fullchanged(void)
+{
+	return fullshown != sysfullscreen;
+}
+
+/* widelabel returns the format of the view's item in the current language, a text of the port alone */
+static char *
+widelabel(void)
+{
+	switch (lang) {
+	case 0:
+		return "Breitbild: %s";
+	// FEATURE: french: the item's label in French
+#ifdef FEATURE_FRENCH
+	case 2:
+		return "\xc9" "cran large\xa0: %s";
+#endif
+	case 4:
+		return "Schermo largo: %s";
+	default:
+		return "Widescreen: %s";
+	}
+}
+
+/* viewgfxkey calls gfxkey with the original's numbers of the items, where the view's item stands second */
+static short
+viewgfxkey(unsigned char unused, unsigned char c)
+{
+	short r, sel;
+
+	sel = menu1.sel;
+	if (!optextra && sel > 2)
+		menu1.sel = sel - 1;
+	r = gfxkey(unused, c);
+	menu1.sel = sel;
+	return r;
+}
+#endif
+
 void
 options(int ingame)
 {
@@ -2469,9 +2517,23 @@ options(int ingame)
 				upperstr(((char (*)[100])scrbuf)[optn]);
 				optitems[optn] = ((char (*)[100])scrbuf)[optn];
 				optn++;
+				// PORT: the item drives the display, where the original's keeps the map in a frame
+#ifdef PORT
+				fullshown = sysfullscreen;
+				wsprintf(((char (*)[100])scrbuf)[optn], strs[953], sysfullscreen ? strs[247] : strs[248]);
+#else
 				wsprintf(((char (*)[100])scrbuf)[optn], strs[953], mapframed == 0 ? strs[247] : strs[248]);
+#endif
 				optitems[optn] = ((char (*)[100])scrbuf)[optn];
 				optn++;
+				// PORT: the view, below the full screen
+#ifdef PORT
+				if (!optextra) {
+					wsprintf(((char (*)[100])scrbuf)[optn], widelabel(), syswide ? strs[247] : strs[248]);
+					optitems[optn] = ((char (*)[100])scrbuf)[optn];
+					optn++;
+				}
+#endif
 				wsprintf(((char (*)[100])scrbuf)[optn], strs[954], strs[955 + scrolling]);
 				optitems[optn] = ((char (*)[100])scrbuf)[optn];
 				optn++;
@@ -2512,7 +2574,14 @@ options(int ingame)
 				listw = 360;
 				pagefx = 0;
 				menu1.keysel = optsel;
+				// PORT: Alt+Enter on this page draws it again
+#ifdef PORT
+				optn = runmenu(&menu1, fullchanged, viewgfxkey, 0);
+				if (optn == 0xfe)
+					continue;
+#else
 				optn = runmenu(&menu1, 0, (short (*)(unsigned char, unsigned char))gfxkey, 0);
+#endif
 				if (needredraw(optn))
 					continue;
 				if (optn == 0 || optn == menu1.n) {
@@ -2522,6 +2591,20 @@ options(int ingame)
 					optextra = 0;
 					break;
 				}
+				// PORT: the display's items change the registry file alone, which leaves the game unsaved. The page draws again here, so the poll takes a new width as seen. The view's item moves the next three down from the original's numbers below, and the last three count from the end
+#ifdef PORT
+				if (optn == 1) {
+					wintogglefullscreen();
+					continue;
+				}
+				if (optn == 2 && !optextra) {
+					wintogglewide();
+					seenleft = sysscreen.left;
+					continue;
+				}
+				if (!optextra && optn >= 3 && optn <= 5)
+					optn--;
+#endif
 				optchanged = 1;
 				if (optn == 1) {
 					if (mapframed)

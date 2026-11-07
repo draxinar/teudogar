@@ -3763,7 +3763,7 @@ darkcorners(void)
 	if (lightlvl <= 11 || ((unsigned char *)mapstate)[0x22] <= 15 || sunlight < 11) {
 		// PORT: the wide view's corners lie at the screen's, lit by what its own sight sees
 #ifdef PORT
-		if (sysscreen.left < 0 && !mapframed) {
+		if (sysscreen.left < 0) {
 			if (!widelit[0])
 				putwint(sysscreen.left, 0, 0xd4);
 			if (!widelit[1])

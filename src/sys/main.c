@@ -337,7 +337,6 @@ setchoices(int argc, char *argv[])
 static void
 setscreen(void)
 {
-	const SDL_DisplayMode *m;
 	const char *s;
 	char *end;
 	long w;
@@ -356,8 +355,8 @@ setscreen(void)
 		return;
 	if (syssizew > 0)
 		drawsetwidth(screenwidth(syssizew, syssizeh, syssharp));
-	else if ((m = SDL_GetDesktopDisplayMode(SDL_GetPrimaryDisplay())) != NULL)
-		drawsetwidth(windowwidth(m->w, m->h));
+	else
+		drawsetwidth(winviewwidth());
 }
 
 /*

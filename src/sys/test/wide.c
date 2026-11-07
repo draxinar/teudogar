@@ -4,8 +4,10 @@
  * Lock's origin and pitch, the numbers of GetSurfaceDesc, the rectangles at
  * the edges of sysscreen, the spans of fills and copies, a keyed copy, Flip,
  * which clears the new back buffer's wings, drawkeepwings, and what sysdrawx
- * shifts, and the window's first size. The test prints each check that
- * fails.
+ * shifts, and the window's first size and what the switches of the view and
+ * the full screen make of it. The test prints each check that fails.
+ *
+ * Usage: wide dir, the folder of the registry file that the switches write.
  */
 
 #include <stdio.h>
@@ -187,6 +189,97 @@ checksizes(int sw)
 		failed = 1;
 	}
 }
+
+/* settle lets the window's events reach the pump. */
+static void
+settle(void)
+{
+	int i;
+
+	for (i = 0; i < 8; i++)
+		winpump(0);
+}
+
+/* checkshape checks that the window has the shape of a screen of width sw. */
+static void
+checkshape(int sw, const char *what)
+{
+	int w, h;
+
+	SDL_GetWindowSize(syswindow, &w, &h);
+	if (w * Gameh != h * sw) {
+		printf("wide: %s: a window of %d by %d lacks the shape of a screen of %d\n", what, w, h, sw);
+		failed = 1;
+	}
+}
+
+/* checkswitches checks the switch of the view in a window, under a fixed width, and in the full screen. */
+static void
+checkswitches(void)
+{
+	SDL_Event e;
+	int sw, w, h;
+
+	syswide = 0;
+	syssharp = 1;
+	drawsetwidth(Gamew);
+	wininit();
+	SDL_ShowWindow(syswindow);
+	settle();
+
+	wintogglewide();
+	sw = winviewwidth();
+	check(syswide == 1 && sysregdword("Wide", 0) == 1, "the switch turns the view wide in the registry file");
+	check(sw > Gamew && sysscreenw == sw, "the screen takes a wide window's width at once");
+	settle();
+	checkshape(sw, "the view turned wide");
+	check(sysscreenw == sw, "the window's new size keeps that width");
+
+	wintogglewide();
+	check(sysscreenw == Gamew, "the screen takes the frame's width at once");
+	settle();
+	check(syswide == 0 && sysregdword("Wide", 1) == 0, "the switch turns the view classic in the registry file");
+	check(sysscreenw == Gamew, "the window's new size keeps that width");
+	checkshape(Gamew, "the view turned classic");
+
+	sysfixedwidth = 1;
+	wintogglewide();
+	check(syswide == 0 && sysscreenw == Gamew, "a fixed width leaves the view");
+	checkshape(Gamew, "the view under a fixed width");
+	sysfixedwidth = 0;
+
+	wintogglefullscreen();
+	settle();
+	check((SDL_GetWindowFlags(syswindow) & SDL_WINDOW_FULLSCREEN) != 0, "the full screen opens");
+	wintogglewide();
+	settle();
+	SDL_GetWindowSizeInPixels(syswindow, &w, &h);
+	check(sysscreenw == screenwidth(w, h, syssharp), "in the full screen the width follows the output");
+	memset(&e, 0, sizeof e);
+	e.type = SDL_EVENT_WINDOW_RESTORED;
+	e.window.windowID = SDL_GetWindowID(syswindow);
+	SDL_PushEvent(&e);
+	settle();
+	wintogglefullscreen();
+	settle();
+	checkshape(sw, "the full screen left in the wide view");
+	check(sysscreenw == sw, "the full screen left in the wide view gives a wide window's width");
+
+	wintogglefullscreen();
+	settle();
+	wintogglewide();
+	check(sysscreenw == Gamew, "in the full screen the classic view takes the frame's width at once");
+	settle();
+	wintogglefullscreen();
+	settle();
+	checkshape(Gamew, "the full screen left in the classic view");
+	check(sysscreenw == Gamew, "the full screen left in the classic view gives the frame's width");
+
+	SDL_DestroyRenderer(sysrenderer);
+	SDL_DestroyWindow(syswindow);
+	sysrenderer = NULL;
+	syswindow = NULL;
+}
 #endif
 
 /* pixel returns the pixel of s at x, y of the game's coordinates. */
@@ -230,7 +323,7 @@ clear(LPDIRECTDRAWSURFACE s)
 }
 
 int
-main(void)
+main(int argc, char *argv[])
 {
 	LPDIRECTDRAW dd;
 	LPDIRECTDRAWSURFACE prim, back, surf2, tile, plain;
@@ -245,6 +338,11 @@ main(void)
 	int w, h;
 #endif
 
+	if (argc != 2) {
+		fprintf(stderr, "usage: wide dir\n");
+		return 2;
+	}
+	SDL_snprintf(sysuserdir, sizeof sysuserdir, "%s/", argv[1]);
 	for (i = 0; i < sizeof widths / sizeof widths[0]; i++)
 		if (screenwidth(widths[i].w, widths[i].h, widths[i].sharp) != widths[i].want) {
 			printf("wide: screenwidth(%d, %d, %d) = %d, want %d\n", widths[i].w, widths[i].h,
@@ -287,6 +385,8 @@ main(void)
 	check(w == 1000 && h == 500, "--size gives the integer window's first size");
 	syssizew = 0;
 	syssizeh = 0;
+	reginit();
+	checkswitches();
 #endif
 
 	drawsetwidth(852);

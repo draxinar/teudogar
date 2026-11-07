@@ -90,6 +90,10 @@ int stripx(int x);
 enum {
 	Wingkind = 0xe7	/* the hoverkind of a pointer on the map in a wing */
 };
+extern int sysfullscreen;	/* whether the window fills the display */
+void wintogglefullscreen(void);
+void wintogglewide(void);
+extern int seenleft;	/* the left edge that the last poll saw, or 1 before the first */
 extern int syswide;	/* the view the player chose: whether the screen takes the output's width */
 extern int sysedges;	/* whether the HUD stands at the wide screen's edges */
 extern int sysroam;	/* whether the pointer roams the screen, in the play view */
