@@ -81,12 +81,141 @@ char *printers[20];
 int nprinters;
 DWORD timer1, timer2, timer3;
 char unused8[8];
+// PORT: rng as plain data, seeded by initrng in place of the constructor
+#ifdef PORT
+MTRand rng;
+#else
 MTRand rng(0);
+#endif
 DWORD serial;
 
 void gettime(void);
 int fileseek(HANDLE h, LONG pos);
 
+// PORT: the members of MTRand as functions of a pointer to it
+#ifdef PORT
+void
+initrng(void)
+{
+	mtseed(&rng, 0);
+}
+
+void
+mtseed(MTRand *r, uint32_t s)
+{
+	double one;
+	uint32_t *p;
+
+	r->mt[0] = s;
+	for (r->mti = 1; r->mti < 624; r->mti++)
+		r->mt[r->mti] = 1812433253 * (r->mt[r->mti - 1] ^ (r->mt[r->mti - 1] >> 30)) + r->mti;
+	one = 1.0;
+	p = (uint32_t *)&one;
+	if (p[1] == 0x3ff00000)
+		r->endian = 0;
+	else if (p[0] == 0x3ff00000)
+		r->endian = 1;
+	else
+		r->endian = 2;
+}
+
+void
+mtseedarray(MTRand *r, uint32_t *key, int n)
+{
+	int i, j, k;
+
+	mtseed(r, 19650218);
+	if (n <= 0)
+		return;
+	i = 1;
+	j = 0;
+	k = 624 > n ? 624 : n;
+	for (; k; k--) {
+		r->mt[i] = (r->mt[i] ^ ((r->mt[i - 1] ^ (r->mt[i - 1] >> 30)) * 1664525)) + key[j] + j;
+		i++;
+		j++;
+		if (i >= 624) {
+			r->mt[0] = r->mt[623];
+			i = 1;
+		}
+		if (j >= n)
+			j = 0;
+	}
+	for (k = 623; k; k--) {
+		r->mt[i] = (r->mt[i] ^ ((r->mt[i - 1] ^ (r->mt[i - 1] >> 30)) * 1566083941)) - i;
+		i++;
+		if (i >= 624) {
+			r->mt[0] = r->mt[623];
+			i = 1;
+		}
+	}
+	r->mt[0] = 0x80000000;
+}
+
+uint32_t
+mtgenrand(MTRand *r)
+{
+	uint32_t y;
+	int kk;
+
+	if (r->mti >= 624) {
+		for (kk = 0; kk < 624 - 397; kk++) {
+			y = (r->mt[kk] & 0x80000000) | (r->mt[kk + 1] & 0x7fffffff);
+			r->mt[kk] = r->mt[kk + 397] ^ (y >> 1) ^ mag01[y & 1];
+		}
+		for (; kk < 623; kk++) {
+			y = (r->mt[kk] & 0x80000000) | (r->mt[kk + 1] & 0x7fffffff);
+			r->mt[kk] = r->mt[kk + (397 - 624)] ^ (y >> 1) ^ mag01[y & 1];
+		}
+		y = (r->mt[623] & 0x80000000) | (r->mt[0] & 0x7fffffff);
+		r->mt[623] = r->mt[396] ^ (y >> 1) ^ mag01[y & 1];
+		r->mti = 0;
+	}
+	y = r->mt[r->mti++];
+	y ^= y >> 11;
+	y ^= (y << 7) & 0x9d2c5680;
+	y ^= (y << 15) & 0xefc60000;
+	y ^= y >> 18;
+	return y;
+}
+
+double
+mtreal(MTRand *r)
+{
+	uint32_t x;
+	double d;
+
+	x = mtgenrand(r);
+	switch (r->endian) {
+	case 0:
+		((uint32_t *)&d)[0] = x << 20;
+		((uint32_t *)&d)[1] = x >> 12 | 0x3ff00000;
+		return d - 1.0;
+	case 1:
+		((uint32_t *)&d)[1] = x << 20;
+		((uint32_t *)&d)[0] = x >> 12 | 0x3ff00000;
+		return d - 1.0;
+	case 2:
+		break;
+	}
+	return x / 4294967296.0;
+}
+
+int
+mtrange(MTRand *r, int lo, int hi)
+{
+	double n;
+	int v;
+
+	n = hi - lo + 1;
+	v = (int)(mtreal(r) * n) + lo;
+	if (v > hi)
+		v = hi;
+	if (hi < lo)
+		v = 0x80000000;
+	return v;
+}
+#else
 void MTRand::seed(unsigned long s)
 {
 	double one;
@@ -197,6 +326,7 @@ int MTRand::range(int lo, int hi)
 		r = 0x80000000;
 	return r;
 }
+#endif
 
 void
 pathjoin(char *dst, char *dir, char *name)
@@ -266,6 +396,10 @@ logf(char *fmt, ...)
 
 	va_start(ap, fmt);
 	wvsprintf(logline, fmt, ap);
+	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
+#ifdef PORT
+	va_end(ap);
+#endif
 	if (loghook)
 		loghook();
 	loglen = fixline(logline);
@@ -289,6 +423,10 @@ logfile(char *name, char *fmt, ...)
 	}
 	va_start(ap, fmt);
 	wvsprintf(logline, fmt, ap);
+	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
+#ifdef PORT
+	va_end(ap);
+#endif
 	if (loghook)
 		loghook();
 	filelen = fixline(logline);
@@ -330,6 +468,10 @@ logerr(char *fmt, ...)
 	*errcur++ = ' ';
 	va_start(ap, fmt);
 	wvsprintf(errcur, fmt, ap);
+	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
+#ifdef PORT
+	va_end(ap);
+#endif
 	while (*errcur)
 		errcur++;
 	*errcur++ = '\r';
@@ -593,6 +735,10 @@ writef(HANDLE h, char *fmt, ...)
 
 	va_start(ap, fmt);
 	wvsprintf(fbuf, fmt, ap);
+	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
+#ifdef PORT
+	va_end(ap);
+#endif
 	return writestr(h, fbuf);
 }
 
@@ -1010,8 +1156,14 @@ again:
 			}
 		}
 	}
+	// FIXED: the size_t of sizeof for %lu, which reads 32 bits, is undefined in C where it has 64. Pass an unsigned int.
+#ifdef PORT
+	logf("EnumPrinters.r%d ( buf %lu Bytes (sizeof struct %lu); need %lu, ret %lu )",
+		enumok, bufsize, (unsigned int)sizeof(PRINTER_INFO_2), needed, nreturned);
+#else
 	logf("EnumPrinters.r%d ( buf %lu Bytes (sizeof struct %lu); need %lu, ret %lu )",
 		enumok, bufsize, sizeof(PRINTER_INFO_2), needed, nreturned);
+#endif
 	if (!enumok) {
 		if (hprinters) {
 			GlobalFree(hprinters);
@@ -1262,18 +1414,33 @@ setbit(char *p, int n, int v)
 void
 seedrand(unsigned long s)
 {
+	// PORT: MTRand's member as a function
+#ifdef PORT
+	mtseed(&rng, s);
+#else
 	rng.seed(s);
+#endif
 }
 
 int
 random(void)
 {
+	// PORT: MTRand's member as a function
+#ifdef PORT
+	return mtrange(&rng, 0, 32766);
+#else
 	return rng.range(0, 32766);
+#endif
 }
 int
 randn(int n)
 {
+	// PORT: MTRand's member as a function
+#ifdef PORT
+	rnd = mtrange(&rng, 0, n - 1);
+#else
 	rnd = rng.range(0, n - 1);
+#endif
 	if (rnd >= n)
 		logerr("FEHLER: zuf_bis(%d).ret%d !!!", n, rnd);
 	return rnd;
@@ -1315,7 +1482,12 @@ volserial(void)
 }
 
 int
+// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+setcliptext(HWND w, char *s)
+#else
 setclip(HWND w, char *s)
+#endif
 {
 	HGLOBAL h;
 	int ok;
@@ -1386,7 +1558,12 @@ makedirs(char *path, char *buf)
 int
 run(char *file, char *params, char *dir)
 {
+	// PORT: ShellExecute's handle as an integer of its own width
+#ifdef PORT
+	if ((UINT_PTR)ShellExecute(NULL, "open", file, params, dir, SW_SHOWNORMAL) > 32)
+#else
 	if ((UINT)ShellExecute(NULL, "open", file, params, dir, SW_SHOWNORMAL) > 32)
+#endif
 		return 1;
 	return 0;
 }

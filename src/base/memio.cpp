@@ -76,6 +76,10 @@ memprintf(char **p, char *fmt, ...)
 
 	va_start(ap, fmt);
 	wvsprintf(*p, fmt, ap);
+	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
+#ifdef PORT
+	va_end(ap);
+#endif
 	while (**p)
 		(*p)++;
 }

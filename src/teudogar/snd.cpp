@@ -7,6 +7,10 @@
 #include <dsound.h>
 
 #include "base.h"
+// PORT: a name of its own for prim, which graphics.cpp defines with another type
+#ifdef PORT
+#define prim dsprim
+#endif
 
 /*
  * The music player is Microsoft's MIDIPLYR sample (smf.c, smfread.c,
@@ -224,7 +228,12 @@ MMRESULT WINAPI seqStop(Seq *pSeq);
 MMRESULT WINAPI seqPreroll(Seq *pSeq, Preroll *lpPreroll);
 MMRESULT WINAPI seqStart(Seq *pSeq);
 MMRESULT WINAPI seqTime(Seq *pSeq, TICKS *pTicks);
+// PORT: the arguments of the callback as wide as pointers, as on Win64
+#ifdef PORT
+void CALLBACK seqMIDICallback(HMIDISTRM hms, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2);
+#else
 void CALLBACK seqMIDICallback(HMIDISTRM hms, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2);
+#endif
 static MMRESULT WINAPI XlatSMFErr(SMFRESULT smfrc);
 
 extern HWND mainwnd;
@@ -291,6 +300,10 @@ struct Dss {
 	HRESULT hr;
 	HRESULT err;
 };
+// PORT: the struct's tag as a type name, as C++ has it
+#ifdef PORT
+typedef struct Dss Dss;
+#endif
 extern HRESULT dsres[2];
 extern int dslost;
 extern DWORD musvol;
@@ -375,7 +388,12 @@ createbuf(LPDIRECTSOUND d, LPDIRECTSOUNDBUFFER *buf, DWORD size)
 	bd.dwFlags = DSBCAPS_CTRLDEFAULT;
 	bd.dwBufferBytes = size;
 	bd.lpwfxFormat = &wfx;
+	// PORT: DirectSound through its C binding
+#ifdef PORT
+	if (!dsfailed("crbuf.CrSBf", IDirectSound_CreateSoundBuffer(d, &bd, buf, NULL)))
+#else
 	if (!dsfailed("crbuf.CrSBf", d->CreateSoundBuffer(&bd, buf, NULL)))
+#endif
 		return 1;
 	*buf = NULL;
 	return 0;
@@ -386,17 +404,32 @@ freesound(void)
 {
 	for (dsi = 0; dsi < 78; dsi++)
 		if (bufs[dsi] != NULL) {
+			// PORT: DirectSound through its C binding
+#ifdef PORT
+			IDirectSoundBuffer_Release(bufs[dsi]);
+#else
 			bufs[dsi]->Release();
+#endif
 			bufs[dsi] = NULL;
 		}
 	swbytes = 0;
 	hwbytes = 0;
 	if (prim != NULL) {
+		// PORT: DirectSound through its C binding
+#ifdef PORT
+		dsfailed("Prim.Rel", IDirectSoundBuffer_Release(prim));
+#else
 		dsfailed("Prim.Rel", prim->Release());
+#endif
 		prim = NULL;
 	}
 	if (ds != NULL) {
+		// PORT: DirectSound through its C binding
+#ifdef PORT
+		IDirectSound_Release(ds);
+#else
 		ds->Release();
+#endif
 		ds = NULL;
 	}
 	dsready = 0;
@@ -446,13 +479,23 @@ initsound(void)
 			return 0;
 		}
 	}
+	// PORT: DirectSound through its C binding
+#ifdef PORT
+	dsfailed("i_s.sGtCaps", IDirectSound_GetCaps(ds, &dscaps));
+#else
 	dsfailed("i_s.sGtCaps", ds->GetCaps(&dscaps));
+#endif
 	if (ds == NULL) {
 		wsprintf(dsmsg, T(0x931d));
 		wsprintf(dsshort, T(0x933f));
 		return 0;
 	}
+	// PORT: DirectSound through its C binding
+#ifdef PORT
+	if (dsfailed("i_s.sCoopLv", IDirectSound_SetCooperativeLevel(ds, mainwnd, DSSCL_PRIORITY))) {
+#else
 	if (dsfailed("i_s.sCoopLv", ds->SetCooperativeLevel(mainwnd, DSSCL_PRIORITY))) {
+#endif
 		freesound();
 		wsprintf(dsmsg, T(0x934b));
 		wsprintf(dsshort, T(0x936b));
@@ -461,7 +504,12 @@ initsound(void)
 	memset(&primdesc, 0, sizeof primdesc);
 	primdesc.dwSize = sizeof primdesc;
 	primdesc.dwFlags = DSBCAPS_PRIMARYBUFFER;
+	// PORT: DirectSound through its C binding
+#ifdef PORT
+	if (dsfailed("i_s.CrSB.Prim", IDirectSound_CreateSoundBuffer(ds, &primdesc, &prim, NULL)) || dsfailed("i_s.Prim.StFrm", IDirectSoundBuffer_SetFormat(prim, &wfx))) {
+#else
 	if (dsfailed("i_s.CrSB.Prim", ds->CreateSoundBuffer(&primdesc, &prim, NULL)) || dsfailed("i_s.Prim.StFrm", prim->SetFormat(&wfx))) {
+#endif
 primfail:
 		freesound();
 		wsprintf(dsmsg, T(0x937b));
@@ -469,7 +517,12 @@ primfail:
 		return 0;
 	}
 	if (outalways)
+		// PORT: DirectSound through its C binding
+#ifdef PORT
+		if (dsfailed("i_s.Pl.Prim", IDirectSoundBuffer_Play(prim, 0, 0, DSBPLAY_LOOPING)))
+#else
 		if (dsfailed("i_s.Pl.Prim", prim->Play(0, 0, DSBPLAY_LOOPING)))
+#endif
 			goto primfail;
 	swbytes = 0;
 	hwbytes = 0;
@@ -481,7 +534,12 @@ primfail:
 			return 0;
 		}
 		caps.dwSize = sizeof caps;
+		// PORT: DirectSound through its C binding
+#ifdef PORT
+		IDirectSoundBuffer_GetCaps(bufs[dsj], &caps);
+#else
 		bufs[dsj]->GetCaps(&caps);
+#endif
 		if (caps.dwFlags & DSBCAPS_LOCHARDWARE)
 			hwbytes += caps.dwBufferBytes;
 		else
@@ -523,14 +581,29 @@ loadsound(int n, int id)
 				lsc /= 2;
 			loadbuf[lsi] = lsc + 0x80;
 		}
+	// PORT: DirectSound through its C binding
+#ifdef PORT
+	if (dsfailed("ls.lck", IDirectSoundBuffer_Lock(bufs[n], 0, lslen, &lsp1, &lsn1, &lsp2, &lsn2, 0)))
+#else
 	if (dsfailed("ls.lck", bufs[n]->Lock(0, lslen, &lsp1, &lsn1, &lsp2, &lsn2, 0)))
+#endif
 		return 0;
 	memcpy(lsp1, loadbuf + 0x2c, lsn1);
 	if (lsn2)
 		memcpy(lsp2, loadbuf + 0x2c + lsn1, lsn2);
+	// PORT: DirectSound through its C binding
+#ifdef PORT
+	if (dsfailed("ls.ulck", IDirectSoundBuffer_Unlock(bufs[n], lsp1, lsn1, lsp2, lsn2)))
+#else
 	if (dsfailed("ls.ulck", bufs[n]->Unlock(lsp1, lsn1, lsp2, lsn2)))
+#endif
 		return 0;
+	// PORT: DirectSound through its C binding
+#ifdef PORT
+	dsfailed("ls.sCP0", IDirectSoundBuffer_SetCurrentPosition(bufs[n], 0));
+#else
 	dsfailed("ls.sCP0", bufs[n]->SetCurrentPosition(0));
+#endif
 	return lslen;
 }
 
@@ -557,7 +630,12 @@ restoresounds(void)
 	if (!dsready)
 		return 0;
 	for (rsi = 0; rsi < 78; rsi++)
+		// PORT: DirectSound through its C binding
+#ifdef PORT
+		if (bufs[rsi] != NULL && dsfailed("rst&rl_sb", IDirectSoundBuffer_Restore(bufs[rsi])))
+#else
 		if (bufs[rsi] != NULL && dsfailed("rst&rl_sb", bufs[rsi]->Restore()))
+#endif
 			return 0;
 	return loadsounds();
 }
@@ -615,7 +693,12 @@ stopsounds(void)
 	if (dsready)
 		for (ssi = 0; ssi < 78; ssi++)
 			if (bufs[ssi] != NULL)
+				// PORT: DirectSound through its C binding
+#ifdef PORT
+				dsfailed("s_stp", IDirectSoundBuffer_Stop(bufs[ssi]));
+#else
 				dsfailed("s_stp", bufs[ssi]->Stop());
+#endif
 }
 
 void
@@ -641,7 +724,12 @@ playing(short n)
 		return 0;
 	if (bufs[n] == NULL)
 		return 0;
+	// PORT: DirectSound through its C binding
+#ifdef PORT
+	while (dsfailed("swgg?", IDirectSoundBuffer_GetStatus(bufs[n], &pstatus))) {
+#else
 	while (dsfailed("swgg?", bufs[n]->GetStatus(&pstatus))) {
+#endif
 		if (dslost == 0 || appactive == 0)
 			return 0;
 		if (!restoresounds())
@@ -712,8 +800,14 @@ playsound(short n)
 		vol = 0;
 		break;
 	}
+	// PORT: DirectSound through its C binding
+#ifdef PORT
+	dsfailed("ssb.sv", IDirectSoundBuffer_SetVolume(bufs[n], vol));
+	while (dsfailed("ssb.sp", IDirectSoundBuffer_SetCurrentPosition(bufs[n], 0))) {
+#else
 	dsfailed("ssb.sv", bufs[n]->SetVolume(vol));
 	while (dsfailed("ssb.sp", bufs[n]->SetCurrentPosition(0))) {
+#endif
 		if (dslost == 0)
 			break;
 		if (appactive == 0)
@@ -721,7 +815,12 @@ playsound(short n)
 		if (!restoresounds())
 			break;
 	}
+	// PORT: DirectSound through its C binding
+#ifdef PORT
+	while (dsfailed("ssb.pl", IDirectSoundBuffer_Play(bufs[n], 0, 0, 0))) {
+#else
 	while (dsfailed("ssb.pl", bufs[n]->Play(0, 0, 0))) {
+#endif
 		if (dslost == 0 || appactive == 0)
 			return;
 		if (!restoresounds())
@@ -778,6 +877,10 @@ dbgf(char *fmt, ...)
 		return;
 	va_start(ap, fmt);
 	wvsprintf(dbgp, fmt, ap);
+	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
+#ifdef PORT
+	va_end(ap);
+#endif
 	while (*dbgp)
 		dbgp++;
 	*dbgp++ = ' ';
@@ -1156,7 +1259,12 @@ seqAllocBuffers(Seq *pSeq)
 		((LPMIDIHDR)lpbWork)->lpData = (LPSTR)lpbWork + sizeof(MIDIHDR);
 		((LPMIDIHDR)lpbWork)->dwBufferLength = pSeq->cbBuffer;
 		((LPMIDIHDR)lpbWork)->dwBytesRecorded = 0;
+		// PORT: the sequencer in dwUser at the width of a pointer
+#ifdef PORT
+		((LPMIDIHDR)lpbWork)->dwUser = (DWORD_PTR)pSeq;
+#else
 		((LPMIDIHDR)lpbWork)->dwUser = (DWORD)(UINT)pSeq;
+#endif
 		((LPMIDIHDR)lpbWork)->dwFlags = 0;
 		pSeq->lpmhFree = (LPMIDIHDR)lpbWork;
 		lpbWork += dwEachBufferSize;
@@ -1263,7 +1371,12 @@ seqPreroll(Seq *pSeq, Preroll *lpPreroll)
 	pSeq->uState = SEQ_S_PREROLLING;
 	if (NULL == pSeq->hmidi) {
 		uDeviceID = pSeq->uDeviceID;
+		// PORT: the callback at the width of a pointer
+#ifdef PORT
+		if ((mmrc = midiStreamOpen((LPHMIDISTRM)&pSeq->hmidi, &uDeviceID, 1, (DWORD_PTR)seqMIDICallback, 0, CALLBACK_FUNCTION)) != MMSYSERR_NOERROR) {
+#else
 		if ((mmrc = midiStreamOpen((LPHMIDISTRM)&pSeq->hmidi, &uDeviceID, 1, (DWORD)seqMIDICallback, 0, CALLBACK_FUNCTION)) != MMSYSERR_NOERROR) {
+#endif
 			dbgf(T(0xaf1b), uDeviceID, (WORD)mmrc);
 			pSeq->hmidi = NULL;
 			goto seq_Preroll_Cleanup;
@@ -1297,7 +1410,12 @@ seqPreroll(Seq *pSeq, Preroll *lpPreroll)
 	lpmhPreroll->lpData = (LPSTR)lpmhPreroll + sizeof(MIDIHDR);
 	lpmhPreroll->dwBufferLength = cbPrerollBuffer - sizeof(MIDIHDR);
 	lpmhPreroll->dwBytesRecorded = 0;
+	// PORT: the sequencer in dwUser at the width of a pointer
+#ifdef PORT
+	lpmhPreroll->dwUser = (DWORD_PTR)pSeq;
+#else
 	lpmhPreroll->dwUser = (DWORD)(UINT)pSeq;
+#endif
 	lpmhPreroll->dwFlags = 0;
 	do {
 		smfrc = smfSeek(pSeq->hSmf, pSeq->tkBase, lpmhPreroll);
@@ -1469,7 +1587,12 @@ seqTicksToMillisecs(Seq *pSeq, TICKS tkOffset)
 }
 
 void CALLBACK
+// PORT: the arguments of the callback as wide as pointers, as on Win64
+#ifdef PORT
+seqMIDICallback(HMIDISTRM hms, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2)
+#else
 seqMIDICallback(HMIDISTRM hms, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
+#endif
 {
 	LPMIDIHDR lpmh = (LPMIDIHDR)dw1;
 	Seq *pSeq;

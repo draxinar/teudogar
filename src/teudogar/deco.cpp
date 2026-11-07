@@ -155,7 +155,12 @@ struct Part {
 	short text;		/* a text */
 	char grassmask;
 	unsigned long size;	/* of the cached picture set */
+	// PORT: partpics holds the pointer, which 64 bits widen past these 4 bytes
+#ifdef PORT
+	char pics[4];
+#else
 	char *pics;		/* the cached picture set */
+#endif
 	char showhead;
 	char showbody;
 	char showcloak;
@@ -277,7 +282,12 @@ struct Box {
 	int icon;
 	int window;		/* a picture */
 	int worn;		/* a picture */
+	// PORT: the unit as a pointer, which 64 bits widen past an int
+#ifdef PORT
+	Unit *unit;
+#else
 	int unit;
+#endif
 	short x;
 	short y;
 	short w;

@@ -27,6 +27,13 @@ struct Spq {
 	int idx;
 };
 
+// PORT: the structs' tags as type names, as C++ has them
+#ifdef PORT
+typedef struct Dds Dds;
+typedef struct Spq Spq;
+typedef struct Saved Saved;
+#endif
+
 extern char texts[];
 
 #define T(off) (texts + (off))
@@ -76,7 +83,12 @@ extern unsigned char font2[256][120];
 extern unsigned char inkcolor;
 extern int shadeon;
 extern unsigned char shadecolor;
+// FIXED: spritetext holds outlinecols and ink3cols in the port
+#ifdef PORT
+extern char spritetext[2008];
+#else
 extern char spritetext[2000];
+#endif
 extern int textmode;
 extern char gauges[9][2304];
 extern int sheetrows[11];
@@ -90,7 +102,12 @@ extern unsigned char curspack1[];
 extern unsigned char curspack2[];
 extern unsigned char iconpack[];
 extern unsigned char paperpack[];
+// FIXED: outlinecols is the tail of spritetext in the port
+#ifdef PORT
+#define outlinecols (spritetext + 2000)
+#else
 extern char outlinecols[4];
+#endif
 extern int setpics;
 extern int dir0frm6;
 extern int dir0frm7;
@@ -920,16 +937,31 @@ setbw(char *pal)
 void
 waitvbl(void)
 {
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (IDirectDraw_GetVerticalBlankStatus(dd, &vblank) == DD_OK && vblank)
+#else
 	while (dd->GetVerticalBlankStatus(&vblank) == DD_OK && vblank)
+#endif
 		;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (IDirectDraw_GetVerticalBlankStatus(dd, &vblank) == DD_OK && !vblank)
+#else
 	while (dd->GetVerticalBlankStatus(&vblank) == DD_OK && !vblank)
+#endif
 		;
 }
 
 void
 waitvb(void)
 {
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (IDirectDraw_WaitForVerticalBlank(dd, DDWAITVB_BLOCKBEGIN, NULL) == DDERR_WASSTILLDRAWING)
+#else
 	while (dd->WaitForVerticalBlank(DDWAITVB_BLOCKBEGIN, NULL) == DDERR_WASSTILLDRAWING)
+#endif
 		;
 }
 
@@ -955,7 +987,12 @@ fade(int in, int step)
 			return 1;
 	}
 	for (;;) {
+		// PORT: the palette as unsigned char, which C wants cast
+#ifdef PORT
+		palp = (unsigned char *)gamepal;
+#else
 		palp = gamepal;
+#endif
 		for (i = 0; i < 256; i++) {
 			tmp = 0;
 			tmp = *palp++ << 2;
@@ -977,7 +1014,12 @@ fade(int in, int step)
 		fadecount = 256;
 		tmp = ticks();
 		waitvbl();
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		(*(Dds *)ddres).hr = IDirectDrawPalette_SetEntries(ddpal, 0, 0, 256, pe);
+#else
 		(*(Dds *)ddres).hr = ddpal->SetEntries(0, 0, 256, pe);
+#endif
 		if (ddfailed("pal_bl.sEntr", (*(Dds *)ddres).hr))
 			return 0;
 		if (in) {
@@ -1023,7 +1065,12 @@ setpal(void)
 	int i;
 
 	palblack = 0;
+	// PORT: the palette as unsigned char, which C wants cast
+#ifdef PORT
+	palq = (unsigned char *)gamepal;
+#else
 	palq = gamepal;
+#endif
 	for (i = 0; i < 256; i++) {
 		tmp2 = 0;
 		tmp2 = *palq++ << 2;
@@ -1038,7 +1085,12 @@ setpal(void)
 	}
 	setpalcount = 256;
 	waitvb();
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	(*(Dds *)ddres).hr = IDirectDrawPalette_SetEntries(ddpal, 0, 0, 256, pe);
+#else
 	(*(Dds *)ddres).hr = ddpal->SetEntries(0, 0, 256, pe);
+#endif
 	if (ddfailed("pal_s.sEntr", (*(Dds *)ddres).hr))
 		return 0;
 	return 1;
@@ -1048,7 +1100,12 @@ int
 lightpal(int n, int which)
 {
 	lgsrc = which ? pals[1] : pals[0];
+	// PORT: the palette as unsigned char, which C wants cast
+#ifdef PORT
+	lgdst = (unsigned char *)gamepal;
+#else
 	lgdst = gamepal;
+#endif
 	lgmul = n + 1;
 	for (lgi = 0; lgi < 224; lgi++) {
 		*lgdst++ = *lgsrc++ * lgmul >> 4;
@@ -1070,7 +1127,12 @@ palblk(void)
 {
 	palblack = 1;
 	memset(pe, 0, sizeof pe);
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	if (ddfailed("pal_blck.sEntr", IDirectDrawPalette_SetEntries(ddpal, 0, 0, 256, pe)))
+#else
 	if (ddfailed("pal_blck.sEntr", ddpal->SetEntries(0, 0, 256, pe)))
+#endif
 		return 0;
 	return 1;
 }
@@ -1081,7 +1143,12 @@ getpal(unsigned char *pal)
 	int i;
 	unsigned char *p;
 
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	if (ddfailed("g_cpal.gEntr", IDirectDrawPalette_GetEntries(ddpal, 0, 0, 256, pe))) {
+#else
 	if (ddfailed("g_cpal.gEntr", ddpal->GetEntries(0, 0, 256, pe))) {
+#endif
 		memcpy(pal, pals[0], 0x300);
 		return 0;
 	}
@@ -1128,7 +1195,12 @@ buildtables(void)
 	}
 	/* naming btprevb first gives it edi and btprevg esi, as the original */
 	(void)btprevb;
+	// PORT: the palette as unsigned char, which C wants cast
+#ifdef PORT
+	btp = (unsigned char *)gamepal;
+#else
 	btp = gamepal;
+#endif
 	btprevr = *btp++;
 	btprevg = *btp++;
 	btprevb = *btp;
@@ -1380,38 +1452,78 @@ void
 freesurfs(void)
 {
 	if (prim) {
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		IDirectDrawSurface_Release(prim);
+#else
 		prim->Release();
+#endif
 		prim = NULL;
 	}
 	if (surf2) {
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		IDirectDrawSurface_Release(surf2);
+#else
 		surf2->Release();
+#endif
 		surf2 = NULL;
 	}
 	if (surfc) {
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		IDirectDrawSurface_Release(surfc);
+#else
 		surfc->Release();
+#endif
 		surfc = NULL;
 	}
 	for (fsi = 0; fsi < 7; fsi++)
 		if (surfm[fsi]) {
+			// PORT: DirectDraw through its C binding
+#ifdef PORT
+			IDirectDrawSurface_Release(surfm[fsi]);
+#else
 			surfm[fsi]->Release();
+#endif
 			surfm[fsi] = NULL;
 		}
 	for (fsi = 0; fsi < 13; fsi++)
 		if (surfo[fsi]) {
+			// PORT: DirectDraw through its C binding
+#ifdef PORT
+			IDirectDrawSurface_Release(surfo[fsi]);
+#else
 			surfo[fsi]->Release();
+#endif
 			surfo[fsi] = NULL;
 		}
 	for (fsi = 0; fsi < 5; fsi++)
 		if (surfw[fsi]) {
+			// PORT: DirectDraw through its C binding
+#ifdef PORT
+			IDirectDrawSurface_Release(surfw[fsi]);
+#else
 			surfw[fsi]->Release();
+#endif
 			surfw[fsi] = NULL;
 		}
 	if (surfpg) {
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		IDirectDrawSurface_Release(surfpg);
+#else
 		surfpg->Release();
+#endif
 		surfpg = NULL;
 	}
 	if (ddpal) {
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		IDirectDrawPalette_Release(ddpal);
+#else
 		ddpal->Release();
+#endif
 		ddpal = NULL;
 	}
 	if (textfont) {
@@ -1426,7 +1538,12 @@ putsurf(unsigned char *src, LPDIRECTDRAWSURFACE s, int x, int y, int w, int h)
 {
 	memset(&ddsd, 0, sizeof ddsd);
 	ddsd.dwSize = sizeof ddsd;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	if (IDirectDrawSurface_Lock(s, NULL, &ddsd, DDLOCK_WAIT, NULL) != DD_OK)
+#else
 	if (s->Lock(NULL, &ddsd, DDLOCK_WAIT, NULL) != DD_OK)
+#endif
 		return 0;
 	psdst = (unsigned char *)ddsd.lpSurface + x + y * ddsd.lPitch;
 	pssrc = src;
@@ -1436,12 +1553,22 @@ putsurf(unsigned char *src, LPDIRECTDRAWSURFACE s, int x, int y, int w, int h)
 		pssrc += w;
 	}
 	for (;;) {
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		psres = IDirectDrawSurface_Unlock(s, NULL);
+#else
 		psres = s->Unlock(NULL);
+#endif
 		if (psres == DD_OK)
 			return 1;
 		if (psres != DDERR_SURFACELOST)
 			return 0;
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		if (IDirectDrawSurface_Restore(s) != DD_OK)
+#else
 		if (s->Restore() != DD_OK)
+#endif
 			return 0;
 	}
 }
@@ -1451,26 +1578,64 @@ restoresurfs(void)
 {
 	if (!appactive)
 		return 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	if (ddfailed("sfs_r.DDS P.Rst", IDirectDrawSurface_Restore(prim)))
+#else
 	if (ddfailed("sfs_r.DDS P.Rst", prim->Restore()))
+#endif
 		goto fail;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	if (surf2 && ddfailed("sfs_r.DDS S2.Rst", IDirectDrawSurface_Restore(surf2)))
+#else
 	if (surf2 && ddfailed("sfs_r.DDS S2.Rst", surf2->Restore()))
+#endif
 		goto fail;
 	surfslost = 1;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	IDirectDrawSurface_Blt(back, NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx);
+	IDirectDrawSurface_Blt(prim, NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx);
+	IDirectDrawSurface_Blt(surf2, NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx);
+	if (surfc && ddfailed("sfs_r.DDS SC.Rst", IDirectDrawSurface_Restore(surfc)))
+#else
 	back->Blt(NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx);
 	prim->Blt(NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx);
 	surf2->Blt(NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx);
 	if (surfc && ddfailed("sfs_r.DDS SC.Rst", surfc->Restore()))
+#endif
 		goto fail;
 	for (rsfi = 0; rsfi < 7; rsfi++)
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		if (surfm[rsfi] && ddfailed("sfs_r.DDS SM.Rst", IDirectDrawSurface_Restore(surfm[rsfi])))
+#else
 		if (surfm[rsfi] && ddfailed("sfs_r.DDS SM.Rst", surfm[rsfi]->Restore()))
+#endif
 			goto fail;
 	for (rsfi = 0; rsfi < 13; rsfi++)
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		if (surfo[rsfi] && ddfailed("sfs_r.DDS SO.Rst", IDirectDrawSurface_Restore(surfo[rsfi])))
+#else
 		if (surfo[rsfi] && ddfailed("sfs_r.DDS SO.Rst", surfo[rsfi]->Restore()))
+#endif
 			goto fail;
 	for (rsfi = 0; rsfi < 5; rsfi++)
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		if (surfw[rsfi] && ddfailed("sfs_r.DDS W.Rst", IDirectDrawSurface_Restore(surfw[rsfi])))
+#else
 		if (surfw[rsfi] && ddfailed("sfs_r.DDS W.Rst", surfw[rsfi]->Restore()))
+#endif
 			goto fail;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	if (surfpg && ddfailed("sfs_r.DDS Pg.Rst", IDirectDrawSurface_Restore(surfpg)))
+#else
 	if (surfpg && ddfailed("sfs_r.DDS Pg.Rst", surfpg->Restore()))
+#endif
 		goto fail;
 	savesurfs();
 	loadsurfs();
@@ -1485,7 +1650,12 @@ lock(LPDIRECTDRAWSURFACE s)
 {
 	memset(&sd, 0, sizeof sd);
 	sd.dwSize = sizeof sd;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("SfLck", IDirectDrawSurface_Lock(s, NULL, &sd, DDLOCK_WAIT, NULL)))
+#else
 	while (ddfailed("SfLck", s->Lock(NULL, &sd, DDLOCK_WAIT, NULL)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return 0;
 	return 1;
@@ -1495,7 +1665,12 @@ int
 unlock(LPDIRECTDRAWSURFACE s)
 {
 	unlocktries = 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("SfUlck", IDirectDrawSurface_Unlock(s, NULL))) {
+#else
 	while (ddfailed("SfUlck", s->Unlock(NULL))) {
+#endif
 		if (ddlost && restoresurfs())
 			continue;
 		if (unlocktries++ >= 5)
@@ -1546,7 +1721,12 @@ getrect(int x, int y, int w, int h, unsigned char *dst)
 int
 getdc(LPDIRECTDRAWSURFACE s)
 {
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("Sf_gDC", IDirectDrawSurface_GetDC(s, &surfdc))) {
+#else
 	while (ddfailed("Sf_gDC", s->GetDC(&surfdc))) {
+#endif
 		if (ddlost && restoresurfs())
 			continue;
 		if (!ddbusy)
@@ -1559,7 +1739,12 @@ int
 releasedc(LPDIRECTDRAWSURFACE s)
 {
 	reldctries = 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("Sf_rDC", IDirectDrawSurface_ReleaseDC(s, surfdc))) {
+#else
 	while (ddfailed("Sf_rDC", s->ReleaseDC(surfdc))) {
+#endif
 		if (ddlost && restoresurfs())
 			continue;
 		if (reldctries++ >= 5)
@@ -1583,7 +1768,12 @@ flip(void)
 	lastflip = ticks();
 #endif
 	for (;;) {
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		if (!ddfailed("w_s_s.flp", IDirectDrawSurface_Flip(prim, NULL, DDFLIP_WAIT)))
+#else
 		if (!ddfailed("w_s_s.flp", prim->Flip(NULL, DDFLIP_WAIT)))
+#endif
 			break;
 		if (!ddlost || !restoresurfs())
 			return 0;
@@ -1606,14 +1796,24 @@ scroll(int x, int y, int dx, int dy, int w, int h)
 	rc.top = y;
 	rc.right = x + w;
 	rc.bottom = y + h;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("sb2s_ss.bltf", IDirectDrawSurface_BltFast(back, dx, dy, back, &rc, DDBLTFAST_WAIT)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("sb2s_ss.bltf", back->BltFast(dx, dy, back, &rc, DDBLTFAST_WAIT)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
 void
 blitfull(LPDIRECTDRAWSURFACE src, LPDIRECTDRAWSURFACE dst)
 {
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("sb2s_ss.bltf", IDirectDrawSurface_BltFast(dst, 0, 0, src, &fullrect, DDBLTFAST_WAIT)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("sb2s_ss.bltf", dst->BltFast(0, 0, src, &fullrect, DDBLTFAST_WAIT)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
@@ -1624,7 +1824,12 @@ blit(LPDIRECTDRAWSURFACE src, int x, int y, LPDIRECTDRAWSURFACE dst, int dx, int
 	rc.top = y;
 	rc.right = x + w;
 	rc.bottom = y + h;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("css2ssbxyw.bltf", IDirectDrawSurface_BltFast(dst, dx, dy, src, &rc, DDBLTFAST_WAIT)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("css2ssbxyw.bltf", dst->BltFast(dx, dy, src, &rc, DDBLTFAST_WAIT)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
@@ -1635,7 +1840,12 @@ blitkey(LPDIRECTDRAWSURFACE src, int x, int y, LPDIRECTDRAWSURFACE dst, int dx, 
 	rc.top = y;
 	rc.right = x + w;
 	rc.bottom = y + h;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("css2ssbxywn0.bltf", IDirectDrawSurface_BltFast(dst, dx, dy, src, &rc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("css2ssbxywn0.bltf", dst->BltFast(dx, dy, src, &rc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
@@ -1653,7 +1863,12 @@ blitmirror(LPDIRECTDRAWSURFACE src, int x, int y, LPDIRECTDRAWSURFACE dst, int d
 	rc2.right = dx + w;
 	rc2.top = dy;
 	rc2.bottom = dy + h;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("css2ssbxywfl.blt", IDirectDrawSurface_Blt(dst, &rc2, src, &rc, DDBLT_WAIT, &mirrorfx)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("css2ssbxywfl.blt", dst->Blt(&rc2, src, &rc, DDBLT_WAIT, &mirrorfx)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
@@ -1701,7 +1916,12 @@ s2tobackrows(int y, int dy, int h)
 	rc.left = 0;
 	rc.right = 640;
 	rc.bottom = y + h;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("ss2xz2sa.bltf", IDirectDrawSurface_BltFast(back, 0, dy, surf2, &rc, DDBLTFAST_WAIT)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("ss2xz2sa.bltf", back->BltFast(0, dy, surf2, &rc, DDBLTFAST_WAIT)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
@@ -1712,7 +1932,12 @@ backto2rows(int y, int dy, int h)
 	rc.left = 0;
 	rc.right = 640;
 	rc.bottom = y + h;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("ss2xz2sa.bltf", IDirectDrawSurface_BltFast(surf2, 0, dy, back, &rc, DDBLTFAST_WAIT)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("ss2xz2sa.bltf", surf2->BltFast(0, dy, back, &rc, DDBLTFAST_WAIT)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
@@ -2236,7 +2461,12 @@ clearsurf(int n, unsigned char color)
 {
 	selsurf(n);
 	fillfx.dwFillColor = color;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("clss.blt", IDirectDrawSurface_Blt(cursurf, NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("clss.blt", cursurf->Blt(NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
@@ -2246,7 +2476,12 @@ clrprim(void)
 	if (!appactive)
 		return;
 	fillfx.dwFillColor = 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("clss.blt", IDirectDrawSurface_Blt(prim, NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("clss.blt", prim->Blt(NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
@@ -2256,7 +2491,12 @@ clrback(void)
 	if (!appactive)
 		return;
 	fillfx.dwFillColor = 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("cls.blt", IDirectDrawSurface_Blt(back, NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("cls.blt", back->Blt(NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
@@ -2278,7 +2518,12 @@ fillrect(int n, int l, int t, int r, int b, unsigned char color)
 	rc2.right = r;
 	rc2.bottom = b;
 	fillfx.dwFillColor = color;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("dr_sld_r.blt", IDirectDrawSurface_Blt(cursurf, &rc2, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("dr_sld_r.blt", cursurf->Blt(&rc2, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
@@ -2286,13 +2531,33 @@ void
 clrframe(void)
 {
 	fillfx.dwFillColor = 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("pscrr.blt.l", IDirectDrawSurface_Blt(back, &frameleft, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("pscrr.blt.l", back->Blt(&frameleft, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#endif
 		;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("pscrr.blt.l", IDirectDrawSurface_Blt(back, &frameright, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("pscrr.blt.l", back->Blt(&frameright, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#endif
 		;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("pscrr.blt.l", IDirectDrawSurface_Blt(back, &frametop, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("pscrr.blt.l", back->Blt(&frametop, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#endif
 		;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("pscrr.blt.l", IDirectDrawSurface_Blt(back, &framebottom, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("pscrr.blt.l", back->Blt(&framebottom, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
@@ -2300,9 +2565,19 @@ void
 clrsides(void)
 {
 	fillfx.dwFillColor = 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("pscrr.blt.l", IDirectDrawSurface_Blt(back, &sideleft, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("pscrr.blt.l", back->Blt(&sideleft, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#endif
 		;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("pscrr.blt.r", IDirectDrawSurface_Blt(back, &sideright, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("pscrr.blt.r", back->Blt(&sideright, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
@@ -2745,7 +3020,12 @@ zoom(int in)
 		rc2.bottom = zoomh + 240;
 		if (rc2.bottom > 480)
 			rc2.bottom = 480;
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		while (ddfailed("pspir.blt", IDirectDrawSurface_Blt(back, &rc2, surf2, &rc, DDBLT_WAIT, NULL)) && ddlost && restoresurfs())
+#else
 		while (ddfailed("pspir.blt", back->Blt(&rc2, surf2, &rc, DDBLT_WAIT, NULL)) && ddlost && restoresurfs())
+#endif
 			;
 		flip();
 		if (in) {
@@ -2793,7 +3073,12 @@ melt(void)
 				rc.right = meltcol * 8 + 8;
 				rc.bottom = colh[meltcol];
 				if (rc.bottom > 0)
+					// PORT: DirectDraw through its C binding
+#ifdef PORT
+					ddfailed("sa2ss", IDirectDrawSurface_BltFast(prim, meltcol * 8, 0, back, &rc, DDBLTFAST_WAIT));
+#else
 					ddfailed("sa2ss", prim->BltFast(meltcol * 8, 0, back, &rc, DDBLTFAST_WAIT));
+#endif
 			}
 		}
 		if (meltdone)
@@ -2839,7 +3124,12 @@ dissolve(int n)
 		packbuf[dvi]++;
 	}
 	for (dvi = 1; dvi < 24; dvi++)
+		// FIXED: memcpy over overlapping bytes is undefined in C. Copy forward, as Watcom's memcpy did, which repeats the pattern.
+#ifdef PORT
+		fwdcopy(packbuf + dvi * 0x3200, packbuf + randn(640), 0x3200);
+#else
 		memcpy(packbuf + dvi * 0x3200, packbuf + randn(640), 0x3200);
+#endif
 	getscreen(0, packbuf + 0x4b000);
 	for (dvstep = 0; dvstep < n + 1; dvstep++) {
 		if (dvstep) {
@@ -2920,7 +3210,12 @@ lzwbyte(void)
 }
 
 /* lzwfill reads the next data block of the codes */
+// PORT: inline as C99 has it, for this module alone
+#ifdef PORT
+static inline int
+#else
 inline int
+#endif
 lzwfill(void)
 {
 	lzwnavail = lzwbyte();
@@ -3252,7 +3547,12 @@ mksurf(unsigned n)
 	sd.dwHeight = rows * 48;
 	if (gfxram == 1 && sd.dwHeight >= 0x800 || gfxram == 2 && sd.dwHeight >= 0x400 || gfxram == 3)
 		sd.ddsCaps.dwCaps |= DDSCAPS_SYSTEMMEMORY;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	if (ddfailed("cr_dta_s.xs.ddCrSrf", IDirectDraw_CreateSurface(dd, &sd, &s, NULL)))
+#else
 	if (ddfailed("cr_dta_s.xs.ddCrSrf", dd->CreateSurface(&sd, &s, NULL)))
+#endif
 		return NULL;
 	return s;
 }
@@ -3271,7 +3571,12 @@ mksurfwh(DWORD w, DWORD h)
 	sd.dwHeight = h;
 	if (gfxram == 1 && sd.dwHeight >= 0x800 || gfxram == 2 && sd.dwHeight >= 0x400 || gfxram == 3)
 		sd.ddsCaps.dwCaps |= DDSCAPS_SYSTEMMEMORY;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	if (ddfailed("cr_dta_s.xyw.ddCrSrf", IDirectDraw_CreateSurface(dd, &sd, &s, NULL)))
+#else
 	if (ddfailed("cr_dta_s.xyw.ddCrSrf", dd->CreateSurface(&sd, &s, NULL)))
+#endif
 		return NULL;
 	return s;
 }
@@ -3284,12 +3589,22 @@ setkey(LPDIRECTDRAWSURFACE s)
 
 	key.dwColorSpaceLowValue = 0;
 	key.dwColorSpaceHighValue = 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("s_dta_s_trnsp", IDirectDrawSurface_SetColorKey(s, DDCKEY_SRCBLT, &key))) {
+#else
 	while (ddfailed("s_dta_s_trnsp", s->SetColorKey(DDCKEY_SRCBLT, &key))) {
+#endif
 		if (ddbusy)
 			continue;
 		if (!ddlost)
 			return 0;
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		if (ddfailed("s_dta_s_trnsp.r_sf", IDirectDrawSurface_Restore(s)))
+#else
 		if (ddfailed("s_dta_s_trnsp.r_sf", s->Restore()))
+#endif
 			return 0;
 		savesurfs();
 	}
@@ -3301,7 +3616,12 @@ getcaps(void)
 {
 	memset(&ddcaps, 0, sizeof ddcaps);
 	ddcaps.dwSize = sizeof ddcaps;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	if (ddfailed("DD.gCaps", IDirectDraw_GetCaps(dd, &ddcaps, NULL)))
+#else
 	if (ddfailed("DD.gCaps", dd->GetCaps(&ddcaps, NULL)))
+#endif
 		return 0;
 	return 1;
 }
@@ -3400,7 +3720,12 @@ surfmem(LPDIRECTDRAWSURFACE s, int n)
 {
 	memset(&smdesc, 0, sizeof smdesc);
 	smdesc.dwSize = sizeof smdesc;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	IDirectDrawSurface_GetSurfaceDesc(s, &smdesc);
+#else
 	s->GetSurfaceDesc(&smdesc);
+#endif
 	if (smdesc.ddsCaps.dwCaps & DDSCAPS_SYSTEMMEMORY) {
 		if (!(surfwhere[n] & 1)) {
 			surfwhere[n] |= 1;
@@ -3433,7 +3758,12 @@ ddinit(char *scr, unsigned char *pal)
 	sd.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
 	sd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX;
 	sd.dwBackBufferCount = 1;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	if (ddfailed("DD.CrSfP", IDirectDraw_CreateSurface(dd, &sd, &prim, NULL))) {
+#else
 	if (ddfailed("DD.CrSfP", dd->CreateSurface(&sd, &prim, NULL))) {
+#endif
 fail:
 		ddclose();
 		return 0;
@@ -3441,11 +3771,21 @@ fail:
 	for (;;) {
 		memset(&backcaps, 0, sizeof backcaps);
 		backcaps.dwCaps = DDSCAPS_BACKBUFFER;
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		if (!ddfailed("DDSP.gAtSf", IDirectDrawSurface_GetAttachedSurface(prim, &backcaps, &back)))
+#else
 		if (!ddfailed("DDSP.gAtSf", prim->GetAttachedSurface(&backcaps, &back)))
+#endif
 			break;
 		if (!ddlost)
 			goto fail;
+		// PORT: DirectDraw through its C binding
+#ifdef PORT
+		if (ddfailed("DDSP.gAtSf.rSf", IDirectDrawSurface_Restore(prim)))
+#else
 		if (ddfailed("DDSP.gAtSf.rSf", prim->Restore()))
+#endif
 			goto fail;
 		savesurfs();
 	}
@@ -3482,10 +3822,21 @@ fail:
 		goto fail;
 	savesurfs();
 	memset(pe, 0, sizeof pe);
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	if (ddfailed("DD.CrPal", IDirectDraw_CreatePalette(dd, DDPCAPS_8BIT | DDPCAPS_ALLOW256, pe, &ddpal, NULL)))
+#else
 	if (ddfailed("DD.CrPal", dd->CreatePalette(DDPCAPS_8BIT | DDPCAPS_ALLOW256, pe, &ddpal, NULL)))
+#endif
 		goto fail;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("DDS P.sPal", IDirectDrawSurface_SetPalette(prim, ddpal)) && ddlost) {
+		if (ddfailed("DDS P.sPal.rSf", IDirectDrawSurface_Restore(prim)))
+#else
 	while (ddfailed("DDS P.sPal", prim->SetPalette(ddpal)) && ddlost) {
 		if (ddfailed("DDS P.sPal.rSf", prim->Restore()))
+#endif
 			break;
 		savesurfs();
 	}
@@ -3540,13 +3891,23 @@ ddstart(char *scr, unsigned char *pal)
 	fillfx.dwSize = sizeof fillfx;
 	if (ddfailed("DD.Cr", DirectDrawCreate(NULL, &dd, NULL)))
 		return 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	if (ddfailed("DD.sCoopL", IDirectDraw_SetCooperativeLevel(dd, mainwnd, DDSCL_EXCLUSIVE | DDSCL_ALLOWREBOOT | DDSCL_FULLSCREEN)))
+#else
 	if (ddfailed("DD.sCoopL", dd->SetCooperativeLevel(mainwnd, DDSCL_EXCLUSIVE | DDSCL_ALLOWREBOOT | DDSCL_FULLSCREEN)))
+#endif
 		return 0;
 	modew = 640;
 	modeh = 480;
 	modebpp = 8;
 	modetry = 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("DD.sDspM", IDirectDraw_SetDisplayMode(dd, modew, modeh, modebpp))) {
+#else
 	while (ddfailed("DD.sDspM", dd->SetDisplayMode(modew, modeh, modebpp))) {
+#endif
 		if ((*(Dds *)ddres).err != DDERR_SURFACEBUSY || modetry++ >= 3) {
 			ddclose();
 			return 0;
@@ -3580,7 +3941,12 @@ int
 ddclose(void)
 {
 	freesurfs();
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	IDirectDraw_Release(dd);
+#else
 	dd->Release();
+#endif
 	dd = NULL;
 	modeset = 0;
 	return 1;
@@ -3706,7 +4072,12 @@ putsrc(int n, int x, int y, int kind, int idx)
 		}
 	}
 	selsurf(n);
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("gogr.bltf", IDirectDrawSurface_BltFast(cursurf, x, y, srcsurf, &srcrc, srcflags)))
+#else
 	while (ddfailed("gogr.bltf", cursurf->BltFast(x, y, srcsurf, &srcrc, srcflags)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return 0;
 	return 1;
@@ -3979,7 +4350,12 @@ glyph3(int c, int x, int y, int w)
 					for (g3x = 0; g3x < w; g3x++) {
 						g3pix = *g3src++;
 						if (g3pix == 0)
+							// FIXED: *p++ = t[*p] reads and moves p unsequenced, undefined in C. Shade the pixel, then step, as Watcom compiled it.
+#ifdef PORT
+							*g3dst = darker4[*g3dst], g3dst++;
+#else
 							*g3dst++ = darker4[*g3dst];
+#endif
 						else if (g3pix >= 0xf0 && g3pix <= 0xf3)
 							*g3dst++ = ((unsigned char *)spritetext)[0x6e4 + g3pix];
 						else if (g3pix == 0xf4)
@@ -4705,7 +5081,12 @@ putwin(int x, int y, int idx)
 {
 	srcrc = srcrects[idx];
 	tilepage = srcpages[idx];
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("gogr.bltf", IDirectDrawSurface_BltFast(back, x, y, surfw[tilepage], &srcrc, DDBLTFAST_WAIT)))
+#else
 	while (ddfailed("gogr.bltf", back->BltFast(x, y, surfw[tilepage], &srcrc, DDBLTFAST_WAIT)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return 0;
 	return 1;
@@ -4717,7 +5098,12 @@ putwint(int x, int y, int idx)
 {
 	srcrc = srcrects[idx];
 	tilepage = srcpages[idx];
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("gogr.bltf", IDirectDrawSurface_BltFast(back, x, y, surfw[tilepage], &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)))
+#else
 	while (ddfailed("gogr.bltf", back->BltFast(x, y, surfw[tilepage], &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return 0;
 	return 1;
@@ -4737,7 +5123,12 @@ putwinp(int x, int y, int idx, int l, int t, int r, int b)
 	srcrc.bottom -= t + b;
 	if (srcrc.bottom <= srcrc.top)
 		return 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("gogr.bltf", IDirectDrawSurface_BltFast(back, x, y, surfw[tilepage], &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)))
+#else
 	while (ddfailed("gogr.bltf", back->BltFast(x, y, surfw[tilepage], &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return 0;
 	return 1;
@@ -4876,7 +5267,12 @@ clear48(int x, int y)
 	rc2.right = x + 48;
 	rc2.bottom = y + 48;
 	fillfx.dwFillColor = 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("op_s_s.blt", IDirectDrawSurface_Blt(back, &rc2, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)))
+#else
 	while (ddfailed("op_s_s.blt", back->Blt(&rc2, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return;
 }
@@ -4904,7 +5300,12 @@ putcs(int x, int y, unsigned n)
 	srcrc.top = n / 13 * 48;
 	srcrc.right = srcrc.left + 48;
 	srcrc.bottom = srcrc.top + 48;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("op_csp.bltf", IDirectDrawSurface_BltFast(back, x, y, surfc, &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)))
+#else
 	while (ddfailed("op_csp.bltf", back->BltFast(x, y, surfc, &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return;
 }
@@ -4931,7 +5332,12 @@ putic(int s, int x, int y, unsigned n)
 	srcrc.right = srcrc.left + 24;
 	srcrc.bottom = srcrc.top + 20;
 	selsurf(s);
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("op_ic.bltf", IDirectDrawSurface_BltFast(cursurf, x, y, surfc, &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)))
+#else
 	while (ddfailed("op_ic.bltf", cursurf->BltFast(x, y, surfc, &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return;
 }
@@ -4941,7 +5347,12 @@ void
 tileinfo(void)
 {
 	tinfop = spritetext;
+	// FIXED: the size_t of sizeof for %ld, which reads 32 bits, is undefined in C where it has 64. Pass an int.
+#ifdef PORT
+	wsprintf(tinfop, T(0x9004), (int)(ntiles * sizeof tilebuf / 1024));
+#else
 	wsprintf(tinfop, T(0x9004), ntiles * sizeof tilebuf / 1024);
+#endif
 	while (*tinfop)
 		tinfop++;
 	wsprintf(tinfop, T(0x9032), minsets ? T(0x9044) : T(0x9051));
@@ -4953,7 +5364,12 @@ tileinfo(void)
 	wsprintf(tinfop, T(0x90a2), noprun ? T(0x90b6) : T(0x90cb));
 	while (*tinfop)
 		tinfop++;
+	// FIXED: as above, pass an int
+#ifdef PORT
+	wsprintf(tinfop, T(0x90dd), (int)(hasgearbank ? setpics * 18 * sizeof tilebuf / 1024 : 0));
+#else
 	wsprintf(tinfop, T(0x90dd), hasgearbank ? setpics * 18 * sizeof tilebuf / 1024 : 0);
+#endif
 	while (*tinfop)
 		tinfop++;
 }
@@ -5206,7 +5622,12 @@ tilemask(unsigned char *dst, unsigned char *src)
 void
 msrestore(void)
 {
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	ddfailed("rst_ms_hgr", IDirectDrawSurface_BltFast(surfs[spriteshape], spritex, spritey, surfm[0], &msbackrect, DDBLTFAST_WAIT));
+#else
 	ddfailed("rst_ms_hgr", surfs[spriteshape]->BltFast(spritex, spritey, surfm[0], &msbackrect, DDBLTFAST_WAIT));
+#endif
 }
 
 /* mssave saves the 48x48 square under the mouse pointer */
@@ -5217,19 +5638,34 @@ mssave(void)
 	rc.top = spritey;
 	rc.right = rc.left + 48;
 	rc.bottom = rc.top + 48;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	ddfailed("gt_ms_hgr", IDirectDrawSurface_BltFast(surfm[0], msbackrect.left, msbackrect.top, surfs[spriteshape], &rc, DDBLTFAST_WAIT));
+#else
 	ddfailed("gt_ms_hgr", surfm[0]->BltFast(msbackrect.left, msbackrect.top, surfs[spriteshape], &rc, DDBLTFAST_WAIT));
+#endif
 }
 
 void
 iprestore(int s)
 {
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	ddfailed("rst_ip_hgr", IDirectDrawSurface_BltFast(surfs[s], 8, 0x118, surfw[0], &ipbackrect, DDBLTFAST_WAIT));
+#else
 	ddfailed("rst_ip_hgr", surfs[s]->BltFast(8, 0x118, surfw[0], &ipbackrect, DDBLTFAST_WAIT));
+#endif
 }
 
 void
 ipsave(int s)
 {
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	ddfailed("gt_ip_hgr", IDirectDrawSurface_BltFast(surfw[0], ipbackrect.left, ipbackrect.top, surfs[s], &iprect, DDBLTFAST_WAIT));
+#else
 	ddfailed("gt_ip_hgr", surfw[0]->BltFast(ipbackrect.left, ipbackrect.top, surfs[s], &iprect, DDBLTFAST_WAIT));
+#endif
 }
 
 /* msdraw draws tile n of surfc (kind 3) or surfo (kind 2), clipped, at the pointer's place */
@@ -5247,7 +5683,12 @@ msdraw(int kind, int n)
 	srcrc.right = srcrc.left + msw;
 	srcrc.top += mscy;
 	srcrc.bottom = srcrc.top + msh;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("zms.bltf", IDirectDrawSurface_BltFast(cursurf, msx, msy, srcsurf, &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)) && ddlost && restoresurfs())
+#else
 	while (ddfailed("zms.bltf", cursurf->BltFast(msx, msy, srcsurf, &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)) && ddlost && restoresurfs())
+#endif
 		;
 }
 
@@ -5617,11 +6058,23 @@ void
 button(int x, int y, int w, int h, char *s, unsigned char lit)
 {
 	pillring(x, y, w, h);
+	// FIXED: printbuf - 1 points before the array, undefined in C. Start at printbuf and step after the test.
+#ifdef PORT
+	btnp = printbuf;
+	for (;;) {
+		*btnp = *s;
+		s++;
+		if (!(*btnp != 0 && *btnp != ']' && *btnp != '[' && *btnp != 13 && btnp < printbuf + 0x95e))
+			break;
+		btnp++;
+	}
+#else
 	btnp = printbuf - 1;
 	do {
 		*++btnp = *s;
 		s++;
 	} while (*btnp != 0 && *btnp != ']' && *btnp != '[' && *btnp != 13 && btnp < printbuf + 0x95e);
+#endif
 	btnx = x + w / 2;
 	btny = y + h / 2 - 9;
 	*btnp = 0;
@@ -6012,7 +6465,12 @@ grabtile(int k, int s, int x, int y)
 	rc.top = y;
 	rc.right = x + 48;
 	rc.bottom = y + 48;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	ddfailed("cangbk.bltf", IDirectDrawSurface_BltFast(surfm[0], k * 48, 0x2a0, surfs[s], &rc, DDBLTFAST_WAIT));
+#else
 	ddfailed("cangbk.bltf", surfm[0]->BltFast(k * 48, 0x2a0, surfs[s], &rc, DDBLTFAST_WAIT));
+#endif
 }
 
 void
@@ -6089,7 +6547,12 @@ sqclear(void)
 	rc2.right = rc2.left + sqw;
 	rc2.bottom = rc2.top + sqh;
 	fillfx.dwFillColor = 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("G_ps_swz.blt", IDirectDrawSurface_Blt(back, &rc2, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)))
+#else
 	while (ddfailed("G_ps_swz.blt", back->Blt(&rc2, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return;
 }
@@ -6102,7 +6565,12 @@ sqclear48(void)
 	rc2.right = rc2.left + 48;
 	rc2.bottom = rc2.top + 48;
 	fillfx.dwFillColor = 0;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("G_ps_swz.blt", IDirectDrawSurface_Blt(back, &rc2, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)))
+#else
 	while (ddfailed("G_ps_swz.blt", back->Blt(&rc2, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fillfx)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return;
 }
@@ -6116,7 +6584,12 @@ sqputm(unsigned n)
 	srcrc.top -= tilepage * 768;
 	srcrc.right = srcrc.left + sqw;
 	srcrc.bottom = srcrc.top + sqh;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("G_ps_m_cl.bltf", IDirectDrawSurface_BltFast(back, sqx, sqy, surfm[tilepage], &srcrc, DDBLTFAST_WAIT)))
+#else
 	while (ddfailed("G_ps_m_cl.bltf", back->BltFast(sqx, sqy, surfm[tilepage], &srcrc, DDBLTFAST_WAIT)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return;
 }
@@ -6130,7 +6603,12 @@ sqputm48(unsigned n)
 	srcrc.top -= tilepage * 768;
 	srcrc.right = srcrc.left + 48;
 	srcrc.bottom = srcrc.top + 48;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("G_ps_m.bltf", IDirectDrawSurface_BltFast(back, sqx, sqy, surfm[tilepage], &srcrc, DDBLTFAST_WAIT)))
+#else
 	while (ddfailed("G_ps_m.bltf", back->BltFast(sqx, sqy, surfm[tilepage], &srcrc, DDBLTFAST_WAIT)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return;
 }
@@ -6144,7 +6622,12 @@ sqputo(unsigned n)
 	srcrc.top -= tilepage * 768;
 	srcrc.right = srcrc.left + sqw;
 	srcrc.bottom = srcrc.top + sqh;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("G_ps_o_cl.bltf", IDirectDrawSurface_BltFast(back, sqx, sqy, surfo[tilepage], &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)))
+#else
 	while (ddfailed("G_ps_o_cl.bltf", back->BltFast(sqx, sqy, surfo[tilepage], &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return;
 }
@@ -6158,7 +6641,12 @@ sqputo48(unsigned n)
 	srcrc.top -= tilepage * 768;
 	srcrc.right = srcrc.left + 48;
 	srcrc.bottom = srcrc.top + 48;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("G_ps_o.bltf", IDirectDrawSurface_BltFast(back, sqx, sqy, surfo[tilepage], &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)))
+#else
 	while (ddfailed("G_ps_o.bltf", back->BltFast(sqx, sqy, surfo[tilepage], &srcrc, DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return;
 }
@@ -6172,7 +6660,12 @@ sqputo48o(unsigned n)
 	srcrc.top -= tilepage * 768;
 	srcrc.right = srcrc.left + 48;
 	srcrc.bottom = srcrc.top + 48;
+	// PORT: DirectDraw through its C binding
+#ifdef PORT
+	while (ddfailed("G_ps_o(.bltf", IDirectDrawSurface_BltFast(back, sqx, sqy, surfo[tilepage], &srcrc, DDBLTFAST_WAIT)))
+#else
 	while (ddfailed("G_ps_o(.bltf", back->BltFast(sqx, sqy, surfo[tilepage], &srcrc, DDBLTFAST_WAIT)))
+#endif
 		if (ddlost == 0 || !restoresurfs())
 			return;
 }
@@ -6362,11 +6855,16 @@ RECT fullrect2 = {
 };
 char vramtext[2000] = "";
 char blittext[2000] = "";
+// FIXED: the font code reaches past spritetext into outlinecols and ink3cols in WLINK's layout alone. Make the three one array.
+#ifdef PORT
+char spritetext[2008] = { [2000] = '^', 'v', 0, 0, 240, 241, 242, 243 };
+#else
 char spritetext[2000] = "";
 char outlinecols[4] = "^v";
 unsigned char ink3cols[4] = {
 	240, 241, 242, 243
 };
+#endif
 int textmode = 1;
 RECT msbackrect = {
 	0x120, 0, 0x150, 48

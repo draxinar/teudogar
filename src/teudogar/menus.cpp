@@ -132,8 +132,13 @@ void setcursor1(int kind, int img);
 void redrawcursor(void);
 void pgtoback(void);
 /* pgtoback under a second name, which keeps menupage2 apart from menupage */
+// PORT: the second name of pgtoback, which Watcom binds by its symbol
+#ifdef PORT
+#define pgtoback2 pgtoback
+#else
 void pgtoback2(void);
 #pragma aux pgtoback2 "W?pgtoback$n()v"
+#endif
 void cleartexts(void);
 void usepal(unsigned char n);
 int text3(int n, int x, int y, char *s);
@@ -257,7 +262,12 @@ unsigned char readkey(void);
 void stopcaret(void);
 long evalvar(char *s);
 void textn(int n, int x, int y, char *fmt, ...);
+// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+int waitnokey(void);
+#else
 int waitrelease(void);
+#endif
 int showscrt(void);
 int save0(void);
 void blitn(int a, int x, int y, int b, int dx, int dy, int w, int h);
@@ -2269,7 +2279,12 @@ actionidx(unsigned char c)
 }
 
 short
+// PORT: the type that runmenu calls it through, where a call through another is undefined in C
+#ifdef PORT
+bindaction(unsigned char scan, unsigned char key)
+#else
 bindaction(unsigned char scan, char key)
+#endif
 {
 	if (menu1.sel == 0 || menu1.sel > 40 || key < '1' || key > '9')
 		return 0;
@@ -3812,7 +3827,12 @@ redraw:
 			inbuf[inputi] = s[inputi];
 		inbuf[inputi] = 0;
 		text3w(inbuf);
+		// FIXED: a call through another function type is undefined in C. Call it through its own, with the same value.
+#ifdef PORT
+		setcaret(inx0 + text3width, iny);
+#else
 		((void (*)(unsigned short, unsigned short))setcaret)(inx0 + text3width, iny);
+#endif
 	}
 	drawenter(inxend, iny);
 	backto2rows(iny, iny, 0x14);
@@ -4192,7 +4212,12 @@ asknumber(short x, short y, unsigned short ndigits, int min, int max, int init)
 				numres = evalvar(numdigits);
 #endif
 				lastscan = 0;
+				// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+				waitnokey();
+#else
 				waitrelease();
+#endif
 				if (numres == -1 || numres < min || numres > max)
 					return -1;
 				return numres;

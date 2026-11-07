@@ -200,6 +200,10 @@ extern Prov provs[100];
 extern short nsites;
 extern unsigned char provmap[22500];
 extern unsigned long map[22500];
+// PORT: a second name for the global map, which parameters named map hide
+#ifdef PORT
+static unsigned long *const globalmap = map;
+#endif
 extern unsigned long mapitems[32767];
 extern unsigned long rndprice;
 extern unsigned long rndrem;
@@ -2844,7 +2848,12 @@ unpacked:
 	memcpy(gridhead, lcgrid, sizeof gridhead);
 	lcgrid += sizeof gridhead;
 	for (lcidx = 0; lcidx < 22500; lcidx++) {
+		// PORT: the global map, which ::map names in C++
+#ifdef PORT
+		globalmap[lcidx] = *(unsigned short *)lcgrid;
+#else
 		::map[lcidx] = *(unsigned short *)lcgrid;
+#endif
 		lcgrid += 2;
 	}
 	gridver = *(unsigned short *)lcgrid;
@@ -2904,18 +2913,38 @@ loaded:
 	for (lcidx = 0; lcidx < 22500; lcidx++) {
 		memread(&lcflags, 1, 1, &lcrec);
 		unpackcell(lcidx, lcflags);
+		// PORT: the global map, which ::map names in C++
+#ifdef PORT
+		if (globalmap[lcidx] & 0x1000) {
+#else
 		if (::map[lcidx] & 0x1000) {
+#endif
 			lcword = nmapitems;
 			lcword <<= 16;
+			// PORT: the global map, which ::map names in C++
+#ifdef PORT
+			globalmap[lcidx] |= lcword;
+#else
 			::map[lcidx] |= lcword;
+#endif
 			do {
 				memread(&lcword, 4, 1, &lcrec);
 				if ((lcword & 0xfff) == 0) {
 					if (!(lcword & 0x8000)) {
+						// PORT: the global map, which ::map names in C++
+#ifdef PORT
+						if (globalmap[lcidx] >> 16 < nmapitems)
+#else
 						if (::map[lcidx] >> 16 < nmapitems)
+#endif
 							mapitems[nmapitems - 1] &= 0xffff7fff;
 						else
+							// PORT: the global map, which ::map names in C++
+#ifdef PORT
+							globalmap[lcidx] &= 0xefff;
+#else
 							::map[lcidx] &= 0xefff;
+#endif
 					}
 				} else
 					mapitems[nmapitems++] = lcword;
@@ -2986,7 +3015,12 @@ savegrid(unsigned short map, char flag)
 	wsprintf(gridhead, texts + 0xb1d8, map);
 	filewrite(gridhead, sizeof gridhead, 1, h);
 	for (i = 0; i < 22500; i++) {
+		// PORT: the global map, which ::map names in C++
+#ifdef PORT
+		v = globalmap[i] & 0xfff;
+#else
 		v = ::map[i] & 0xfff;
+#endif
 		filewrite(&v, 2, 1, h);
 	}
 	i = 0xf4f9;
@@ -3037,7 +3071,12 @@ saveobjs(unsigned short map, char flag)
 	memset(workbuf, 0, 0x96640);
 	p = memopen(workbuf);
 	for (i = 0; i < 22500; i++) {
+		// PORT: the global map, which ::map names in C++
+#ifdef PORT
+		v = globalmap[i];
+#else
 		v = ::map[i];
+#endif
 		c = packcell(i);
 		memwrite(&c, 1, 1, &p);
 		if (v & 0x1000) {

@@ -1,5 +1,6 @@
 # ci builds every target on the latest Fedora: the programs of 2008 and
-# the game with the features, with Watcom C/C++. Each step runs
+# the game with the features with Watcom C/C++, and the modules of the
+# game as C99 with gcc, clang, and mingw-w64. Each step runs
 # whatever the others do, so that a run reports every target, and make
 # runs four jobs at a time, with the output of each rule in one piece.
 name: ci
@@ -29,8 +30,9 @@ jobs:
         run: >-
           dnf -y install --setopt=install_weak_deps=False
           git make gawk sed grep coreutils diffutils findutils tar gzip bzip2 zstd curl 7zip
-          golang dosbox-staging ShellCheck
-          mingw32-gcc
+          golang gcc clang dosbox-staging ShellCheck
+          glibc-devel.x86_64 glibc-devel.i686
+          mingw32-gcc mingw64-gcc
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
@@ -58,9 +60,27 @@ jobs:
       - name: ddraw.dll
         if: ${{ !cancelled() }}
         run: make ddraw
-      - name: Game with the features
+      - name: windows/386, Watcom C/C++
         if: ${{ !cancelled() }}
-        run: make dist
+        run: make dist OS=windows ARCH=386 CC=watcom
+      - name: linux/386, gcc
+        if: ${{ !cancelled() }}
+        run: make all OS=linux ARCH=386 CC=gcc
+      - name: linux/386, clang
+        if: ${{ !cancelled() }}
+        run: make all OS=linux ARCH=386 CC=clang
+      - name: linux/amd64, gcc
+        if: ${{ !cancelled() }}
+        run: make all OS=linux ARCH=amd64 CC=gcc
+      - name: linux/amd64, clang
+        if: ${{ !cancelled() }}
+        run: make all OS=linux ARCH=amd64 CC=clang
+      - name: windows/386, mingw-w64
+        if: ${{ !cancelled() }}
+        run: make all OS=windows ARCH=386 CC=gcc
+      - name: windows/amd64, mingw-w64
+        if: ${{ !cancelled() }}
+        run: make all OS=windows ARCH=amd64 CC=gcc
       - name: Programs
         run: |
           cd build

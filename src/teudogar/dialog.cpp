@@ -1466,7 +1466,12 @@ evalvar(char *s)
 			return units[curunit].sympathy;
 		else if (ideqi(evp, texts + 0xab1f)) {
 			/* &units[curunit] as a sum whose first term is the product */
+			// PORT: the unit by its index, as 64 bits truncate the address in a DWORD
+#ifdef PORT
+		if (isservant(&units[curunit]) && units[curunit].lord)
+#else
 		if (isservant((Unit *)(curunit * sizeof(Unit) + (DWORD)units)) && units[curunit].lord)
+#endif
 				return units[units[curunit].lord].sympathy;
 			return units[curunit].sympathy;
 		} else if (ideqi(evp, texts + 0xab25))
@@ -2329,7 +2334,12 @@ takefrom(Unit *u, unsigned long w)
 
 /* set flag n of the game, clearing its opposite, unless the opposite of 0x1d to 0x1f is set */
 void
+// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+setknown(unsigned n)
+#else
 setflag(unsigned n)
+#endif
 {
 	if (n >= 0xf0)
 		return;
@@ -2746,7 +2756,12 @@ runcmds(char *p)
 		if (p[0] == 'g' && p[1] == 'z') {
 			if (p[2] == '_') {
 				cmdn = evalvar(p + 3);
+				// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+				setknown(cmdn);
+#else
 				setflag(cmdn);
+#endif
 			} else {
 				cmdn = evalvar(p + 2);
 				if (cmdn < 0xf0 && !getbit(game.known, cmdn)) {
@@ -2757,7 +2772,12 @@ runcmds(char *p)
 					drawactions();
 					flip();
 					s2toback();
+					// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+					setknown(cmdn);
+#else
 					setflag(cmdn);
+#endif
 					drawactions();
 					waitinput(1000);
 					dissolvet();
@@ -4001,7 +4021,12 @@ runnode(char **pa, char **pb, unsigned char n)
 				k = 1;
 			wake:
 				/* the original passes k as an int */
+				// FIXED: a call through another function type is undefined in C. Call it through its own, with the same value.
+#ifdef PORT
+				staydays(k);
+#else
 				((void (*)(int))staydays)(k);
+#endif
 				gobattle = 0;
 				return 0xff4;
 			}
@@ -4130,8 +4155,14 @@ runnode(char **pa, char **pb, unsigned char n)
 						if (lang) {
 							if (lvn == 0)
 								lvp++;
+							// FIXED: *lvp++ = lower(*lvp) reads and moves lvp unsequenced, undefined in C. Read *lvp first, as Watcom compiled it.
+#ifdef PORT
+							for (; *lvp; lvp++)
+								*lvp = lower(*lvp);
+#else
 							while (*lvp)
 								*lvp++ = lower(*lvp);
+#endif
 						} else
 							while (*lvp)
 								lvp++;

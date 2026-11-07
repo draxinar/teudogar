@@ -177,13 +177,22 @@ struct Part {
 	unsigned char setkind;
 	char f4[0x11 - 4];
 	unsigned long size;	/* of pics */
+	// PORT: partpics holds the pointer, which 64 bits widen past these 4 bytes
+#ifdef PORT
+	char pics[4];
+#else
 	char *pics;
+#endif
 	char f19[0x1d - 0x19];
 	unsigned char setflag;
 	char f1e[0x22 - 0x1e];
 };
 
 extern Part partdefs[];
+// PORT: the picture sets of partdefs, in unittype.cpp
+#ifdef PORT
+extern char *partpics[78];
+#endif
 extern unsigned char partkinds[][2];
 extern char version[23];	/* 004c3b40, "@#$(!): 01.005 \xff      " */
 extern short starttime;
@@ -223,7 +232,12 @@ extern int cheat;
 extern int titlesopt;
 extern int nofani;
 extern unsigned char firststart;
+// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+int unpackblock(void);
+#else
 int unpack(void);
+#endif
 void setlang(char c);
 int cdprog(void);
 void kbdinit(void);
@@ -850,8 +864,14 @@ folderpath(char *buf, int csidl)
 	} else {
 		r = SHGetPathFromIDList(pidl, buf);
 		SHGetMalloc(&m);
+		// PORT: COM through its C binding
+#ifdef PORT
+		IMalloc_Free(m, pidl);
+		IMalloc_Release(m);
+#else
 		m->Free(pidl);
 		m->Release();
+#endif
 	}
 	return r;
 }
@@ -1078,6 +1098,10 @@ addtext(char *fmt, ...)
 
 	va_start(ap, fmt);
 	wvsprintf(logp, fmt, ap);
+	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
+#ifdef PORT
+	va_end(ap);
+#endif
 	while (*logp)
 		logp++;
 	*logp++ = '\r';
@@ -1159,6 +1183,10 @@ adderr(char *fmt, ...)
 
 	va_start(ap, fmt);
 	wvsprintf(fbuf, fmt, ap);
+	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
+#ifdef PORT
+	va_end(ap);
+#endif
 	for (p = errlines; *p; p++)
 		;
 	if (errlines[0]) {
@@ -1223,8 +1251,14 @@ browse(char *buf, char *title)
 	SHGetPathFromIDList(pidl, buf);
 	m = NULL;
 	if (SHGetMalloc(&m) == NOERROR) {
+		// PORT: COM through its C binding
+#ifdef PORT
+		IMalloc_Free(m, pidl);
+		IMalloc_Release(m);
+#else
 		m->Free(pidl);
 		m->Release();
+#endif
 	}
 	return 1;
 }
@@ -1494,19 +1528,43 @@ mklink(char *path, char *dir, char *link, char *desc)
 	WCHAR wsz[1000];
 	HRESULT hr;
 
+	// PORT: the IDs by address, as C passes them
+#ifdef PORT
+	hr = CoCreateInstance(&CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, &IID_IShellLink, (void **)&sl);
+#else
 	hr = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void **)&sl);
+#endif
 	if (FAILED(hr))
 		return hr;
+	// PORT: COM through its C binding
+#ifdef PORT
+	IShellLink_SetPath(sl, path);
+	IShellLink_SetDescription(sl, desc);
+	IShellLink_SetWorkingDirectory(sl, dir);
+	hr = IShellLink_QueryInterface(sl, &IID_IPersistFile, (void **)&pf);
+#else
 	sl->SetPath(path);
 	sl->SetDescription(desc);
 	sl->SetWorkingDirectory(dir);
 	hr = sl->QueryInterface(IID_IPersistFile, (void **)&pf);
+#endif
 	if (SUCCEEDED(hr)) {
 		MultiByteToWideChar(CP_ACP, 0, link, -1, wsz, 1000);
+		// PORT: COM through its C binding
+#ifdef PORT
+		hr = IPersistFile_Save(pf, wsz, TRUE);
+		IPersistFile_Release(pf);
+#else
 		hr = pf->Save(wsz, TRUE);
 		pf->Release();
+#endif
 	}
+	// PORT: COM through its C binding
+#ifdef PORT
+	IShellLink_Release(sl);
+#else
 	sl->Release();
+#endif
 	return hr;
 }
 
@@ -1599,6 +1657,10 @@ logput(char *fmt, ...)
 		return;
 	va_start(ap, fmt);
 	wvsprintf(logcur, fmt, ap);
+	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
+#ifdef PORT
+	va_end(ap);
+#endif
 	if (*logcur) {
 		if (lognl != 0) {
 			loghead = logcur;
@@ -1626,7 +1688,12 @@ logprogress(char *buf, char *line)
 	int k, pos, i;
 
 	/* defect: compares the pointer line with the address of a literal */
+	// FIXED: a comparison with the address of a literal is unspecified in C. Compare with NULL, which holds for every line of logbuf as the original's test does, and skips a NULL line, on which the original faults in ideqi.
+#ifdef PORT
+	if (line != NULL) {
+#else
 	if (line != "") {
+#endif
 		if (ideqi(line, "ERROR")) {
 			adderr(line + 7);
 			return 1;
@@ -1882,7 +1949,12 @@ rungame(void)
 
 /* show the items of the setup dialog's page for mode setuppage */
 void
+// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+showsetuppage(HWND w)
+#else
 showpage(HWND w)
+#endif
 {
 	int v;
 
@@ -1995,7 +2067,12 @@ setupproc(HWND w, WORD msg, int wp, LPARAM lp)
 		break;
 	case WM_INITDIALOG:
 		dlg = w;
+		// PORT: the icon through intptr_t, which holds the 64-bit pointer that a LONG truncates
+#ifdef PORT
+	SetClassLong(w, GCL_HICON, (LONG)(intptr_t)LoadIcon(appinst, MAKEINTRESOURCE(101)));
+#else
 	SetClassLong(w, GCL_HICON, (LONG)LoadIcon(appinst, MAKEINTRESOURCE(101)));
+#endif
 		if (!winw || !winh) {
 			GetWindowRect(w, &r);
 			winw = r.right - r.left;
@@ -2027,7 +2104,12 @@ setupproc(HWND w, WORD msg, int wp, LPARAM lp)
 			savepos(w);
 			EndDialog(w, 1);
 		} else
+			// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+			showsetuppage(w);
+#else
 			showpage(w);
+#endif
 		break;
 	case WM_SYSCOMMAND:
 		if (wp != SC_CLOSE)
@@ -2107,7 +2189,12 @@ progproc(HWND w, WORD msg, int wp, LPARAM lp)
 	switch (msg) {
 	case WM_INITDIALOG:
 		dlg = w;
+		// PORT: the icon through intptr_t, which holds the 64-bit pointer that a LONG truncates
+#ifdef PORT
+	SetClassLong(w, GCL_HICON, (LONG)(intptr_t)LoadIcon(appinst, MAKEINTRESOURCE(101)));
+#else
 	SetClassLong(w, GCL_HICON, (LONG)LoadIcon(appinst, MAKEINTRESOURCE(101)));
+#endif
 		SetWindowText(w, pick(T(0x27f), T(0x2a7), T(0x2d2), T(0x2d3), T(0x2d4), T(0x2fa)));
 		SetDlgItemText(w, IDABORT, pick(T(0xd4), T(0xdf), T(0xe6), T(0xe7), T(0xe8), T(0xf1)));
 		SetWindowPos(w, NULL, winx, winy, winw, winh, SWP_NOSIZE);
@@ -2216,7 +2303,12 @@ inisys(HINSTANCE inst, char *cmd, char *err)
 	starttime = (*(short *)&hour);
 	starttime *= 60;
 	starttime += (*(short *)&minute);
+	// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+	isi = unpackblock();
+#else
 	isi = unpack();
+#endif
 	x = 0;
 	setlang(0xff);
 	if (gamedir(T(0x9b28)))
@@ -2268,7 +2360,12 @@ inisys(HINSTANCE inst, char *cmd, char *err)
 	memset(facecache, 0, sizeof facecache);
 	memset(overcache, 0, sizeof overcache);
 	for (isi = 0; isi < 78; isi++)
+		// PORT: partpics for Part's pics
+#ifdef PORT
+		partpics[isi] = NULL;
+#else
 		partdefs[isi].pics = NULL;
+#endif
 	clearbufs();
 	lastscan = 0;
 	leftclick = 0;
@@ -2692,17 +2789,37 @@ inisys2(char *err)
 					i2len = storedn;
 					fileread(packbuf + 0x4b320, i2len, 1, datfh);
 					i2len = unpack(packbuf, 0x4b320, packbuf + 0x4b320, i2len);
+					// PORT: partpics for Part's pics
+#ifdef PORT
+					partpics[i2i] = (char *)GlobalAlloc(GMEM_FIXED, i2len);
+#else
 					partdefs[i2i].pics = (char *)GlobalAlloc(GMEM_FIXED, i2len);
+#endif
 				} else
+					// PORT: partpics for Part's pics
+#ifdef PORT
+					partpics[i2i] = NULL;
+#else
 					partdefs[i2i].pics = NULL;
+#endif
 				cacheparts++;
+				// PORT: partpics for Part's pics
+#ifdef PORT
+				if (!partpics[i2i])
+#else
 				if (!partdefs[i2i].pics)
+#endif
 					partdefs[i2i].size = 0;
 				else {
 					cachebytes += i2len;
 					partbytes += i2len;
 					partscached++;
+					// PORT: partpics for Part's pics
+#ifdef PORT
+					memcpy(partpics[i2i], packbuf, i2len);
+#else
 					memcpy(partdefs[i2i].pics, packbuf, i2len);
+#endif
 					partdefs[i2i].size = i2len;
 				}
 			}
@@ -2726,7 +2843,12 @@ inisys2(char *err)
 		if (!minmem && !lowmem && seekentry(i2i + 0x209c)) {
 			i2len = storedn;
 			fileread(packbuf, i2len, 1, datfh);
+			// PORT: the cache as unsigned char, which C wants cast
+#ifdef PORT
+			facecache[i2i] = (unsigned char *)GlobalAlloc(GMEM_FIXED, i2len);
+#else
 			facecache[i2i] = (char *)GlobalAlloc(GMEM_FIXED, i2len);
+#endif
 		} else
 			facecache[i2i] = NULL;
 		if (facecache[i2i]) {
@@ -2752,7 +2874,12 @@ inisys2(char *err)
 			fileread(packbuf + 0x4b320, i2len, 1, datfh);
 			if (i2len)
 				i2len = unpack(packbuf, 0x4b320, packbuf + 0x4b320, i2len);
+			// PORT: the cache as unsigned char, which C wants cast
+#ifdef PORT
+			overcache[i2i] = (unsigned char *)GlobalAlloc(GMEM_FIXED, i2len);
+#else
 			overcache[i2i] = (char *)GlobalAlloc(GMEM_FIXED, i2len);
+#endif
 		} else
 			// FIXED: the entry cleared is facecache's, where overcache's is meant. Clear overcache's.
 #if defined(FEATURE_FIXES)
@@ -2934,10 +3061,18 @@ exitsys(void)
 		}
 	}
 	for (runminutes = 0; runminutes < 78; runminutes++) {
+		// PORT: partpics for Part's pics
+#ifdef PORT
+		if (partpics[runminutes] != NULL) {
+			GlobalFree(partpics[runminutes]);
+			partpics[runminutes] = NULL;
+		}
+#else
 		if (partdefs[runminutes].pics != NULL) {
 			GlobalFree(partdefs[runminutes].pics);
 			partdefs[runminutes].pics = NULL;
 		}
+#endif
 	}
 	closemutex();
 	return 1;

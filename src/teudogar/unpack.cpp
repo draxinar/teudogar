@@ -16,7 +16,12 @@ extern char texts[47942];
 
 /* unpack the tables and the texts that the program carries packed */
 int
+// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+unpackblock(void)
+#else
 unpack(void)
+#endif
 {
 	unsigned i;
 	char *p;

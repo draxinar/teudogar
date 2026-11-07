@@ -155,7 +155,12 @@ struct Part {
 	short text;		/* a text */
 	char grassmask;
 	unsigned long size;	/* of the cached picture set */
+	// PORT: partpics holds the pointer, which 64 bits widen past these 4 bytes
+#ifdef PORT
+	char pics[4];
+#else
 	char *pics;		/* the cached picture set */
+#endif
 	char showhead;
 	char showbody;
 	char showcloak;
@@ -277,7 +282,12 @@ struct Box {
 	int icon;
 	int window;		/* a picture */
 	int worn;		/* a picture */
+	// PORT: the unit as a pointer, which 64 bits widen past an int
+#ifdef PORT
+	Unit *unit;
+#else
 	int unit;
+#endif
 	short x;
 	short y;
 	short w;
@@ -459,6 +469,10 @@ extern unsigned char keys[256];
 extern int debugmap;
 extern unsigned char partkinds[][2];
 extern Part partdefs[];
+// PORT: the picture sets of partdefs, in unittype.cpp
+#ifdef PORT
+extern char *partpics[78];
+#endif
 extern char packbuf[];
 extern char picbuf[];
 extern HANDLE datfh;
@@ -1015,6 +1029,21 @@ watercolor(void)
 	return 0x74;
 }
 
+// PORT: C leaves the order of a call's arguments open. This draws the four colors from the last to the first, as Watcom compiled drawmap's calls
+#ifdef PORT
+static void
+setscr4by(int off, int (*color)(void))
+{
+	int a, b, c, d;
+
+	d = color();
+	c = color();
+	b = color();
+	a = color();
+	setscr4(off, a, b, c, d);
+}
+#endif
+
 /* draws the minimap at x, y */
 void
 drawmap(int x, int y, short mode, short showunits)
@@ -1082,7 +1111,12 @@ drawmap(int x, int y, short mode, short showunits)
 				dmapterr = terrains[dmaptile & 0xfff];
 				switch (dmapterr & 0x1f) {
 				case 9:
+					// PORT: C leaves the order of a call's arguments open. Draw them from the last to the first, as Watcom compiled them
+#ifdef PORT
+					setscr4by(dmapoff, watercolor);
+#else
 					setscr4(dmapoff, watercolor(), watercolor(), watercolor(), watercolor());
+#endif
 					continue;
 				case 8:
 					dmapterr = randn(99);
@@ -1092,7 +1126,12 @@ drawmap(int x, int y, short mode, short showunits)
 						setscr2o(dmapoff, 0x77);
 					continue;
 				case 4:
+					// PORT: as above
+#ifdef PORT
+					setscr4by(dmapoff, fieldcolor);
+#else
 					setscr4(dmapoff, fieldcolor(), fieldcolor(), fieldcolor(), fieldcolor());
+#endif
 					continue;
 				}
 				if (!(dmaptile & 0x4000)) {
@@ -1124,13 +1163,23 @@ drawmap(int x, int y, short mode, short showunits)
 					switch (dmapterr & 0x1f) {
 					case 2:
 					case 3:
+						// PORT: as above
+#ifdef PORT
+						setscr4by(dmapoff, pathcolor);
+#else
 						setscr4(dmapoff, pathcolor(), pathcolor(), pathcolor(), pathcolor());
+#endif
 						continue;
 					default:
 						if (debugmap || cheat && keys[VK_SHIFT] & 0x80 && keys['W'] & 0x80)
 							setscr2o(dmapoff, 0x46);
 						else
+							// PORT: as above
+#ifdef PORT
+							setscr4by(dmapoff, groundcolor);
+#else
 							setscr4(dmapoff, groundcolor(), groundcolor(), groundcolor(), groundcolor());
+#endif
 						continue;
 					}
 				}
@@ -1256,7 +1305,12 @@ loadpart(char *dst, unsigned n)
 		memset(dst, 0, setpics * 0x900);
 		return;
 	}
+	// PORT: partpics for Part's pics
+#ifdef PORT
+	if (partpics[n] == NULL) {
+#else
 	if (partdefs[n].pics == NULL) {
+#endif
 		if (!seekentry(n + 0x1398)) {
 			memset(dst, 0, setpics * 0x900);
 			return;
@@ -1266,7 +1320,12 @@ loadpart(char *dst, unsigned n)
 		partlen = unpack(packbuf, 0x96640, picbuf, partlen);
 	} else {
 		partlen = partdefs[n].size;
+		// PORT: partpics for Part's pics
+#ifdef PORT
+		memcpy(packbuf, partpics[n], partlen);
+#else
 		memcpy(packbuf, partdefs[n].pics, partlen);
+#endif
 	}
 	partp = packbuf;
 	if (minsets)
@@ -2884,7 +2943,12 @@ burntext(unsigned long item)
 void
 clearboxes(void)
 {
+	// PORT: the size of boxes, whose pointers 64 bits widen
+#ifdef PORT
+	memset(boxes, 0, sizeof boxes);
+#else
 	memset(boxes, 0, 0x820);
+#endif
 	nboxes = 0;
 	memset(boxtexts, 0, 800);
 	nboxtexts = 0;
@@ -3128,7 +3192,12 @@ describe(unsigned long item, short owner)
 		break;
 	case 0x14:
 	case 0x15:
+		// PORT: the unit as a pointer, which 64 bits widen past an int
+#ifdef PORT
+		boxes[nboxes].unit = &units[item >> 16];
+#else
 		boxes[nboxes].unit = (int)&units[item >> 16];
+#endif
 		nboxes++;
 		break;
 	default:

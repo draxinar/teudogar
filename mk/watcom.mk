@@ -1,5 +1,6 @@
 # watcom.mk builds with Watcom C/C++ under DOSBox (bin/dos): the
-# programs of 2008, byte for byte, and the game with FEATURES.
+# programs of 2008, byte for byte, and the game with FEATURES when CC is
+# watcom.
 
 # ZLIB_MODULES lists the modules of zlib that the game links, in their
 # link order.
@@ -102,6 +103,11 @@ $(ORIGINAL)/.ok: $(ORIGINAL)/teudogar.exe $(ORIGINAL)/uninstal.exe sum/rebuild.s
 	sed -n 's|  teudogar/uninstal.exe$$|  uninstal.exe|p' sum/teudogar.sha256 | (cd $(ORIGINAL) && sha256sum --quiet -c)
 	touch $@
 
+ifeq ($(CC),watcom)
+ifneq ($(OS)-$(ARCH),windows-386)
+$(error CC=watcom builds OS=windows ARCH=386)
+endif
+
 # The game with FEATURES. wpp386 takes FEATURE_<NAME> for each feature
 # from its variable WPP386, since DOS holds a command line to 127
 # characters.
@@ -160,3 +166,4 @@ $(D)/teudogar.exe: $(O)/teudogar.exe build/zip/.ok build/ddraw/ddraw.dll LICENSE
 
 # dist builds the distribution and its archive.
 dist: $(D)/teudogar.exe $(ARCHIVE)
+endif

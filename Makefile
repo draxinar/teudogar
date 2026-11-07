@@ -2,9 +2,18 @@
 # source and from teudogar.zip, the author's release of version 1.05.
 # Plain make lists the goals.
 
+# OS, ARCH, and CC name the target that all builds: linux or windows,
+# 386 or amd64, and gcc, clang, or watcom, the compiler of 2008, which
+# builds windows on 386.
+OS = linux
+ARCH = amd64
+CC = gcc
+
 # FEATURES lists the features of the game that all builds: faults, the
 # fixes of the code's faults, pace, the game's pace at any refresh, and
-# fixes, the fixes of the gameplay, which takes faults and pace with it.
+# fixes, the fixes of the gameplay, which takes faults and pace with
+# it. A module compiled as C99 takes faults and pace whatever the list
+# holds.
 FEATURES = fixes
 
 # ZIP is the author's release, and PASSWORD the file whose first line is
@@ -24,28 +33,34 @@ DATE = 2008-05-20T08:23:29Z
 BASE_MODULES = basio memio str
 GAME_MODULES = zpack map dialog datfile texts input actions demotext graphics trade system combat cursor menus mainmenu npc unittype snd unpack world plt keys lang sysinfo deco panel screen
 
-# TARGET names what all builds, the game with FEATURES for Windows on
-# 386 with Watcom C/C++, O the directory of its program and its objects,
-# and D its distribution, whose archive is ARCHIVE. BIN holds the Go
-# commands, and RELEASE the release's files.
-TARGET = windows-386-watcom
+# TARGET names what all builds, O the directory of its program and its
+# objects, and D its distribution, whose archive is ARCHIVE. BIN holds
+# the Go commands, and RELEASE the release's files.
+TARGET = $(OS)-$(ARCH)-$(CC)
 O = build/$(TARGET)
 D = dist/$(TARGET)
 ARCHIVE = dist/teudogar-$(VERSION)-$(TARGET).zip
 BIN = build/bin
 RELEASE = build/zip/teudogar
 
+# make keeps the target's variables out of the recipes' environment,
+# where CC names the C compiler of go build.
+unexport OS ARCH CC
+
 .DELETE_ON_ERROR:
 .PHONY: usage all dist original ddraw check lint fetch tools clean distclean FORCE
 
 # usage lists the goals.
 usage::
-	@echo 'usage: make goal ... [FEATURES=fixes]'
+	@echo 'usage: make goal ... [OS=linux|windows] [ARCH=386|amd64] [CC=gcc|clang|watcom]'
+	@echo '                     [FEATURES=fixes]'
 	@echo ''
-	@echo 'the game with FEATURES, with Watcom C/C++:'
-	@echo '  all        build the program into build/windows-386-watcom'
-	@echo '  dist       build its distribution into dist/windows-386-watcom, the program'
-	@echo '             with the data of the game, and the archive of that folder'
+	@echo 'the game, for the target that OS, ARCH, and CC name (linux, amd64, gcc):'
+	@echo '  all        compile the modules of the game as C99 into build/<os>-<arch>-<cc>,'
+	@echo '             or build the program there when CC is watcom'
+	@echo '  dist       when CC is watcom, build its distribution into'
+	@echo '             dist/windows-386-watcom, the program with the data of the game,'
+	@echo '             and the archive of that folder'
 	@echo ''
 	@echo 'the programs of 2008:'
 	@echo '  original   rebuild teudogar.exe and uninstal.exe with Watcom C/C++ and'
@@ -126,6 +141,10 @@ clean:
 distclean: clean
 	rm -rf $(FETCHED) $(DL)/tmp
 
-# The other rules: the inputs, and the builds with Watcom C/C++.
+# The other rules: the inputs, the builds with Watcom C/C++, and the
+# modules of the game as C99 with gcc and clang.
 include mk/fetch.mk
 include mk/watcom.mk
+ifneq ($(CC),watcom)
+include mk/port.mk
+endif

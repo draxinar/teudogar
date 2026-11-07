@@ -306,7 +306,12 @@ cdprog(void)
 
 /* open data file name in the program's directory */
 int
+// PORT: a name for the unused parameter, which C99 wants
+#ifdef PORT
+opendat(char *name, int unused)
+#else
 opendat(char *name, int)
+#endif
 {
 	pathjoin(datpath, progdir, name);
 	if (datfh)

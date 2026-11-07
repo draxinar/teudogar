@@ -533,6 +533,11 @@ extern int ptrpace;
 extern short heropace;
 /* the first of three shorts (005590c8 to 005590cd) that advance reads as an array */
 extern short walkedsum;
+// FIXED: the neighbors of walkedsum, which the port names
+#ifdef PORT
+extern short walkeddx;
+extern short walkeddy;
+#endif
 extern unsigned short playernext;
 extern unsigned char notedkind;
 extern int notedposx;
@@ -1357,6 +1362,17 @@ advance(int dx, int dy)
 			units[0].dirx = units[0].nextx - playerx;
 			units[0].diry = units[0].nexty - playery;
 			playernext = units[0].nextx + units[0].nexty * 150;
+			// FIXED: the writes past walkedsum reach walkeddx and walkeddy in WLINK's layout alone. Name them.
+#ifdef PORT
+			if (units[0].diry) {
+				walkedsum += (signed char)units[0].diry * 0x5a;
+				walkeddy += (signed char)units[0].diry;
+			}
+			if (units[0].dirx) {
+				walkedsum += (signed char)units[0].dirx;
+				walkeddx += (signed char)units[0].dirx;
+			}
+#else
 			if (units[0].diry) {
 				(&walkedsum)[0] += (signed char)units[0].diry * 0x5a;
 				(&walkedsum)[2] += (signed char)units[0].diry;
@@ -1365,6 +1381,7 @@ advance(int dx, int dy)
 				(&walkedsum)[0] += (signed char)units[0].dirx;
 				(&walkedsum)[1] += (signed char)units[0].dirx;
 			}
+#endif
 			notedkind = 0xff;
 			units[0].pose = 1;
 			return 1;

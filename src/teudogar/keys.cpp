@@ -180,7 +180,12 @@ waitkey(void)
 }
 
 int
+// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+waitnokey(void)
+#else
 waitrelease(void)
+#endif
 {
 	do {
 		if (!readinput())

@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "base.h"
+// PORT: names of their own for lastx and lasty, which cursor.cpp defines with another type
+#ifdef PORT
+#define lastx menulastx
+#define lasty menulasty
+#endif
 
 #pragma pack(1)
 
@@ -261,7 +266,12 @@ void setcurregion(void);
 void lookaround(void);
 void lookdone(void);
 void fillrect(int n, int l, int t, int r, int b, unsigned char color);
+// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+int waitnokey(void);
+#else
 int waitrelease(void);
+#endif
 void hidecursor(void);
 void drawcursor(void);
 short regionat(short x, short y);
@@ -623,7 +633,12 @@ extern char udstr2[82];
 extern char udstr3[22];
 extern char vramtext[2000];
 extern char blittext[2000];
+// FIXED: spritetext holds outlinecols and ink3cols in the port
+#ifdef PORT
+extern char spritetext[2008];
+#else
 extern char spritetext[2000];
+#endif
 extern char soundtext[2000];
 extern char capstext[2000];
 extern char musictext[2000];
@@ -1114,7 +1129,12 @@ pickmap(void)
 	mousemoved = 1;
 	lastreg = 0xff;
 	lastprov = 0xff;
+	// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+	waitnokey();
+#else
 	waitrelease();
+#endif
 	for (;;) {
 		if (keys[VK_SHIFT] & 0x80)
 			;
@@ -1186,7 +1206,12 @@ redraw:
 			drawmap(100, 90, mapmode, mapflag);
 			flip();
 			drawcursor();
+			// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+			waitnokey();
+#else
 			waitrelease();
+#endif
 		} else if (cheat && mapkey == 0x22) {
 			mapmode = 0xfe;
 			mapflag = 1;
@@ -1859,8 +1884,14 @@ memreport(char *buf)
 		;
 }
 
+// PORT: the type that runmenu calls it through, where a call through another is undefined in C
+#ifdef PORT
+short
+palkey(unsigned char unused, unsigned char c)
+#else
 int
 palkey(void *, char c)
+#endif
 {
 	int *v;
 
@@ -1903,8 +1934,14 @@ palkey(void *, char c)
 	return 3;
 }
 
+// PORT: the type that runmenu calls it through, where a call through another is undefined in C
+#ifdef PORT
+short
+gfxkey(unsigned char unused, unsigned char c)
+#else
 int
 gfxkey(void *, char c)
+#endif
 {
 	// FIXED: items 5 and 6 are the delays only while optextra shows them, and otherwise the dialogs' and the pages' items, whose plus and minus keys change the hidden delays. Leave them alone.
 #if defined(FEATURE_FIXES)
@@ -1959,8 +1996,14 @@ gfxkey(void *, char c)
 	return 0;
 }
 
+// PORT: the type that runmenu calls it through, where a call through another is undefined in C
+#ifdef PORT
+short
+ctrlkey(unsigned char unused, unsigned char c)
+#else
 int
 ctrlkey(void *, char c)
+#endif
 {
 	if (menu1.sel == 3) {
 		if (c == '+' && censorship < 4) {
@@ -2028,8 +2071,14 @@ resetsound(void)
 	dsready = 0;
 }
 
+// PORT: the type that runmenu calls it through, where a call through another is undefined in C
+#ifdef PORT
+short
+soundkey(unsigned char unused, unsigned char c)
+#else
 int
 soundkey(void *, char c)
+#endif
 {
 	if (menu1.sel == 4 && dsready && soundson) {
 		if (c == '+') {
@@ -2316,7 +2365,12 @@ options(int ingame)
 				{
 					int t;
 
+					// FIXED: a call through another function type is undefined in C. Call it through its own: optn keeps the same 16 bits.
+#ifdef PORT
+					t = runmenu(&menu1, 0, 0, 0);
+#else
 					t = ((int (*)(Menu *, int (*)(void), short (*)(unsigned char, unsigned char), short))runmenu)(&menu1, 0, 0, 0);
+#endif
 					optn = t;
 				}
 				if (needredraw(optn))
@@ -2973,8 +3027,14 @@ parsetext(char *text, int len)
 	ntextlines = 0;
 	text[len] = 0;
 	texttitle = text;
+	// FIXED: *splitp++ = upper(*splitp) reads and moves splitp unsequenced, undefined in C. Read *splitp first, as Watcom compiled it.
+#ifdef PORT
+	for (splitp = text; *splitp && *splitp != 13; splitp++)
+		*splitp = upper(*splitp);
+#else
 	for (splitp = text; *splitp && *splitp != 13; )
 		*splitp++ = upper(*splitp);
+#endif
 	for (splitp = text; splitp < text + len; splitp++) {
 		if (*splitp == '[') {
 			*splitp = 0;
@@ -3282,7 +3342,12 @@ showtext(short a, short b, char *s, short mode, short raw)
 		if (quitting)
 			return 0;
 		/* s only shapes the code: with it docpick is tested in a register */
+		// PORT: the integer as a pointer through intptr_t, which 64 bits widen
+#ifdef PORT
+		s = (char *)(intptr_t)docpick;
+#else
 		s = (char *)docpick;
+#endif
 		if (s == 0)
 			break;
 		curtopic = docpick - 1;
@@ -4472,7 +4537,12 @@ quit:
 		while (namep[-1] == ' ')
 			*--namep = 0;
 		memcpy(((char *)&game), heroname, 0x14);
+		// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+		waitnokey();
+#else
 		waitrelease();
+#endif
 		hidecursor();
 		drawcreate(empty);
 		dissolvet();
@@ -4889,8 +4959,14 @@ aftersave(void)
 {
 }
 
+// PORT: the type that runmenu calls it through, where a call through another is undefined in C
+#ifdef PORT
+short
+revivekey(unsigned char m, unsigned char c)
+#else
 int
 revivekey(void *m, char c)
+#endif
 {
 	int i;
 	unsigned long u;
@@ -5029,7 +5105,12 @@ done:
 			pagefx = 2;
 			/* storing 2 again through another type keeps the dead
 			   store above and gives the original's registers */
+			// PORT: the store through a pointer, in place of C++'s reference
+#ifdef PORT
+			*(unsigned short *)&pagefx = 2;
+#else
 			(unsigned short &)pagefx = 2;
+#endif
 			pagefx = 3;
 			leavemenu(1);
 			goto check;
@@ -5072,7 +5153,12 @@ sheetface(void)
 	putfacen(2, 0x5c, 0x46, curblink && units[0].health > 0 && !sheetdead ? heroface2 : heroface);
 }
 
+// PORT: the type that textwin calls it through, where a call through another is undefined in C
+#ifdef PORT
+void
+#else
 int
+#endif
 sheethover(short n)
 {
 	faceshadow(0x5c, 0x46, curblink && units[0].health > 0 && !sheetdead ? heroface2 : heroface);
@@ -5128,7 +5214,10 @@ show:
 	drawoutfit(0x14, 0xe6, sheetunit, 0, 1);
 	memcpy(sheetunit, printbuf, 0x1b8);
 	puthands();
+	// PORT: void, as above
+#ifndef PORT
 	return 0;
+#endif
 }
 
 void

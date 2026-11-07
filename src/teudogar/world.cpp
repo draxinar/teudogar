@@ -1164,7 +1164,12 @@ shift:
 void
 realmboxes(short k)
 {
+	// FIXED: a container that holds 50 items makes the test read items[50], which is undefined in C. Test the slot first: the loop stops at 50 either way.
+#ifdef PORT
+	for (rbslot = 0; rbslot < 50 && realms[k].items[rbslot] != 0; rbslot++) {
+#else
 	for (rbslot = 0; realms[k].items[rbslot] != 0 && rbslot < 50; rbslot++) {
+#endif
 		gettileo(realms[k].items[rbslot] & 0xfff);
 		tilebox(&rbx0, &rby0, &rbx1, &rby1);
 		rbx = realms[k].pos[rbslot] % 320;
@@ -1199,7 +1204,12 @@ realmboxes(short k)
 short
 boxfree(short k, unsigned short x0, unsigned short y0, unsigned short x1, unsigned short y1)
 {
+	// FIXED: as in realmboxes, a container that holds 50 items makes the test read items[50]. Test the slot first.
+#ifdef PORT
+	for (bfslot = 0; bfslot < 50 && realms[k].items[bfslot] != 0; bfslot++)
+#else
 	for (bfslot = 0; realms[k].items[bfslot] != 0 && bfslot < 50; bfslot++)
+#endif
 		if ((x0 >= boxx0[bfslot] && x0 <= boxx1[bfslot]
 		    || x1 >= boxx0[bfslot] && x1 <= boxx1[bfslot]
 		    || x0 <= boxx0[bfslot] && x1 >= boxx1[bfslot])
@@ -1604,8 +1614,14 @@ stowspot(int k, int x, int y, unsigned long item)
 					    x + spbx + spbw - 1, y + spby + spbh - 1))
 						return x + y * 320;
 		}
+		// PORT: C leaves the order of an expression's operands open. Draw y's offset, then x's, as Watcom compiled them
+#ifdef PORT
+		y = randn(sph);
+		return spx + randn(spw) - spbx + (spy + y - spby) * 320;
+#else
 		return spx + randn(spw) - spbx
 		    + (spy + randn(sph) - spby) * 320;
+#endif
 	}
 	if (spbx + x < spx)
 		x = spx - spbx;
@@ -2788,6 +2804,23 @@ enum {
 static unsigned long sightbuf[22500 + 2 * Sightrows * 150];
 static unsigned long *sight = map;
 
+// PORT: markcell marks a cell of mapflags, and past its ends the object that WLINK places there in the original
+#ifdef PORT
+/* markcell marks cell i of mapflags, or the object that the original holds there. */
+void
+markcell(int i)
+{
+	if (i < 0)
+		map[22500 + i] |= 0x200;
+	else if (i < 22500)
+		mapflags[i] |= 0x200;
+	else if (i == 22500)
+		nmapitems |= 0x200;
+	else
+		mapitems[i - 22501] |= 0x200;
+}
+#endif
+
 /* sightinit gives the walks the map, or near its ends a copy between rows of zeros. */
 void
 sightinit(void)
@@ -2805,7 +2838,12 @@ sightinit(void)
 void
 spreadup(void)
 {
+	// FIXED: &viewgrid[0][k] past the first row is undefined in C. Take byte k of the whole grid.
+#ifdef PORT
+	spreadp = (unsigned char *)viewgrid + 9;
+#else
 	spreadp = &viewgrid[0][9];
+#endif
 	spreadp += spreadrow * 19;
 	spreadmap = &map[(spreadrow + playery - 8) * 150 + playerx];
 	for (spreadk = 0; spreadk <= 7; spreadk++) {
@@ -2828,7 +2866,12 @@ spreadup(void)
 void
 spreaddown(void)
 {
+	// FIXED: &viewgrid[0][k] past the first row is undefined in C. Take byte k of the whole grid.
+#ifdef PORT
+	spreadp = (unsigned char *)viewgrid + 9;
+#else
 	spreadp = &viewgrid[0][9];
+#endif
 	spreadp += spreadrow * 19;
 	spreadmap = &map[(spreadrow + playery - 8) * 150 + playerx];
 	for (spreadk = 0; spreadk <= 7; spreadk++) {
@@ -2851,7 +2894,12 @@ spreaddown(void)
 void
 spreadeast(void)
 {
+	// FIXED: &viewgrid[0][k] past the first row is undefined in C. Take byte k of the whole grid.
+#ifdef PORT
+	spreadp = (unsigned char *)viewgrid;
+#else
 	spreadp = &viewgrid[0][0];
+#endif
 	spreadp += spreadrow * 19;
 	spreadp++;
 	spreadmap = &map[(spreadrow + playery - 8) * 150 + 1 + playerx - 9];
@@ -2867,7 +2915,12 @@ spreadeast(void)
 void
 spreadwest(void)
 {
+	// FIXED: the walk reaches the rows beside spreadrow, which C leaves undefined through one row. Take the bytes of the whole grid.
+#ifdef PORT
+	spreadp = (unsigned char *)viewgrid + spreadrow * 19 + 17;
+#else
 	spreadp = &viewgrid[spreadrow][17];
+#endif
 	spreadmap = &map[(spreadrow + playery - 8) * 150 + 17 + playerx - 9];
 	for (spreadk = 17; spreadk >= 1; spreadmap--, spreadp--, spreadk--)
 		if (spreadp[-1] == 1 || spreadp[1] == 1 || spreadp[19] == 1 || spreadp[-19] == 1
@@ -2881,7 +2934,12 @@ spreadwest(void)
 void
 roofeast(void)
 {
+	// FIXED: &viewgrid[0][k] past the first row is undefined in C. Take byte k of the whole grid.
+#ifdef PORT
+	spreadp = (unsigned char *)viewgrid;
+#else
 	spreadp = &viewgrid[0][0];
+#endif
 	spreadp += spreadrow * 19;
 	spreadp++;
 	spreadmap = &map[(spreadrow + playery - 8) * 150 + 1 + playerx - 9];
@@ -2895,7 +2953,12 @@ roofeast(void)
 void
 roofwest(void)
 {
+	// FIXED: the walk reaches the rows beside spreadrow, which C leaves undefined through one row. Take the bytes of the whole grid.
+#ifdef PORT
+	spreadp = (unsigned char *)viewgrid + spreadrow * 19 + 17;
+#else
 	spreadp = &viewgrid[spreadrow][17];
+#endif
 	spreadmap = &map[(spreadrow + playery - 8) * 150 + 17 + playerx - 9];
 	for (spreadk = 17; spreadk >= 1; spreadmap--, spreadp--, spreadk--)
 		if (*spreadp == 0 && *spreadmap & 0x2000
@@ -2923,7 +2986,12 @@ lookaround(void)
 		spreaddown();
 	}
 	for (lookrow = 1; lookrow <= 15; lookrow++) {
+		// FIXED: &viewgrid[0][k] past the first row is undefined in C. Take byte k of the whole grid.
+#ifdef PORT
+		lookp = (unsigned char *)viewgrid + lookrow * 19 + 1;
+#else
 		lookp = &viewgrid[0][lookrow * 19 + 1];
+#endif
 		for (lookcol = 1; lookcol <= 17; lookp++, lookcol++)
 			if (*lookp == 2 && lookp[1] != 1 && lookp[19] != 1)
 				*lookp = 0;
@@ -2942,7 +3010,12 @@ lookaround(void)
 		spreadeast();
 #endif
 	for (lookrow = 1; lookrow <= 15; lookrow++) {
+		// FIXED: &viewgrid[0][k] past the first row is undefined in C. Take byte k of the whole grid.
+#ifdef PORT
+		lookp = (unsigned char *)viewgrid + lookrow * 19 + 1;
+#else
 		lookp = &viewgrid[0][lookrow * 19 + 1];
+#endif
 		for (lookcol = 1; lookcol <= 17; lookp++, lookcol++)
 			if (*lookp == 2)
 				if (lookp[1] == 1)
@@ -2951,7 +3024,12 @@ lookaround(void)
 					*lookp = 4;
 	}
 	for (lookrow = 1; lookrow <= 15; lookrow++) {
+		// FIXED: &viewgrid[0][k] past the first row is undefined in C. Take byte k of the whole grid.
+#ifdef PORT
+		lookp = (unsigned char *)viewgrid + lookrow * 19 + 1;
+#else
 		lookp = &viewgrid[0][lookrow * 19 + 1];
+#endif
 		for (lookcol = 1; lookcol <= 17; lookp++, lookcol++)
 			if (*lookp == 2)
 				if (lookp[19] == 0 && lookp[-1] == 0)
@@ -2978,14 +3056,23 @@ lookaround(void)
 		looky = lookrow + playery - 8;
 		lookx = playerx - 8;
 		k = lookrow * 19 + 1;
+		// FIXED: &viewgrid[0][k] past the first row is undefined in C. Take byte k of the whole grid.
+#ifdef PORT
+		lookp = (unsigned char *)viewgrid + k;
+#else
 		lookp = &viewgrid[0][k];
+#endif
 		spreadmap = &map[looky * 150 + lookx];
 		lookflags = &mapflags[lookx + looky * 150];
 		for (lookcol = 1; lookcol <= 17; lookx++, lookcol++, lookp++, spreadmap++, lookflags++) {
 			// FIXED: a mark off the map's top or bottom goes, where the original's lands before or past mapflags on its neighbors
+			// FIXED: a mark past mapflags lands, through markcell, on the neighbor that holds it in the original's layout
 #if defined(FEATURE_FIXES)
 			if (*lookp && lookx + looky * 150 >= 0 && lookx + looky * 150 < 22500)
 				*lookflags |= 0x200;
+#elif defined(PORT)
+			if (*lookp)
+				markcell(lookx + looky * 150);
 #else
 			if (*lookp)
 				*lookflags |= 0x200;
@@ -3014,7 +3101,12 @@ lookaround(void)
 		roofwest();
 	for (lookrow = 1; lookrow <= 15; lookrow++) {
 		spreadmap = &map[(playery + lookrow - 8) * 150 + (playerx - 8)];
+		// FIXED: &viewgrid[0][k] past the first row is undefined in C. Take byte k of the whole grid.
+#ifdef PORT
+		spreadp = (unsigned char *)viewgrid + lookrow * 19 + 1;
+#else
 		spreadp = &viewgrid[0][lookrow * 19 + 1];
+#endif
 		for (lookcol = 1; lookcol <= 17; spreadp++, spreadmap++, lookcol++)
 			if (*spreadp == 0x40 && spreadp[1] & 0x48 && spreadp[19] & 0x48 && spreadp[20] & 0x48)
 				*spreadp = 8;
@@ -3025,7 +3117,12 @@ lookaround(void)
 	litsw = 0;
 	litse = 0;
 	for (lookrow = 1; lookrow <= 15; lookrow++) {
+		// FIXED: &viewgrid[0][k] past the first row is undefined in C. Take byte k of the whole grid.
+#ifdef PORT
+		lookp = (unsigned char *)viewgrid + lookrow * 19 + 1;
+#else
 		lookp = &viewgrid[0][lookrow * 19 + 1];
+#endif
 		for (lookcol = 1; lookcol <= 17; lookp++, lookcol++) {
 			lookx = lookcol - 9;
 			looky = lookrow - 8;

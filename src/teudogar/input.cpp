@@ -310,7 +310,12 @@ int text3(int n, int x, int y, char *s);
 void hidecursor(void);
 void waitrelease(short anim);
 short actionidx(unsigned char c);
+// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+int waitnokey(void);
+#else
 int waitrelease(void);
+#endif
 int __cdecl pollinput(void);
 char *daytime(unsigned char h);
 char *titlehead(void);
@@ -2243,7 +2248,12 @@ showquick(void)
 	sqact = sqi * 21 + 0x9c;
 	drawtext2(1, 0xf0, sqact, strs[1144]);
 	drawtext2(1, 0xf0, sqact + 10, strs[1145]);
+	// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+	waitnokey();
+#else
 	waitrelease();
+#endif
 	waitrelease(0);
 	drawcursor();
 	mousemoved = 1;
@@ -2298,7 +2308,12 @@ peektarget(void)
 }
 
 void
+// PORT: a name for the unused parameter, which C99 wants
+#ifdef PORT
+showquests(int unused)
+#else
 showquests(int)
+#endif
 {
 	roman(gamehour >= 5 ? gameday : gameday - 1);
 	wsprintf(workbuf + 0xd6d8, strs[546], daytime(gamehour), romanbuf);

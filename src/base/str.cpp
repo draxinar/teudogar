@@ -677,8 +677,20 @@ droplf(char *src, char *dst)
 void
 cutstr(char *s, int n)
 {
+	// FIXED: *s++ = s[n] reads and moves s unsequenced, undefined in C. Read s[n] first, as Watcom compiled it.
+#ifdef PORT
+	for (;;) {
+		char c;
+
+		c = s[n];
+		*s++ = c;
+		if (c == 0)
+			break;
+	}
+#else
 	while (*s++ = s[n])
 		;
+#endif
 	while (n--)
 		*++s = 0;
 }

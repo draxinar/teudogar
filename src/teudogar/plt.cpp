@@ -349,7 +349,7 @@ extern char *strs[];
 extern char texts[47942];
 extern short nmarks;
 // FIXED: the labels that the Labels view reaches past nmarks
-#if defined(FEATURE_FIXES)
+#if defined(FEATURE_FIXES) || defined(PORT)
 extern char marks[23][20];
 #endif
 extern unsigned long mapflags[150 * 150];
@@ -2509,6 +2509,7 @@ addlabel(int a, int b, int c)
 	x = a;
 	y = b;
 	// FIXED: a new label takes slot nmarks, which holds a label after a deletion below it. Take the first free slot, as the automap does, and name nmarks and marks.
+	// FIXED: the Labels view over nmarks reaches marks in WLINK's layout alone. Name nmarks and marks.
 #if defined(FEATURE_FIXES)
 	{
 		int k;
@@ -2521,6 +2522,10 @@ addlabel(int a, int b, int c)
 		setmark(k, x, y);
 		nmarks++;
 	}
+#elif defined(PORT)
+	wsprintf(marks[nmarks], texts + 0xb32c, c);
+	setmark(nmarks, x, y);
+	nmarks++;
 #else
 	wsprintf((*(Labels *)&nmarks).text[(*(Labels *)&nmarks).n], texts + 0xb32c, c);
 	setmark((*(Labels *)&nmarks).n, x, y);
@@ -2536,12 +2541,17 @@ labelseen(int x, int y, int c, int flag)
 	x += 4;
 	y += 4;
 	// FIXED: a label above a hole that the automap's delete leaves lies past nmarks, so the place gets a second label beside it. Walk every slot, as drawmarks does, and name nmarks.
+	// FIXED: nmarks by its name, as in addlabel
 #if defined(FEATURE_FIXES)
 	if (nmarks >= 23 || getbit(game.flags, flag))
 		return;
 	for (i = 0; i < 23; i++) {
 		if (!marks[i][0])
 			continue;
+#elif defined(PORT)
+	if (nmarks >= 23 || getbit(game.flags, flag))
+		return;
+	for (i = 0; i < nmarks; i++) {
 #else
 	if ((*(Labels *)&nmarks).n >= 23 || getbit(game.flags, flag))
 		return;

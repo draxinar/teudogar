@@ -7,6 +7,21 @@
  * MTRand is Matsumoto and Nishimura's Mersenne Twister, mt19937ar.c of
  * 2002, as a class.
  */
+// PORT: MTRand as a struct with a function for each member, and initrng for rng's constructor
+#ifdef PORT
+typedef struct MTRand MTRand;
+struct MTRand {
+	uint32_t mt[624];
+	int mti;
+	int endian;
+};
+void mtseed(MTRand *r, uint32_t s);
+void mtseedarray(MTRand *r, uint32_t *key, int n);
+uint32_t mtgenrand(MTRand *r);
+double mtreal(MTRand *r);
+int mtrange(MTRand *r, int lo, int hi);
+void initrng(void);
+#else
 class MTRand {
 public:
 	unsigned long mt[624];
@@ -20,6 +35,7 @@ public:
 	double real();
 	int range(int lo, int hi);
 };
+#endif
 
 /* basio.cpp */
 extern MTRand rng;
@@ -172,7 +188,12 @@ int random(void);
 int randn(int n);
 DWORD regquery(HKEY root, char *subkey, char *name, BYTE *buf, DWORD size);
 DWORD volserial(void);
+// PORT: a name of its own, which C wants for an overloaded function
+#ifdef PORT
+int setcliptext(HWND w, char *s);
+#else
 int setclip(HWND w, char *s);
+#endif
 int getclip(HWND w, char *buf, int size);
 int makedirs(char *path, char *buf);
 int run(char *file, char *params, char *dir);

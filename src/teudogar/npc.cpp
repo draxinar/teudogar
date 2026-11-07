@@ -2345,7 +2345,12 @@ otherat(int x, int y)
 short
 indexof(Unit *u)
 {
+	// PORT: the offset of u as a difference of pointers, which 64 bits keep whole
+#ifdef PORT
+	ixoff = (char *)u - (char *)units;
+#else
 	ixoff = (unsigned long)u - (unsigned long)units;
+#endif
 	ixoff /= sizeof(Unit);
 	return ixoff;
 }
@@ -5548,6 +5553,27 @@ strewcave(int x, int y, int type)
 	return 0;
 }
 
+// PORT: C leaves the order of a call's arguments open. These draw y's offset, then x's, as Watcom compiled fillcave's calls
+#ifdef PORT
+static int
+strewnear(int x, int y, int n, int type)
+{
+	int ry;
+
+	ry = randn(n);
+	return strewcave(x + randn(n), y + ry, type);
+}
+
+static int
+spotnear(int x, int y, int n, int flag)
+{
+	int ry;
+
+	ry = randn(n);
+	return dropspot(x + randn(n), y + ry, flag);
+}
+#endif
+
 int
 fillcave(int x, int y, int type, int d, int e, int f)
 {
@@ -5565,7 +5591,12 @@ fillcave(int x, int y, int type, int d, int e, int f)
 				mapflags[fcy * 150 + fcx] |= 8;
 		if (fcn > 6)
 			fcy -= 3;
+		// PORT: C leaves the order of a call's arguments open. Draw them from the last to the first, as Watcom compiled them
+#ifdef PORT
+		strewnear(fcx - 2, fcy - 2, 5, type);
+#else
 		strewcave(fcx - 2 + randn(5), fcy - 2 + randn(5), type);
+#endif
 		if (randn(100) < 50) {
 			for (fcn = 0; fcx > 10 && map[fcx - 1 + fcy * 150] & 0x4000; fcx--)
 				fcn++;
@@ -5576,7 +5607,12 @@ fillcave(int x, int y, int type, int d, int e, int f)
 			for (fcn = 0; fcx < 140 && map[fcx + 1 + fcy * 150] & 0x4000; fcx++)
 				fcn++;
 		}
+		// PORT: as above
+#ifdef PORT
+		strewnear(fcx - 2, fcy - 2, 5, type);
+#else
 		strewcave(fcx - 2 + randn(5), fcy - 2 + randn(5), type);
+#endif
 	}
 	fccell = dropspot(fcx, fcy, 1);
 	if (fccell == 0)
@@ -5584,26 +5620,46 @@ fillcave(int x, int y, int type, int d, int e, int f)
 	fcx = fccell % 150;
 	fcy = fccell / 150;
 	if (type == 6) {
+		// PORT: as above
+#ifdef PORT
+		fccell = spotnear(fcx - 2, fcy - 2, 5, 1);
+#else
 		fccell = dropspot(fcx - 2 + randn(5), fcy - 2 + randn(5), 1);
+#endif
 		if (fccell)
 			stash(fccell % 150, fccell / 150, 0x19a, 0, randn(8) + 3);
 		fci = 1;
 		if (randn(100) < 20) {
+			// PORT: as above
+#ifdef PORT
+			fccell = spotnear(fcx - 2, fcy - 2, 5, 1);
+#else
 			fccell = dropspot(fcx - 2 + randn(5), fcy - 2 + randn(5), 1);
+#endif
 			if (fccell) {
 				stash(fccell % 150, fccell / 150, 0x19a, 1, randn(5) + 3);
 				fci++;
 			}
 		}
 		if (randn(100) < 15) {
+			// PORT: as above
+#ifdef PORT
+			fccell = spotnear(fcx - 2, fcy - 2, 5, 1);
+#else
 			fccell = dropspot(fcx - 2 + randn(5), fcy - 2 + randn(5), 1);
+#endif
 			if (fccell) {
 				stash(fccell % 150, fccell / 150, 0x19a, 3, randn(4) + 3);
 				fci++;
 			}
 		}
 		if (randn(100) < 10) {
+			// PORT: as above
+#ifdef PORT
+			fccell = spotnear(fcx - 2, fcy - 2, 5, 1);
+#else
 			fccell = dropspot(fcx - 2 + randn(5), fcy - 2 + randn(5), 1);
+#endif
 			if (fccell) {
 				stash(fccell % 150, fccell / 150, 0x19a, 2, randn(4) + 3);
 				fci++;
@@ -5611,7 +5667,12 @@ fillcave(int x, int y, int type, int d, int e, int f)
 		}
 		fcn = fci;
 		for (fci = 0; fci < fcn - 1 + randn(3); fci++) {
+			// PORT: as above
+#ifdef PORT
+			fccell = spotnear(fcx - 2, fcy - 2, 5, 0);
+#else
 			fccell = dropspot(fcx - 2 + randn(5), fcy - 2 + randn(5), 0);
+#endif
 			if (fccell)
 				dropnear(fccell % 150, fccell / 150, randcloak());
 		}
@@ -5620,9 +5681,25 @@ fillcave(int x, int y, int type, int d, int e, int f)
 		stash(fcx, fcy, 0x198, 2, randn(8) + 3);
 		if (randn(100) < 30)
 			for (fci = 0; fci < randn(3); fci++) {
+				// PORT: as above
+#ifdef PORT
+				fccell = spotnear(fcx - 2, fcy - 2, 5, 1);
+#else
 				fccell = dropspot(fcx - 2 + randn(5), fcy - 2 + randn(5), 1);
+#endif
 				if (fccell)
+					// PORT: as above
+#ifdef PORT
+				{
+					int sn, sk;
+
+					sn = randn(5) + 3;
+					sk = randn(100) < 50 ? 2 : 3;
+					stash(fccell % 150, fccell / 150, randn(100) < 50 ? 0x2d5 : 0x288, sk, sn);
+				}
+#else
 					stash(fccell % 150, fccell / 150, randn(100) < 50 ? 0x2d5 : 0x288, randn(100) < 50 ? 2 : 3, randn(5) + 3);
+#endif
 			}
 	}
 	if (type == 5 || type == 1 && randn(100) < 40 || type == 2 && randn(100) < 40) {
@@ -5644,7 +5721,12 @@ fillcave(int x, int y, int type, int d, int e, int f)
 			additem(fccell, fcv | 0xe801ce);
 		else
 			additem(fccell, fcv | 0xe401ca);
+		// PORT: as above
+#ifdef PORT
+		fccell = spotnear(fcx - 2, fcy - 2, 5, 0);
+#else
 		fccell = dropspot(fcx - 2 + randn(5), fcy - 2 + randn(5), 0);
+#endif
 		if (fccell)
 			dropnear(fccell % 150, fccell / 150, newitem(randn(100) < 50 ? 0x347 : 0x348));
 	}
@@ -5658,7 +5740,12 @@ fillcave(int x, int y, int type, int d, int e, int f)
 	} else if (type == 2 || type == 3) {
 		fcn = randn(3) + 1 + (type == 2 ? randn(3) : 0);
 		for (fci = 0; fci < fcn; fci++) {
+			// PORT: as above
+#ifdef PORT
+			fccell = spotnear(fcx - 5, fcy - 5, 11, 0);
+#else
 			fccell = dropspot(fcx - 5 + randn(11), fcy - 5 + randn(11), 0);
+#endif
 			if (fccell) {
 				if (type == 2) {
 					fcv = newunit(0x14, 0);
@@ -6260,8 +6347,14 @@ again:
 			goto slot;
 		if (item & 0xc0050000) {
 			if (!(item & 0x20000) || learned(&units[n]))
+				// PORT: the unit by its index, as 64 bits truncate the address in a DWORD
+#ifdef PORT
+				if (skillof(&units[n], 0x19, 0, 0, 0) >= 0x5f || skillof(&units[n], 0x15, 0, 0, 0) > 100
+				    || skillof(&units[n], 0x18, 0, 0, 0) > 100)
+#else
 				if (skillof((Unit *)(n * sizeof(Unit) + (DWORD)units), 0x19, 0, 0, 0) >= 0x5f || skillof((Unit *)(n * sizeof(Unit) + (DWORD)units), 0x15, 0, 0, 0) > 100
 				    || skillof((Unit *)(n * sizeof(Unit) + (DWORD)units), 0x18, 0, 0, 0) > 100)
+#endif
 					goto slot;
 			if (wary(curmap, n))
 				goto slot;
@@ -10614,7 +10707,17 @@ arrive:
 				if (trvunit <= 5)
 					addavenger(x, y, trvmode == 0xfe ? 0x26f2 : 0x26f3);
 				else
+					// PORT: C leaves the order of a call's arguments open. Draw them from the last to the first, as Watcom compiled them
+#ifdef PORT
+				{
+					int ry;
+
+					ry = randn(30);
+					addavenger(x + randn(30) - 15, y + ry - 15, trvmode == 0xfe ? 0x26f2 : 0x26f3);
+				}
+#else
 					addavenger(x + randn(30) - 15, y + randn(30) - 15, trvmode == 0xfe ? 0x26f2 : 0x26f3);
+#endif
 				markunits();
 			}
 		} else {
@@ -10643,7 +10746,17 @@ arrive:
 						if (trvr && game.defeated < trvunit + 3)
 							units[trvr].courage = 1;
 					} else
+						// PORT: as above
+#ifdef PORT
+					{
+						int ry;
+
+						ry = randn(30);
+						trvr = addrobber(x + randn(30) - 15, y + ry - 15);
+					}
+#else
 						trvr = addrobber(x + randn(30) - 15, y + randn(30) - 15);
+#endif
 					if (game.defeated < 10 && spellset(&units[trvr]))
 						units[trvr].type = 0x22;
 					markunits();
@@ -12755,7 +12868,12 @@ perform(Unit *u, short cmd, int n, int a, int c, short force)
 		/* the original passes scene to deadspeaks as a short and tests a
 		   short result */
 		if (n == 0 || units[n].scene == 0 || u == units && units[n].sympathy <= 0
+		    // FIXED: a call through another function type is undefined in C. Call it through its own, and test the low 16 bits as the original did.
+#ifdef PORT
+		    || !(short)deadspeaks(units[n].scene)) {
+#else
 		    || !((short (*)(short))deadspeaks)(units[n].scene)) {
+#endif
 			anchortip(1, hoverx, hovery);
 			failmsg(strs[303]);
 			break;

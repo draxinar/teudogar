@@ -700,6 +700,10 @@ msgf(short prio, char *fmt, ...)
 
 	va_start(ap, fmt);
 	wvsprintf(msgfmt, fmt, ap);
+	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
+#ifdef PORT
+	va_end(ap);
+#endif
 	if (playerdead() || msgfmt[0] == 0)
 		return 0;
 	cleartip();
@@ -758,6 +762,10 @@ failmsg(char *fmt, ...)
 
 	va_start(ap, fmt);
 	wvsprintf(msgfmt, fmt, ap);
+	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
+#ifdef PORT
+	va_end(ap);
+#endif
 	if (playerdead() || msgfmt[0] == 0)
 		return 0;
 	cleartip();
@@ -797,6 +805,10 @@ denymsg(char *fmt, ...)
 
 	va_start(ap, fmt);
 	wvsprintf(msgfmt, fmt, ap);
+	// FIXED: va_start without va_end is undefined in C. End the list after its one use.
+#ifdef PORT
+	va_end(ap);
+#endif
 	if (playerdead() || msgfmt[0] == 0)
 		return 0;
 	cleartip();
@@ -1553,7 +1565,12 @@ hurt(Unit *a, Unit *u, short kind, short slot, short dmg)
 		hprot = armorval(*hslot, hprot);
 		if (a && (kind == 1 || kind == 3 || kind == 2) && (armors[hgear].hardness == 2 || armors[hgear].hardness == 3))
 			weargear(0, a, &a->hand, dmg, 1);
+		// PORT: 0 for the parameter that weargear leaves unused, where 64 bits truncate the pointer
+#ifdef PORT
+		weargear(0, u, hslot, dmg, 0);
+#else
 		weargear((int)a, u, hslot, dmg, 0);
+#endif
 		if (u == units && restbreak) {
 			restfor(0xfe);
 			return;
@@ -2235,12 +2252,22 @@ strike(Unit *a, Unit *u)
 				sdodge /= 2;
 				sexposed = 1;
 			}
+			// FIXED: a call through another function type is undefined in C. Call it through its own, which returns the same 0 or 1.
+#ifdef PORT
+			if (hampered(curmap, indexof(u), indexof(a))) {
+#else
 			if (((int (*)(short, short, short))hampered)(curmap, indexof(u), indexof(a))) {
+#endif
 				sparry /= 2;
 				sshield /= 2;
 				sdodge /= 2;
 				sexposed = 1;
+			// FIXED: a call through another function type is undefined in C. Call it through its own, which returns the same 0 or 1.
+#ifdef PORT
+			} else if (favored(curmap, indexof(u), indexof(a))) {
+#else
 			} else if (((int (*)(short, short, short))favored)(curmap, indexof(u), indexof(a))) {
+#endif
 				sparry *= 2;
 				sshield *= 2;
 				sdodge *= 2;
@@ -2256,10 +2283,20 @@ strike(Unit *a, Unit *u)
 				smax = (smax - smin) / 2 + smin;
 			if (a == units)
 				smin = (smax - smin) / 2 + smin;
+			// FIXED: a call through another function type is undefined in C. Call it through its own, which returns the same 0 or 1.
+#ifdef PORT
+			if (hampered(curmap, indexof(a), indexof(u))) {
+#else
 			if (((int (*)(short, short, short))hampered)(curmap, indexof(a), indexof(u))) {
+#endif
 				smax = smin;
 				satk /= 2;
+			// FIXED: a call through another function type is undefined in C. Call it through its own, which returns the same 0 or 1.
+#ifdef PORT
+			} else if (favored(curmap, indexof(a), indexof(u))) {
+#else
 			} else if (((int (*)(short, short, short))favored)(curmap, indexof(a), indexof(u))) {
+#endif
 				satk *= 2;
 				smin = smax;
 			}
@@ -2304,7 +2341,12 @@ strike(Unit *a, Unit *u)
 								msgf(0xc, strs[0x15d], attacktext(a, u), itemname(u->hand));
 							else if (a == units)
 								msgf(0xc, strs[0x15e], attacktext(a, u), itemname(u->hand));
+							// FIXED: a call through another function type is undefined in C. Call it through its own, with the same value.
+#ifdef PORT
+							queuesound(issword(u->hand) && issword(a->hand) ? 0x1f : 0x20);
+#else
 							((void (*)(int))queuesound)(issword(u->hand) && issword(a->hand) ? 0x1f : 0x20);
+#endif
 						}
 						{
 							/* named, for the original's stack slots */
@@ -2313,10 +2355,20 @@ strike(Unit *a, Unit *u)
 
 							if (r) {
 								weargear(0, a, &a->hand, sdmg * 4 / 5, 1);
+								// PORT: 0 for the parameter that weargear leaves unused, where 64 bits truncate the pointer
+#ifdef PORT
+								weargear(0, u, g, sdmg * 4 / 5, 1);
+#else
 								weargear((int)a, u, g, sdmg * 4 / 5, 1);
+#endif
 							} else {
 								weargear(0, a, &a->hand, sdmg, 1);
+								// PORT: 0 for the parameter that weargear leaves unused, where 64 bits truncate the pointer
+#ifdef PORT
+								weargear(0, u, g, sdmg, 1);
+#else
 								weargear((int)a, u, g, sdmg, 1);
+#endif
 							}
 						}
 						goto next;
@@ -2342,7 +2394,12 @@ strike(Unit *a, Unit *u)
 							msgf(0xc, strs[0x160], attacktext(a, u));
 						else if (u == units)
 							msgf(0xc, strs[0x15f], attacktext(a, u));
+						// FIXED: a call through another function type is undefined in C. Call it through its own, with the same value.
+#ifdef PORT
+						queuesound(a != units ? 0x26 : 0x25);
+#else
 						((void (*)(int))queuesound)(a != units ? 0x26 : 0x25);
+#endif
 					}
 					smissed = 1;
 					goto next;
@@ -2367,13 +2424,28 @@ strike(Unit *a, Unit *u)
 				}
 				if (sparring(a, u)) {
 					weargear(0, a, &a->hand, sdmg * 4 / 5, 1);
+					// PORT: 0 for the parameter that weargear leaves unused, where 64 bits truncate the pointer
+#ifdef PORT
+					weargear(0, u, &u->offhand, sdmg * 4 / 5, 0);
+#else
 					weargear((int)a, u, &u->offhand, sdmg * 4 / 5, 0);
+#endif
 				} else {
 					weargear(0, a, &a->hand, sdmg, 1);
+					// PORT: 0 for the parameter that weargear leaves unused, where 64 bits truncate the pointer
+#ifdef PORT
+					weargear(0, u, &u->offhand, sdmg, 0);
+#else
 					weargear((int)a, u, &u->offhand, sdmg, 0);
+#endif
 					// FIXED: the shield takes the blow twice, where the sparring branch and the parry wear each piece once. Wear it once.
 #ifndef FEATURE_FIXES
+					// PORT: 0 for the parameter that weargear leaves unused, where 64 bits truncate the pointer
+#ifdef PORT
+					weargear(0, u, &u->offhand, sdmg, 0);
+#else
 					weargear((int)a, u, &u->offhand, sdmg, 0);
+#endif
 #endif
 				}
 				goto next;
@@ -2409,10 +2481,20 @@ strike(Unit *a, Unit *u)
 			queuesound(0x21);
 		if (sparring(a, u)) {
 			weargear(0, a, &a->hand, sdmg * 4 / 5, 1);
+			// PORT: 0 for the parameter that weargear leaves unused, where 64 bits truncate the pointer
+#ifdef PORT
+			weargear(0, u, &u->offhand, sdmg * 4 / 5, 0);
+#else
 			weargear((int)a, u, &u->offhand, sdmg * 4 / 5, 0);
+#endif
 		} else {
 			weargear(0, a, &a->hand, sdmg, 1);
+			// PORT: 0 for the parameter that weargear leaves unused, where 64 bits truncate the pointer
+#ifdef PORT
+			weargear(0, u, &u->offhand, sdmg, 0);
+#else
 			weargear((int)a, u, &u->offhand, sdmg, 0);
+#endif
 		}
 		u->offhand = randlook(u->offhand);
 		additem(sy * 150 + sx, u->offhand);

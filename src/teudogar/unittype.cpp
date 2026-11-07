@@ -1224,6 +1224,10 @@ short tileranges[104] = {
 	225, 229, 230, 234, 80, 89, 235, 244, 245, 254, 45, 59, 255, 0x107,
 	0x108, 0x10d, 100, 109, 12, 12, 60, 69
 };
+// PORT: the picture sets cached for partdefs, which Part holds at 0x15 in the original
+#ifdef PORT
+char *partpics[78];
+#endif
 Part partdefs[78] = {
 	0x2cc, 0, 46, 7, 1, 1, 20, 0, 0, 0, 0, 1, 1, 0x83c, 1, 5, 0, 0, 0, 0,
 	0, 0, 0, 1, 1, 1, 3, 0, 0, 0x2cd, 0, 46, 7, 1, 2, 21, 0, 0, 0, 0, 2,

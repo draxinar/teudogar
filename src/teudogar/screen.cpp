@@ -477,7 +477,12 @@ begintext(int on)
 		if (!on)
 			textmode = 4;
 		else {
+			// PORT: the buffer as unsigned char, which C wants cast
+#ifdef PORT
+			drawbuf = (unsigned char *)(packbuf + 0x4b640);
+#else
 			drawbuf = packbuf + 0x4b640;
+#endif
 			savescr();
 			textmode = 1;
 			nspq = 0;
@@ -505,7 +510,12 @@ endtext(int on)
 }
 
 void
+// PORT: a name for the unused parameter, which C99 wants
+#ifdef PORT
+scenetext(int unused)
+#else
 scenetext(int)
+#endif
 {
 	char *p;
 	int c;
@@ -876,7 +886,12 @@ buttons:
 			: offerprice == 0xffff ? 0x35c : 0x35a], 0xfe);
 		button(230, 438, 156, 24, strs[0x358], 0xfe);
 		if (talkactive && !tradedone) {
+			// PORT: the integer as a pointer through intptr_t, which 64 bits widen
+#ifdef PORT
+			drawp = (char *)(intptr_t)tradedone;
+#else
 			drawp = (char *)tradedone;
+#endif
 			if (goodsprice == 0 || offerprice == 0xffff)
 				drawp = strs[0x35e + dutalk];
 			else if (!offerprice) {
