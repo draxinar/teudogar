@@ -77,7 +77,7 @@ WARN = $(WARN_$(CC)_$(ARCH)) $(WARN_$(CC))
 # program on SDL3 takes.
 ifneq ($(strip $(FEATURES)),)
 MACROS := -DFEATURES $(patsubst %,-DFEATURE_%,$(shell echo $(FEATURES) | tr '[:lower:]' '[:upper:]'))
-FEATURE_MODULES = feature $(filter french,$(FEATURES))
+FEATURE_MODULES = feature $(filter french slots,$(FEATURES))
 endif
 
 # The flags. The game's modules compile as C99 with the prelude of

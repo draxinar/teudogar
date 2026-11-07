@@ -1,0 +1,2 @@
+# the quick save of the feature slots, Shift+F2 and Shift+S, after the save's keys
+manual 19	F2 / S: }}G Spielstand speichern{	F2 / S: }}G Spielstand speichern{\n\nShift+F2 / Shift+S:\n}}G zuletzt gespeicherten/geladenen{\n}}G Spielstand überschreiben{

@@ -1,0 +1,2 @@
+# the quick save of the feature slots, Maj+F2 and Maj+S, after the save's keys
+manual 19	F2 / S : }}G Sauvegarder la partie{	F2 / S : }}G Sauvegarder la partie{\n\nMaj+F2 / Maj+S :\n}}G Écraser la dernière partie{\n}}G sauvegardée ou chargée{

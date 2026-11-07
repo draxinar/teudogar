@@ -393,6 +393,13 @@ void endgame(short why);
 int displayed(Unit *u);
 short seesunit(Unit *u);
 void setunitmode(Unit *u, unsigned char mode);
+// FEATURE: slots: the quick save, in src/feature/slots.cpp
+#ifdef FEATURE_SLOTS
+char *savedesc(void);
+void saveslot(unsigned short slot, char *desc);
+short slotsquick(short slot, char *hero);
+short slotsfailed(void);
+#endif
 
 extern char *strs[];
 extern int playerx;
@@ -2617,6 +2624,28 @@ keycmd(unsigned char key)
 		break;
 	case 0x1f:
 	case 0x3c:
+		// FEATURE: slots: Shift or the period with S or F2 saves into the last slot saved or loaded, with its note, as Shift+L loads it
+#ifdef FEATURE_SLOTS
+		if (((keys[VK_SHIFT] & 0x80) || (keys[0xbe] & 0x80)) && units[0].health > 0
+		&& slotsquick(lastslot, (char *)&game)) {
+			cleartexts();
+			drawscreen();
+			hidecursor();
+			saveslot(lastslot, savedesc());
+			if (!slotsfailed()) {
+				aftersave();
+				entersum = 1;
+				enteritems = 0xff;
+				fadefast(0);
+				if (entergame(0))
+					msgf(0x63, strs[1147], (short)lastslot + 0x40);
+			}
+			drawscreen();
+			leavemenu(1);
+			drawcursor();
+			break;
+		}
+#endif
 		// FIXED: the message of a save shows whenever lastslot is set, which loadsave keeps on a cancel. Show it after a save.
 #if defined(FEATURE_FIXES)
 		keysaved = savemenu(0);

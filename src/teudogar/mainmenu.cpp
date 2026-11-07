@@ -806,6 +806,23 @@ char *feattext(char *s);
 #ifdef FEATURE_FRENCH
 EXTERN_C void frelide(char *s);
 #endif
+// FEATURE: slots: the pages of the menus of the slots, in src/feature/slots.cpp
+#ifdef FEATURE_SLOTS
+extern short slotsdir;
+extern short slotsblank;
+extern short slotsmirror;
+short slotsat(short row);
+char slotschar(void);
+short slotshide(char load);
+short slotsauto(short row);
+void slotskeys(void);
+void slotsedges(void);
+short slotsflip(short sel);
+short slotsask(short row, char *hero);
+short slotsnote(short row, char *hero);
+void slotsputnote(char *desc);
+void slotsrowtext(char *dst, char *desc);
+#endif
 extern char romanbuf[];
 extern short pagex;
 extern short pagemaxh;
@@ -3590,6 +3607,10 @@ savedesc(void)
 	hdr->place = descplace;
 	hdr->hour = gamehour;
 	hdr->day = gameday;
+	// FEATURE: slots: the note that the player gave the save
+#ifdef FEATURE_SLOTS
+	slotsputnote(savehdr.name);
+#endif
 	return savehdr.name;
 }
 
@@ -3902,6 +3923,10 @@ autosave(void)
 	wsprintf(savename, texts + 0xa45c, curmap, 3);
 	wsprintf(autoname, texts + 0xa477, curmap, 3);
 	copyfile(savename, autoname, workbuf, 0x96640);
+	// FEATURE: slots: the AutoSave holds a game of its own, which a journey keeps in Y
+#ifdef FEATURE_SLOTS
+	slotsmirror = 0;
+#endif
 	return 1;
 }
 
@@ -4119,6 +4144,10 @@ loadslot(unsigned short slot, unsigned short mode)
 			autohdr();
 #else
 		autohdr();
+#endif
+		// FEATURE: slots: the AutoSave holds the slot's game, which a journey of the same run keeps out of Y and Z
+#ifdef FEATURE_SLOTS
+		slotsmirror = slot;
 #endif
 	}
 	return 1;
@@ -4759,6 +4788,11 @@ slotinfo(short a, short b)
 	a++;
 	if (!b)
 		return;
+	// FEATURE: slots: the page's edges take no shade, as shadetopic leaves the encyclopedia's
+#ifdef FEATURE_SLOTS
+	if (a > 11)
+		return;
+#endif
 	pillshade8(menu0.rects[a - 1].x, menu0.rects[a - 1].y, menu0.rects[a - 1].w, menu0.rects[a - 1].h);
 	if (a >= 1 && a <= 10 && ((char (*)[200])(workbuf + 0x3e8))[a][0]) {
 		text3grey(0, 0xffff, 0x4a, ((char (*)[200])(workbuf + 0x3e8))[a]);
@@ -4799,6 +4833,10 @@ slotmenu(char load)
 	memset(((char (*)[100])scrbuf), 0, 0x4b9c4);
 	menu0.n = 10;
 	memcpy(&menu0.enabled[40], slottext, 11);
+	// FEATURE: slots: the keys of the page's rows, of Back, and of the page's edges
+#ifdef FEATURE_SLOTS
+	slotskeys();
+#endif
 	menu0.color = 0xf4;
 	menu0.keys2[0] = 0x3c;
 	menu0.keys2[1] = 0x3d;
@@ -4813,14 +4851,31 @@ slotmenu(char load)
 #endif
 	upperstr(slottext + 8);
 	text3grey2(0, 0xffff, 0x22, slottext);
+	// FEATURE: slots: ten rows on every page, a row without a slot hidden, so that Back is item 11 of both menus
+#ifdef FEATURE_SLOTS
+	for (sloti = 1; sloti <= 10; sloti++) {
+		if (slotshide(load))
+			continue;
+#else
 	for (sloti = 1; load && sloti <= 10 || sloti <= 9; sloti++) {
+#endif
+		// FEATURE: slots: the file of the row's slot on the page shown
+#ifdef FEATURE_SLOTS
+		wsprintf(slottext, texts + 0xa492, slotschar());
+#else
 		wsprintf(slottext, texts + 0xa492, sloti + 0x40);
+#endif
 		slotplace = 0x62a;
 		if (findfirst(slottext)) {
 			findclose();
 			if (sloti - 1 == 9)
 				break;
+			// FEATURE: slots: the letter of the row's slot
+#ifdef FEATURE_SLOTS
+			wsprintf(workbuf, texts + 0xb145, slotschar(), strs[265]);
+#else
 			wsprintf(workbuf, texts + 0xb145, sloti + 0x40, strs[265]);
+#endif
 			wsprintf(((char (*)[200])(workbuf + 0x3e8))[sloti], empty);
 			wsprintf(((char (*)[200])(workbuf + 0x3e8))[sloti] + 0x64, empty);
 			memset((char *)((char (*)[100])scrbuf) + sloti * 0x900, 0, 0x900);
@@ -4828,24 +4883,44 @@ slotmenu(char load)
 		} else {
 			filedate(&slotyear, &slotmon, &slotday, &slothour, &slotmin, &slotsec);
 			findclose();
+			// FEATURE: slots: the header of the row's slot
+#ifdef FEATURE_SLOTS
+			if (readhdr(workbuf, ((int (*)[2])(scrbuf + 0x7170))[sloti], ((int (*)[2])(scrbuf + 0x7558))[sloti], (char *)((char (*)[100])scrbuf) + sloti * 0x900, ((int (*)[2])(scrbuf + 0x6d88))[sloti], slotsat(sloti))
+#else
 			if (readhdr(workbuf, ((int (*)[2])(scrbuf + 0x7170))[sloti], ((int (*)[2])(scrbuf + 0x7558))[sloti], (char *)((char (*)[100])scrbuf) + sloti * 0x900, ((int (*)[2])(scrbuf + 0x6d88))[sloti], sloti)
+#endif
 			&& ((Savehdr *)workbuf)->place + 0x62a >= 0x62a && ((Savehdr *)workbuf)->place + 0x62a <= 0x640
 			&& ((Savehdr *)workbuf)->hour < 24) {
 				slotplace = ((Savehdr *)workbuf)->place + 0x62a;
 				wsprintf(((char (*)[200])(workbuf + 0x3e8))[sloti], strs[1379], workbuf, strs[slotplace]);
 				roman(((Savehdr *)workbuf)->hour >= 5 ? ((Savehdr *)workbuf)->day : ((Savehdr *)workbuf)->day - 1);
 				wsprintf(((char (*)[200])(workbuf + 0x3e8))[sloti] + 0x64, strs[546], daytime(((Savehdr *)workbuf)->hour), romanbuf);
+				// FEATURE: slots: the row shows the save's note in place of the hero's name
+#ifdef FEATURE_SLOTS
+				slotsrowtext(slottext, workbuf);
+#else
 				wsprintf(slottext, workbuf);
+#endif
 			} else {
 				wsprintf(((char (*)[200])(workbuf + 0x3e8))[sloti], empty);
 				wsprintf(((char (*)[200])(workbuf + 0x3e8))[sloti] + 0x64, empty);
 				wsprintf(slottext, strs[1146]);
 			}
+			// FEATURE: slots: the AutoSaves Y and Z read AutoSave, as J does
+#ifdef FEATURE_SLOTS
+			if (slotsauto(sloti))
+#else
 			if (sloti - 1 == 9)
+#endif
 				wsprintf(slottext, strs[1149]);
 			// FEATURE: features: the build's own format and month of a saved game
 #ifdef FEATURES
+			// FEATURE: slots: the letter of the row's slot
+#ifdef FEATURE_SLOTS
+			wsprintf(workbuf, feattext(lang == 0 ? (texts + 0xb16e) : (texts + 0xb14c)), slotschar(), slottext, slotday, feattext(months[slotmon]), slotyear, slothour, slotmin, slotsec);
+#else
 			wsprintf(workbuf, feattext(lang == 0 ? (texts + 0xb16e) : (texts + 0xb14c)), sloti + 0x40, slottext, slotday, feattext(months[slotmon]), slotyear, slothour, slotmin, slotsec);
+#endif
 #else
 			wsprintf(workbuf, lang == 0 ? (texts + 0xb16e) : (texts + 0xb14c), sloti + 0x40, slottext, slotday, months[slotmon], slotyear, slothour, slotmin, slotsec);
 #endif
@@ -4857,8 +4932,17 @@ slotmenu(char load)
 		menu0.rects[sloti - 1].y = (sloti - 1) * 30 + 0x83;
 		menu0.rects[sloti - 1].w = 0x1ac;
 		menu0.rects[sloti - 1].h = 0x18;
+		// FEATURE: slots: the row that takes a note's input, drawn without its text
+#ifdef FEATURE_SLOTS
+		if (sloti == slotsblank)
+			workbuf[0] = 0;
+#endif
 		buttonon(menu0.rects[sloti - 1].x, menu0.rects[sloti - 1].y, menu0.rects[sloti - 1].w, menu0.rects[sloti - 1].h, workbuf);
 	}
+	// FEATURE: slots: the page's edges, as the encyclopedia's index has them, and the page's number below Back, drawn before Back so that printbuf, which the saved game keeps, ends with Back's text as in the original
+#ifdef FEATURE_SLOTS
+	slotsedges();
+#endif
 	addcorner(&menu0, sloti - 1, 0);
 	menu0.fn = slotinfo;
 	puthands();
@@ -4874,17 +4958,33 @@ loadsave(int load, int b)
 	slotturn = 1;
 	for (;;) {
 		slotmenu(load);
+		// FEATURE: slots: a page that an edge turns keeps the screen, which turnpage turns over
+#ifdef FEATURE_SLOTS
+		if (!b && !slotsdir) {
+#else
 		if (!b) {
+#endif
 			nop();
 			fadefast(0);
 			usepal(0);
 		}
 		entermenu();
 		drawcursor();
+		// FEATURE: slots: the turn of a page, as the journal's pages turn
+#ifdef FEATURE_SLOTS
+		if (slotsdir)
+			turnpage(slotsdir - 1, 0, 0x1e0, 1);
+		else if (b && slotturn)
+			turnpage(1, 0, 0x1e0, 0);
+		else
+			flip();
+		slotsdir = 0;
+#else
 		if (b && slotturn)
 			turnpage(1, 0, 0x1e0, 0);
 		else
 			flip();
+#endif
 		fadefast(1);
 pick:
 		slotsel = runmenu(&menu0, 0, 0, 0);
@@ -4892,6 +4992,13 @@ pick:
 			slotturn = 0;
 			continue;
 		}
+		// FEATURE: slots: an edge turns the page
+#ifdef FEATURE_SLOTS
+		if (slotsflip(slotsel)) {
+			slotturn = 0;
+			continue;
+		}
+#endif
 		// FIXED: Back is item sloti, 10 in the save menu and in a load menu without Teudogar_J.SAV, which the test takes for slot J: Back saves the game into Teudogar_J.SAV, or loads the AutoSave or the saved game. Cancel on Back.
 #if defined(FEATURE_FIXES)
 		if (slotsel == 0 || slotsel > 10 || slotsel == sloti) {
@@ -4914,8 +5021,19 @@ pick:
 			if (myface && (((int (*)[2])(scrbuf + 0x7170))[slotsel][0] != 4 || !(((int (*)[2])(scrbuf + 0x7558))[slotsel][0] == photosum)))
 				exportface();
 		}
+		// FEATURE: slots: a save asks before it takes another hero's slot, then takes the note that the player types into its row, and No or Escape goes back to the rows
+#ifdef FEATURE_SLOTS
+		if (!load && (!slotsask(slotsel, (char *)&game) || !slotsnote(slotsel, (char *)&game))) {
+			slotturn = 0;
+			continue;
+		}
+#endif
 		break;
 	}
+	// FEATURE: slots: the slot of the row chosen
+#ifdef FEATURE_SLOTS
+	slotsel = slotsat(slotsel);
+#endif
 	pgtoback();
 	text3grey(0, 0xffff, 200, strs[load ? 550 : 551]);
 	puthands();

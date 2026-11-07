@@ -25,11 +25,12 @@ SANITIZE =
 # FEATURES lists the features of the game that all builds: french, the
 # French language, errata, the fixes of the German, English, and Italian
 # texts, faults, the fixes of the code's faults, pace, the game's pace
-# at any refresh, and fixes, the fixes of the gameplay, which takes
-# faults and pace with it. A program on SDL3 takes faults and pace
-# whatever the list holds. LANGFLAGS passes flags to cmd/lang: -p gives
-# French the English of the texts that lang/fr lacks.
-FEATURES = french errata fixes
+# at any refresh, fixes, the fixes of the gameplay, which takes faults
+# and pace with it, and slots, 23 slots of saved games and three
+# AutoSaves in three pages of the menus. A program on SDL3 takes faults
+# and pace whatever the list holds. LANGFLAGS passes flags to cmd/lang:
+# -p gives French the English of the texts that lang/fr lacks.
+FEATURES = french errata fixes slots
 LANGFLAGS =
 
 # ZIP is the author's release, and PASSWORD the file whose first line is
@@ -86,7 +87,7 @@ unexport OS ARCH CC SANITIZE
 # usage lists the goals.
 usage::
 	@echo 'usage: make goal ... [OS=linux|macos|windows] [ARCH=386|amd64|arm64] [CC=gcc|clang|watcom]'
-	@echo "                     [FEATURES='french errata fixes']"
+	@echo "                     [FEATURES='french errata fixes slots']"
 	@echo ''
 	@echo "the game, for the target that OS, ARCH, and CC name (the host's, with gcc,"
 	@echo 'or clang on macOS):'
@@ -137,14 +138,14 @@ build/features: FORCE
 
 # cmd/lang checks the sources of the features in lang/ and writes into
 # build/lang what the features change: data/, the files of the game's
-# folder, and include/, the headers of src/feature. internal/lang's copy
-# of french.c, through which it checks the elisions, must equal
-# src/feature's.
+# folder, and include/, the headers of src/feature. slots comes after
+# french, whose manual it changes too. internal/lang's copy of french.c,
+# through which it checks the elisions, must equal src/feature's.
 build/lang/.ok: build/features build/zip/.ok $(shell find lang -type f) $(wildcard src/teudogar/*.cpp) \
 		internal/lang/french.c src/feature/french.c $(BIN)/lang
 	sed '1,4d' internal/lang/french.c | cmp -s - src/feature/french.c || \
 		{ echo 'make: internal/lang/french.c differs from src/feature/french.c: run go generate ./internal/lang' >&2; exit 1; }
-	rm -rf build/lang && $(BIN)/lang -o build/lang -f '$(filter french errata,$(FEATURES))' -r lang/buffers.txt $(LANGFLAGS) $(RELEASE) src/teudogar lang
+	rm -rf build/lang && $(BIN)/lang -o build/lang -f '$(filter french errata,$(FEATURES)) $(filter slots,$(FEATURES))' -r lang/buffers.txt $(LANGFLAGS) $(RELEASE) src/teudogar lang
 	touch $@
 
 # SWAP puts the folder $(D).new in the place of $(D) under the lock of

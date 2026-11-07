@@ -28,8 +28,10 @@ func Apply(name string, b *Build, picks []Pick, dir string, partial bool) ([]Pro
 		return applyFrench(b, picks, dir, partial)
 	case "errata":
 		return applyErrata(b, picks, dir)
+	case "slots":
+		return applySlots(b, picks, dir)
 	}
-	return nil, fmt.Errorf("lang: unknown feature %q, want french or errata", name)
+	return nil, fmt.Errorf("lang: unknown feature %q, want french, errata, or slots", name)
 }
 
 // source returns the text of the file name of dir, or false when it is
@@ -451,10 +453,28 @@ var errataLangs = []int{German, English, Italian}
 // applyErrata puts lang/<code>/errata.txt into the build for German,
 // English, and Italian.
 func applyErrata(b *Build, picks []Pick, dir string) ([]Problem, error) {
+	return applyFixes(b, picks, dir, "errata.txt", errataLangs)
+}
+
+// applySlots puts lang/<code>/slots.txt, the texts that the feature
+// slots changes, such as the manual's keys, into the build for German,
+// English, and Italian, and for French when french came before it. Its
+// lines take errata's form.
+func applySlots(b *Build, picks []Pick, dir string) ([]Problem, error) {
+	langs := slices.Clone(errataLangs)
+	if b.Langs[French] {
+		langs = append(langs, French)
+	}
+	return applyFixes(b, picks, dir, "slots.txt", langs)
+}
+
+// applyFixes puts the file name of lang/<code>, in errata's form, into
+// the build for each language of langs.
+func applyFixes(b *Build, picks []Pick, dir, name string, langs []int) ([]Problem, error) {
 	var ps []Problem
-	for _, l := range errataLangs {
-		file := filepath.Join("lang", Codes[l], "errata.txt")
-		s, ok, err := source(filepath.Join(dir, Codes[l]), "errata.txt")
+	for _, l := range langs {
+		file := filepath.Join("lang", Codes[l], name)
+		s, ok, err := source(filepath.Join(dir, Codes[l]), name)
 		if err != nil {
 			return nil, err
 		}
@@ -466,6 +486,14 @@ func applyErrata(b *Build, picks []Pick, dir string) ([]Problem, error) {
 		if err != nil {
 			ps = append(ps, problem(file, "%v", err))
 			continue
+		}
+		if l == French {
+			// The sources of lang/fr write the no-break spaces as
+			// plain ones, which the French of the build holds as
+			// Spaces makes them.
+			for i := range es {
+				es[i].Old, es[i].New = Spaces(es[i].Old), Spaces(es[i].New)
+			}
 		}
 		eps, err := b.fix(l, picks, es)
 		if err != nil {
@@ -479,7 +507,8 @@ func applyErrata(b *Build, picks []Pick, dir string) ([]Problem, error) {
 // fix applies the errata es of language l to the build. picks gives
 // the calls of pick, whose groups of Encoded the program keeps XORed. A
 // fix of the texts lies at the slot of l in a call of pick, whose string
-// the game passes through feattext, and holds for l alone.
+// the game passes through feattext, and holds for l alone. A fix of
+// French takes one of the six texts.
 func (b *Build) fix(l int, picks []Pick, es []Erratum) ([]Problem, error) {
 	var ps []Problem
 	srcs := make(map[int]string)  // the source forms of the entries that the errata change
@@ -488,6 +517,12 @@ func (b *Build) fix(l int, picks []Pick, es []Erratum) ([]Problem, error) {
 	for _, e := range es {
 		unit := fmt.Sprintf("line %d (%s)", e.Line, e.Unit)
 		kind, arg, _ := strings.Cut(e.Unit, " ")
+		// The cases of texts, gram, and readme read the release, whose
+		// French the build replaces with its own.
+		if _, ok := textNamed(kind); l == French && !ok {
+			ps = append(ps, problem(unit, "unit %s in French, want strings, manual, encyclopedia1, encyclopedia2, script, or walkthrough", kind))
+			continue
+		}
 		switch kind {
 		case "texts":
 			off, err := strconv.ParseUint(arg, 16, 16)

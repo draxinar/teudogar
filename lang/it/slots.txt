@@ -1,0 +1,2 @@
+# the quick save of the feature slots, Shift+F2 and Shift+S, after the save's keys
+manual 19	F2 / S: }}G Salva stato di gioco{	F2 / S: }}G Salva stato di gioco{\n\nShift+F2 / Shift+S:\n}}G Sovrascrivi l'ultimo salvato / ultimo caricato{\n}}G stato di gioco{

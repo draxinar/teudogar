@@ -118,7 +118,7 @@ GAME_FEATURES = $(sort $(FEATURES) $(if $(filter fixes,$(FEATURES)),faults pace)
 FEATURE_MACROS := -dFEATURES=1 $(patsubst %,-dFEATURE_%=1,$(shell echo $(GAME_FEATURES) | tr '[:lower:]' '[:upper:]'))
 FEATURE_ENV = -e 'WPP386=$(FEATURE_MACROS)' -e 'WCC386=$(FEATURE_MACROS)'
 RC_MACROS = $(if $(filter french,$(FEATURES)),-dFEATURE_FRENCH=1)
-FEATURE_MODULES = feature $(filter french,$(FEATURES))
+FEATURE_MODULES = feature $(filter french slots,$(FEATURES))
 FEATURE_OBJS = $(patsubst %,$(O)/%.obj,$(BASE_MODULES) $(GAME_MODULES) $(FEATURE_MODULES))
 FEATURE_DEPS = src/base/base.h build/features build/dos/.ok bin/dos
 

@@ -368,6 +368,10 @@ void setcombat(short n);
 void plotdepart(short a, short b);
 int autosave(void);
 int travel(unsigned short dest, int x, int y, unsigned long time, unsigned short depart, unsigned short a6, unsigned short mode, short a8);
+// FEATURE: slots: the AutoSaves Y and Z, in src/feature/slots.cpp
+#ifdef FEATURE_SLOTS
+void slotsrotate(void);
+#endif
 // FIXED: the option of the AutoSave, which travelmap reads below
 #if defined(FEATURE_FIXES)
 extern int autolevel;
@@ -5144,6 +5148,10 @@ draw:
 	units[0].dirx = tmdx;
 	units[0].diry = tmdy;
 	tmk = zones[tmsel].id;
+	// FEATURE: slots: a journey moves the AutoSave down to Y, and Y to Z, before the AutoSave takes the journey's start
+#ifdef FEATURE_SLOTS
+	slotsrotate();
+#endif
 	// FIXED: the travel map saves the AutoSave whatever the option, whose off means none, and with the option on travel saves it again at the departure from another map. Leave that to travel, and save it here for a journey inside the map, whose departure travel passes by, when the option asks.
 #if defined(FEATURE_FIXES)
 	if (autolevel >= 1 && tmk == curmap)
