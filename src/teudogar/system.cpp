@@ -2235,6 +2235,10 @@ inisys(HINSTANCE inst, char *cmd, char *err)
 	getver(NULL, NULL, NULL, (char *)&buildtime, &buildno);
 	kbdinit();
 	mouseinit();
+	// FIXED: a tick of gametick is due each 16.67 ms, and at the timer's default timeGetTime can step by 15 ms, which holds a tick past a refresh. Ask for 1 ms.
+#ifdef FEATURE_PACE
+	timeBeginPeriod(1);
+#endif
 	seedrand(ticks());
 	chooselang(1);
 	setlang(0xff);

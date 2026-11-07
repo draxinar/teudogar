@@ -2974,6 +2974,48 @@ fightmusic(void)
 		stopmusic();
 }
 
+// FIXED: as in gametick
+#ifdef FEATURE_PACE
+extern int noflip;
+void setlight(void);
+
+enum {
+	Maxskips = 3,	/* the ticks in a row that leave out their flips */
+	Maxlate = (Maxskips + 1) * 17	/* the milliseconds behind that later ticks make up */
+};
+
+static DWORD gtlate;	/* the milliseconds that this tick runs behind its time */
+static int gtskips;	/* the ticks in a row that left out their flips */
+static DWORD gtstart;	/* the clock at the last start of a step */
+
+/* ticklate returns how far this tick runs behind its time, or 0 when the schedule starts afresh */
+static DWORD
+ticklate(void)
+{
+	DWORD late;
+
+	late = ticks() - (units[0].pose == 1 ? walkdue : standdue);
+	if (late > Maxlate || gtskips >= Maxskips)
+		return 0;
+	return late;
+}
+
+/* pacetimes counts the next ticks from this one's time, a step's a frame of 60 Hz on at least */
+static void
+pacetimes(void)
+{
+	static int n;
+	int frame;
+
+	n = (n + 1) % 3;
+	frame = n ? 17 : 16;	/* 1000/60 on average */
+	if ((int)(walkdue - ticks()) < frame)
+		walkdue = ticks() + frame;
+	walkdue -= gtlate;
+	standdue -= gtlate;
+}
+#endif
+
 void
 gametick(void)
 {
@@ -2986,6 +3028,13 @@ gametick(void)
 	if (playmode == 1 && (units[0].pose == 0 || units[0].pose > 9) && !menumode && !lostcontrol
 	&& (waitforup == 0 && (rightclick || mouseright) && canstep(0, 0)
 	|| dirkeys && canstepkey(dirkeys) || turnkeys && canstepkey(turnkeys))) {
+		// FIXED: a step that playerturn refuses, where canstep passes, comes back here at once and six rounds make a turn, so the world runs ahead of a hero who stays. A round takes four ticks of a stand, a stand's frame, for a stand's turns
+#ifdef FEATURE_PACE
+		if (ticks() - gtstart < 4 * standdelay)
+			return;
+		gtstart = ticks();
+		standdue = ticks();
+#endif
 		units[0].pose = 0;
 		steptick = 0x17;
 		lasttick = 0x17;
@@ -3007,6 +3056,10 @@ gametick(void)
 		mousemoved = 1;
 		readinput();
 	}
+	// FIXED: a tick counts from when it runs, so a late one delays the rest, and a step's delay under a frame of 60 Hz leaves its pace to Flip's wait for the refresh. Count it from when it is due, a step's a frame on at least, with pacetimes below.
+#ifdef FEATURE_PACE
+	gtlate = ticklate();
+#endif
 	if (playmode == 1)
 		standdue = ticks() + standdelay;
 	else {
@@ -3036,6 +3089,10 @@ gametick(void)
 			gtwait++;
 		walkdue = ticks() + gtwait;
 	}
+	// FIXED: pacetimes counts the next ticks from this one's due time, which gtlate gives above
+#ifdef FEATURE_PACE
+	pacetimes();
+#endif
 	if (gtdepth > 1)
 		return;
 	gtunused = 0;
@@ -3180,7 +3237,18 @@ gametick(void)
 	if (units[0].pose == 1 || (steptick & 3) == 0) {
 		lookaround();
 		lookdone();
+		// FIXED: a tick behind its time waits for the refresh all the same, so the game falls behind on a slow display. Leave out its flip and catch up, but still draw, since adddeco writes the units. A skip saves only the flip's wait, so where the drawing itself takes too long, Maxskips in a row restart the schedule.
+#ifdef FEATURE_PACE
+		noflip = ticks() >= (units[0].pose == 1 ? walkdue : standdue) && gtskips < Maxskips;
+		gtskips = noflip ? gtskips + 1 : 0;
+#endif
 		drawscreen();
+		// FIXED: as above, with the lights, which drawscreen sets after a flip alone
+#ifdef FEATURE_PACE
+		if (noflip)
+			setlight();
+		noflip = 0;
+#endif
 	}
 	gtdepth--;
 }

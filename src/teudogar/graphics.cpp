@@ -1568,9 +1568,20 @@ releasedc(LPDIRECTDRAWSURFACE s)
 	return 1;
 }
 
+// FIXED: as in flip
+#ifdef FEATURE_PACE
+static DWORD lastflip;
+#endif
+
 int
 flip(void)
 {
+	// FIXED: a page turn and a talk's slide have only Flip's wait for the refresh to pace them, and Flip returns at once under Wine. Keep 15 ms between flips, under a frame of 60 Hz, which leaves the flips of a display of up to 66 Hz as they are.
+#ifdef FEATURE_PACE
+	while (ticks() - lastflip < 15)
+		Sleep(1);
+	lastflip = ticks();
+#endif
 	for (;;) {
 		if (!ddfailed("w_s_s.flp", prim->Flip(NULL, DDFLIP_WAIT)))
 			break;

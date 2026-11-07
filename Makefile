@@ -3,8 +3,8 @@
 # Plain make lists the goals.
 
 # FEATURES lists the features of the game that all builds: faults, the
-# fixes of the code's faults.
-FEATURES = faults
+# fixes of the code's faults, and pace, the game's pace at any refresh.
+FEATURES = faults pace
 
 # ZIP is the author's release, and PASSWORD the file whose first line is
 # its password.
@@ -39,7 +39,7 @@ RELEASE = build/zip/teudogar
 
 # usage lists the goals.
 usage::
-	@echo 'usage: make goal ... [FEATURES=faults]'
+	@echo "usage: make goal ... [FEATURES='faults pace']"
 	@echo ''
 	@echo 'the game with FEATURES, with Watcom C/C++:'
 	@echo '  all        build the program into build/windows-386-watcom'
