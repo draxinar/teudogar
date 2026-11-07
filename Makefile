@@ -21,7 +21,7 @@ BIN = build/bin
 RELEASE = build/zip/teudogar
 
 .DELETE_ON_ERROR:
-.PHONY: usage original check lint fetch tools clean distclean FORCE
+.PHONY: usage original ddraw check lint fetch tools clean distclean FORCE
 
 # usage lists the goals.
 usage::
@@ -30,6 +30,7 @@ usage::
 	@echo 'the programs of 2008:'
 	@echo '  original   rebuild teudogar.exe and uninstal.exe with Watcom C/C++ and'
 	@echo '             check their bytes'
+	@echo '  ddraw      build ddraw.dll, which runs them on Windows 8 and later'
 	@echo ''
 	@echo 'checks:'
 	@echo '  check      run lint and original'
@@ -55,6 +56,21 @@ FORCE:
 
 # tools builds every Go command.
 tools: $(patsubst cmd/%,$(BIN)/%,$(wildcard cmd/*))
+
+# ddraw builds ddraw.dll, DirectDraw for the Watcom programs on Windows 8
+# and later, and test.exe, its test, which runs beside it under Wine
+# with WINEDLLOVERRIDES=ddraw=n,b. --no-insert-timestamp gives each the
+# stamp 0 in place of the time of its link, so that every build gives
+# the same bytes.
+ddraw: build/ddraw/ddraw.dll build/ddraw/test.exe
+
+build/ddraw/ddraw.dll: src/ddraw/ddraw.c
+	mkdir -p $(@D) && i686-w64-mingw32-gcc -std=gnu99 -O2 -Wall -Wextra -shared -static-libgcc \
+		-Wl,--kill-at,--no-insert-timestamp -o $@ $< -ldwmapi -lgdi32 -lwinmm
+
+build/ddraw/test.exe: src/ddraw/test.c
+	mkdir -p $(@D) && i686-w64-mingw32-gcc -std=gnu99 -O2 -Wall -Wextra -static-libgcc \
+		-Wl,--no-insert-timestamp -o $@ $< -luser32
 
 # lint runs shellcheck on bin/, and gofmt and go vet on cmd/ and
 # internal/.

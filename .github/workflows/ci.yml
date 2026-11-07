@@ -30,6 +30,7 @@ jobs:
           dnf -y install --setopt=install_weak_deps=False
           git make gawk sed grep coreutils diffutils findutils tar gzip bzip2 zstd curl 7zip
           golang dosbox-staging ShellCheck
+          mingw32-gcc
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
@@ -54,10 +55,13 @@ jobs:
       - name: Programs of 2008
         if: ${{ !cancelled() }}
         run: make original
+      - name: ddraw.dll
+        if: ${{ !cancelled() }}
+        run: make ddraw
       - name: Programs
         run: |
           cd build
-          find . -mindepth 2 -maxdepth 2 -type f -name '*.exe' |
+          find . -mindepth 2 -maxdepth 2 -type f \( -name '*.exe' -o -name '*.dll' \) ! -name test.exe |
             sed 's,^\./,,' | LC_ALL=C sort >../programs.txt
           mkdir ../programs
           xargs -d '\n' cp --parents -t ../programs <../programs.txt
