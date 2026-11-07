@@ -99,8 +99,8 @@ $(ORIGINAL)/uninstal.exe: $(wildcard src/uninstal/*) build/dos/.ok build/zip/.ok
 original: $(ORIGINAL)/.ok
 
 $(ORIGINAL)/.ok: $(ORIGINAL)/teudogar.exe $(ORIGINAL)/uninstal.exe sum/rebuild.sha256 sum/teudogar.sha256
-	cd $(ORIGINAL) && sha256sum --quiet -c '$(CURDIR)/sum/rebuild.sha256'
-	sed -n 's|  teudogar/uninstal.exe$$|  uninstal.exe|p' sum/teudogar.sha256 | (cd $(ORIGINAL) && sha256sum --quiet -c)
+	cd $(ORIGINAL) && $(SHA256SUM) '$(CURDIR)/sum/rebuild.sha256'
+	sed -n 's|  teudogar/uninstal.exe$$|  uninstal.exe|p' sum/teudogar.sha256 | (cd $(ORIGINAL) && $(SHA256SUM))
 	touch $@
 
 ifeq ($(CC),watcom)

@@ -4357,12 +4357,15 @@ begingame(unsigned short slot, short mode)
 	n = seal.n;
 	if (n > 0x24)
 		n = 0x24;
+	// PORT: the seal sums the bytes of the sold Teudogar.Exe, which the port replaces
+#ifndef PORT
 	if (crcbuf(&seal.n, n - 12) != seal.crc)
 		bad = 1;
 	if (crcname(exepathbuf, 0, seal.off) != seal.crc1)
 		bad = 1;
 	if (crcname(exepathbuf, seal.off + n, 0xfffffff) != seal.crc2)
 		bad = 1;
+#endif
 	newgame();
 	units[0].health = 0;
 	enterflag = 0;

@@ -1,0 +1,19 @@
+# The races that ThreadSanitizer reports inside the libraries that the
+# port links uninstrumented: SDL3 and FluidSynth run their own threads,
+# FluidSynth renders through OpenMP (libgomp), and SDL3 reaches D-Bus,
+# whose locks the sanitizer sees in part. race_top matches the access's
+# own frame, so that a race of src/sys's audio callbacks, which run
+# under SDL3's threads, stays reported. libgomp and Mesa's libgallium,
+# which SDL3's renderer loads, allocate and free in their own threads,
+# under barriers and locks of their own: called_from_lib passes over
+# their calls of malloc and free. bin/headless reads this file.
+race_top:libSDL3.so
+deadlock:libSDL3.so
+race_top:libfluidsynth.so
+deadlock:libfluidsynth.so
+race_top:libgomp.so
+deadlock:libgomp.so
+race_top:libdbus-1.so
+deadlock:libdbus-1.so
+called_from_lib:libgallium
+called_from_lib:libgomp.so

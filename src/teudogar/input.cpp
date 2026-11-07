@@ -1991,7 +1991,12 @@ dragitem(unsigned char a, unsigned char b)
 	if (!a) {
 		readinput();
 		starttimer3();
+		// PORT: an item in a wing lifts by the pointer's true place
+#ifdef PORT
+		dgx = hoverwx;
+#else
 		dgx = hoverx;
+#endif
 		tracesite = 10;
 		dgy = hovery;
 		do {
@@ -2007,7 +2012,12 @@ dragitem(unsigned char a, unsigned char b)
 				forgettarget();
 				return 0;
 			}
+			// PORT: as above
+#ifdef PORT
+			if (abs(mousewx - dgx) >= 6 || abs(mousey - dgy) >= 6)
+#else
 			if (abs(mousex - dgx) >= 6 || abs(mousey - dgy) >= 6)
+#endif
 				goto moved;
 		} while (elapsed3() < 250);
 		plotfind(targetkind, targetx, targety, targetitem);
@@ -2033,7 +2043,12 @@ dragitem(unsigned char a, unsigned char b)
 				forgettarget();
 				return 0;
 			}
+			// PORT: as above
+#ifdef PORT
+			if (abs(mousewx - dgx) >= 16 || abs(mousey - dgy) >= 16)
+#else
 			if (abs(mousex - dgx) >= 16 || abs(mousey - dgy) >= 16)
+#endif
 				break;
 		}
 		showinfo(0);
@@ -2260,9 +2275,62 @@ showquick(void)
 	drawscreen();
 }
 
+// PORT: the look at a wing, which the wide view's own sight answers
+#ifdef PORT
+int widesee(int x, int y);
+
+/*
+ * winglook names what stands in the wing's cell at x of the screen and
+ * the hover's row, as clicktarget writes a name, or clears a tip. It
+ * leaves the target and the hero's facing as they are, so that saved
+ * games stay as they are.
+ */
+static void
+winglook(int x)
+{
+	unsigned long item;
+	int cx, cy, i;
+
+	cx = (x - 8 + 48 * 20) / 48 - 20 + playerx - 6;
+	cy = hovercy;
+	lbltext[0] = 0;
+	if (cx >= 0 && cx < 150 && cy >= 0 && cy < 150 && widesee(cx, cy)) {
+		i = unitat(cx, cy);
+		if (i != 0xff)
+			wsprintf(lbltext, unitname(&units[i]));
+		else if ((i = topitem(cy * 150 + cx)) != 0) {
+			item = mapitems[i];
+			i = classof(item & 0xfff);
+			if (i == 0xf || i == 0x10)
+				cointext(lbltext, item);
+			else if (i == 0x36 && ageof(item) >= 4)
+				wsprintf(lbltext, strs[1176]);
+			else if (*typetext(item) != 0)
+				wsprintf(lbltext, itemname(item));
+		}
+	}
+	cleartip();
+	if (lbltext[0] != 0) {
+		titlecase(lbltext);
+		anchortip(1, hoverx, hovery);
+		lblx = tipanchorx;
+		lbly = tipanchory;
+		showlabel();
+	}
+	drawscreen();
+}
+#endif
+
 void
 peektarget(void)
 {
+	// PORT: the key names what stands on a wing, as a click does
+#ifdef PORT
+	if (hoverkind == Wingkind) {
+		winglook(hoverwx);
+		return;
+	}
+#endif
 	pkpick = picktarget();
 	if (targetkind == 1 && targetx == playerx && targety == playery) {
 		targetitem = 0x270;
@@ -2508,6 +2576,10 @@ keycmd(unsigned char key)
 		break;
 	case 0x52:
 		hoverx = 12;
+		// PORT: the true place beside the classic one
+#ifdef PORT
+		hoverwx = 12;
+#endif
 		actionmenu(1);
 		if (actsel) {
 			actsel--;
@@ -2675,6 +2747,13 @@ doinput(void)
 		dblclick = 0;
 		leftclick = 0;
 		clickhover();
+		// PORT: a click on a wing names what stands there
+#ifdef PORT
+		if (hoverkind == Wingkind) {
+			winglook(presswx);
+			goto busy;
+		}
+#endif
 		if (hoverkind == 1 && hovercx == playerx && hovercy == playery)
 			goto here;
 		inpick = picktarget();
@@ -2734,6 +2813,13 @@ doinput(void)
 	leftclick = 0;
 	if (hoverkind != 0xe6)
 		clickhover();
+	// PORT: a click on a wing names what stands there
+#ifdef PORT
+	if (hoverkind == Wingkind) {
+		winglook(presswx);
+		goto busy;
+	}
+#endif
 	if (hoverkind == 1 && hovercx == playerx && hovercy == playery) {
 	here:
 		forgettarget();
@@ -3314,6 +3400,10 @@ gametick(void)
 	gtstep = steptick;
 #endif
 	gtdepth--;
+	// PORT: a line of the trace of ticks, into the file that TEUDOGAR_TRACE names
+#ifdef PORT
+	systrace(playerx, playery, steptick, gametime, ptrpace, scrolling, playmode);
+#endif
 }
 
 void
@@ -3382,7 +3472,12 @@ playerturn(void)
 						mousemoved = 1;
 					dblclick = 0;
 					lastkey = 0;
+					// PORT: a right click on a wing walks
+#ifdef PORT
+					if ((hoverkind == 1 || hoverkind == 0x31 || hoverkind == Wingkind) && !unconscious()) {
+#else
 					if ((hoverkind == 1 || hoverkind == 0x31) && !unconscious()) {
+#endif
 						dropheld();
 						cleartexts();
 						readinput();

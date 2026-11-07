@@ -1,12 +1,13 @@
 /*
  * The part of the Win32 API that the game names, for the port: the
  * types, structs, and constants of Watcom C/C++ 11.0's headers, with
- * fixed widths, and the functions that the game calls. Each function
- * compiles to a symbol of its own, sys followed by its name, apart from
- * the names of mingw-w64's import libraries.
+ * fixed widths, and the functions that src/sys implements on SDL3.
+ * Each function compiles to a symbol of its own, sys followed by its
+ * name, apart from the names of mingw-w64's import libraries.
  *
- * The pack pragmas give its structs one layout, whatever the packing of
- * the file that includes it.
+ * Game files and the files of src/sys both include this header, and
+ * the pack pragmas give its structs one layout in both, whatever the
+ * packing of the file that includes it.
  */
 
 #ifndef SYS_WINDOWS_H
@@ -419,7 +420,10 @@ typedef WNDCLASSA WNDCLASS;
 typedef WNDCLASSA *LPWNDCLASSA;
 typedef WNDCLASSA *LPWNDCLASS;
 
+/* SDL3 declares MSG on Windows, for its hook of messages */
+#if !(defined(SDL_system_h_) && defined(SDL_PLATFORM_WINDOWS))
 typedef struct tagMSG MSG;
+#endif
 struct tagMSG {
 	HWND hwnd;
 	UINT message;

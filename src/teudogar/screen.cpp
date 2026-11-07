@@ -227,6 +227,12 @@ extern int subscrolly;
 extern short cellx;
 extern short celly;
 extern char numtext[24];
+// PORT: the wide view's sight and the count of adddeco's pictures
+#ifdef PORT
+extern unsigned char wideview[17][2 * Widehalf + 1];
+int widesee(int x, int y);
+extern int ndecobufs;
+#endif
 extern unsigned char cellsight;
 extern unsigned char topsight;
 extern char *dnname;
@@ -254,6 +260,95 @@ animturn(short x, short y)
 	return 0;
 }
 
+// PORT: the wide view: its columns, the sight of its cells, and its units
+#ifdef PORT
+enum {
+	Maxdecobufs = 120,	/* the pictures of 0x900 bytes in scrbuf from 0x7d00 */
+	Stepscroll = 46	/* the farthest that a step scrolls the view */
+};
+
+/* viewcols returns the columns to draw each side of the hero: those that reach the wide screen's edge under a step's scroll, or the original's 7. */
+static int
+viewcols(void)
+{
+	if (sysscreen.left == 0)
+		return 7;
+	return (sysscreen.right - 296 + Stepscroll + 47) / 48 - 1;
+}
+
+/* inwing reports whether the current column lies past those that the original draws. */
+static int
+inwing(void)
+{
+	return celldx < -7 || celldx > 7;
+}
+
+/*
+ * offmap reports whether the current cell stays black: one with no index in
+ * map, or on the wide screen, which shows the original's hidden columns too,
+ * a column past its 13 off the map.
+ */
+static int
+offmap(void)
+{
+	int x;
+
+	if (cellidx >= 22500)
+		return 1;
+	x = playerx + celldx;
+	return sysscreen.left < 0 && (celldx < -6 || celldx > 6) && (x < 0 || x >= 150);
+}
+
+/* viewcell returns the sight of the current cell: viewgrid's in the original's columns, wideview's in the wings. */
+static unsigned char
+viewcell(void)
+{
+	if (offmap())
+		return 0;
+	if (inwing())
+		return wideview[celldy + 8][celldx + Widehalf];
+	return ((unsigned char *)viewgrid)[celldx + 9 + (celldy + 8) * 19];
+}
+
+/*
+ * widedecos adds the units that the wings show. adddeco rewrites the
+ * poses, seats, and trails of the units it draws, which the saved games
+ * keep, so each unit here takes back its state. The units that the
+ * original draws come first in the picture buffers, and these take the
+ * room left.
+ */
+static void
+widedecos(void)
+{
+	Unit saved, *lastunit, *u;
+	int i, dx, lastframe, lastpos, n;
+
+	if (sysscreen.left == 0)
+		return;
+	lastunit = decounit;
+	lastframe = decoframe;
+	lastpos = decophase;
+	n = viewcols() + 1;
+	for (i = 1; i < nunits && ndecobufs + 2 <= Maxdecobufs; i++) {
+		u = &units[i];
+		dx = abs(u->x - playerx);
+		if (u->health <= 0 || dx <= 7 || dx > n || abs(u->y - playery) > 6)
+			continue;
+		if (!widesee(u->x, u->y) && !(u->pose == 1 && widesee(u->x + u->dirx, u->diry + u->y)))
+			continue;
+		decounit = u;
+		decoframe = stepframe;
+		decophase = decoframe * 4 + (steptick & 3);
+		saved = *u;
+		adddeco();
+		*u = saved;
+	}
+	decounit = lastunit;
+	decoframe = lastframe;
+	decophase = lastpos;
+}
+#endif
+
 void
 animtile(void)
 {
@@ -269,8 +364,14 @@ animtile(void)
 void
 drawcell(void)
 {
+	// PORT: a cell off the map stays black, and the sight of the wings comes from wideview
+#ifdef PORT
+	if (!showall || offmap()) {
+		cellsight = viewcell();
+#else
 	if (!showall) {
 		cellsight = ((unsigned char *)viewgrid)[celldx + 9 + (celldy + 8) * 19];
+#endif
 		if (!cellsight) {
 			if (sqstate)
 				sqclear();
@@ -339,13 +440,23 @@ normal:
 void
 drawcelltop(void)
 {
+	// PORT: a cell off the map stays black
+#ifdef PORT
+	if (offmap())
+		return;
+#endif
 	cellword = map[cellidx];
 	if ((cellword & 0x1000) == 0)
 		return;
 	if ((cellword & 0x2000) == 0 && (mapflags[cellidx] & 0x80) == 0)
 		return;
 	if (!showall) {
+		// PORT: the sight of the wings comes from wideview
+#ifdef PORT
+		topsight = viewcell();
+#else
 		topsight = ((unsigned char *)viewgrid)[celldx + 9 + (celldy + 8) * 19];
+#endif
 		if (!topsight)
 			return;
 	} else
@@ -451,6 +562,10 @@ drawmsgs(void)
 		}
 	}
 	if (tipshown() && (!talkactive || trademode)) {
+		// PORT: a name's tip stands by the pointer on the wide screen
+#ifdef PORT
+		sysdrawx = tipshift;
+#endif
 		text3(0, tipx, tipy, tiptext);
 		p = tiptext;
 		celldy = tipy;
@@ -464,6 +579,10 @@ drawmsgs(void)
 			else
 				p++;
 		}
+		// PORT: as above
+#ifdef PORT
+		sysdrawx = 0;
+#endif
 	}
 }
 
@@ -644,7 +763,12 @@ drawscreen(void)
 			subscrollx *= 2;
 			subscrolly *= 2;
 			for (celldy = -6; celldy <= 6; celldy++)
+				// PORT: the columns of the wide screen
+#ifdef PORT
+				for (celldx = -viewcols(); celldx <= viewcols(); celldx++) {
+#else
 				for (celldx = -7; celldx <= 7; celldx++) {
+#endif
 					cellx = celldx * 48 + 296 + scrollx;
 					celly = celldy * 48 + 216 + scrolly;
 					sqclip(cellx, celly);
@@ -672,9 +796,18 @@ drawscreen(void)
 					&& cansee(decounit->x + decounit->dirx, decounit->diry + decounit->y))
 						adddeco();
 			}
+			// PORT: the units of the wide screen's wings
+#ifdef PORT
+			widedecos();
+#endif
 			drawdecos();
 			for (celldy = -6; celldy <= 6; celldy++)
+				// PORT: the columns of the wide screen
+#ifdef PORT
+				for (celldx = -viewcols(); celldx <= viewcols(); celldx++) {
+#else
 				for (celldx = -7; celldx <= 7; celldx++) {
+#endif
 					cellx = celldx * 48 + 296 + scrollx;
 					celly = celldy * 48 + 216 + scrolly;
 					sqclip(cellx, celly);
@@ -985,6 +1118,10 @@ wins:
 			continue;
 		drawpn = panelstack[drawi];
 		drawpanel = &panels[drawpn];
+		// PORT: a panel stands where the wide screen's layout puts it
+#ifdef PORT
+		sysdrawx = panelshift(drawpn);
+#endif
 		switch (drawpanel->type) {
 		case 1:
 			drawinventory(drawpn);
@@ -1011,6 +1148,10 @@ wins:
 			break;
 		}
 	}
+	// PORT: as above
+#ifdef PORT
+	sysdrawx = 0;
+#endif
 	condgauge = 0;
 	if (!talkactive && !statshown) {
 		cellidx = 0;
@@ -1029,10 +1170,24 @@ wins:
 		if (cellidx) {
 			if (cellidx > 128)
 				cellidx = 128;
+			// PORT: the gauge stands at the wide screen's left edge
+#ifdef PORT
+			sysdrawx = hudleft();
 			putgauge(0, 8, 430, (128 - cellidx) * 100 / 128);
+			sysdrawx = 0;
+#else
+			putgauge(0, 8, 430, (128 - cellidx) * 100 / 128);
+#endif
 			condgauge = 1;
 		}
+		// PORT: the hero's states stand at the wide screen's right edge
+#ifdef PORT
+		sysdrawx = hudright();
 		putherostates(0, 608, 460, 0, 1);
+		sysdrawx = 0;
+#else
+		putherostates(0, 608, 460, 0, 1);
+#endif
 	}
 	if (tipshown() || nmsgs)
 		drawmsgs();
@@ -1047,6 +1202,10 @@ wins:
 	if (!noflip) {
 		if (shown)
 			showcursor();
+		// PORT: the pointer roams a play frame of the wide screen
+#ifdef PORT
+		playflip = !talkactive && !trademode;
+#endif
 		flip();
 		setlight();
 		readinput();

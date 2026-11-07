@@ -1,6 +1,7 @@
 /*
  * The part of WinMM that the game names: timeGetTime, and the MIDI
  * stream API that Microsoft's MIDIPLYR sample, in snd.cpp, drives.
+ * src/sys/midi.c plays the streams through FluidSynth.
  */
 
 #ifndef SYS_MMSYSTEM_H

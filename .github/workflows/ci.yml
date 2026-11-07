@@ -1,13 +1,20 @@
-# ci builds every target on the latest Fedora: the programs of 2008 and
-# the game with the features with Watcom C/C++, and the modules of the
-# game as C99 with gcc, clang, and mingw-w64. Each step runs
-# whatever the others do, so that a run reports every target, and make
-# runs four jobs at a time, with the output of each rule in one piece.
+# ci builds every target: on the latest Fedora the programs of 2008 and
+# the game with the features with Watcom C/C++, and the game on SDL3 for
+# Linux and Windows, and on GitHub's latest macOS the game on SDL3 for
+# macOS. It runs the unit tests of the Linux and macOS targets, and
+# their distributions once (bin/smoke). Each step runs whatever the
+# others do, so that a run reports every target, and make runs four jobs
+# at a time on Fedora, with the output of each rule in one piece, and on
+# macOS keeps going past a failing rule, so that a run reports each. A
+# tag v<VERSION> also drafts a release of the packages: the archives of
+# the Linux and Windows targets of gcc, of the Watcom program, and of the
+# macOS targets.
 name: ci
 
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
   workflow_dispatch:
 
@@ -31,8 +38,10 @@ jobs:
           dnf -y install --setopt=install_weak_deps=False
           git make gawk sed grep coreutils diffutils findutils tar gzip bzip2 zstd curl 7zip
           golang gcc clang dosbox-staging ShellCheck
-          glibc-devel.x86_64 glibc-devel.i686
-          mingw32-gcc mingw64-gcc
+          glibc-devel.x86_64 libatomic.x86_64 SDL3-devel.x86_64 fluidsynth-devel.x86_64 zlib-ng-compat-devel.x86_64
+          glibc-devel.i686 libatomic.i686 SDL3-devel.i686 fluidsynth-devel.i686 zlib-ng-compat-devel.i686 libgcc.i686
+          mingw32-gcc mingw32-zlib-static
+          mingw64-gcc mingw64-zlib-static
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
@@ -41,7 +50,7 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: dl
-          key: dl-${{ hashFiles('sum/watcom.sha256', 'sum/zlib.sha256') }}
+          key: dl-${{ hashFiles('sum/watcom.sha256', 'sum/zlib.sha256', 'sum/sdl.sha256', 'sum/fluidsynth.sha256', 'sum/soundfont.sha256') }}
           restore-keys: dl-
       - name: Downloads
         run: make fetch
@@ -65,26 +74,26 @@ jobs:
         run: make dist OS=windows ARCH=386 CC=watcom
       - name: linux/386, gcc
         if: ${{ !cancelled() }}
-        run: make all OS=linux ARCH=386 CC=gcc
+        run: make dist test OS=linux ARCH=386 CC=gcc && bin/smoke dist/linux-386-gcc
       - name: linux/386, clang
         if: ${{ !cancelled() }}
-        run: make all OS=linux ARCH=386 CC=clang
+        run: make dist test OS=linux ARCH=386 CC=clang && bin/smoke dist/linux-386-clang
       - name: linux/amd64, gcc
         if: ${{ !cancelled() }}
-        run: make all OS=linux ARCH=amd64 CC=gcc
+        run: make dist test OS=linux ARCH=amd64 CC=gcc && bin/smoke dist/linux-amd64-gcc
       - name: linux/amd64, clang
         if: ${{ !cancelled() }}
-        run: make all OS=linux ARCH=amd64 CC=clang
+        run: make dist test OS=linux ARCH=amd64 CC=clang && bin/smoke dist/linux-amd64-clang
       - name: windows/386, mingw-w64
         if: ${{ !cancelled() }}
-        run: make all OS=windows ARCH=386 CC=gcc
+        run: make dist OS=windows ARCH=386 CC=gcc
       - name: windows/amd64, mingw-w64
         if: ${{ !cancelled() }}
-        run: make all OS=windows ARCH=amd64 CC=gcc
+        run: make dist OS=windows ARCH=amd64 CC=gcc
       - name: Programs
         run: |
           cd build
-          find . -mindepth 2 -maxdepth 2 -type f \( -name '*.exe' -o -name '*.dll' \) ! -name test.exe |
+          find . -mindepth 2 -maxdepth 2 -type f \( -name teudogar -o -name '*.exe' -o -name '*.dll' -o -name '*-license.txt' \) ! -name test.exe |
             sed 's,^\./,,' | LC_ALL=C sort >../programs.txt
           mkdir ../programs
           xargs -d '\n' cp --parents -t ../programs <../programs.txt
@@ -99,3 +108,107 @@ jobs:
           path: programs
           retention-days: 7
           if-no-files-found: error
+      - name: Keep the packages
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v7
+        with:
+          name: packages-fedora
+          path: |
+            dist/teudogar-*-linux-386-gcc.tar.gz
+            dist/teudogar-*-linux-amd64-gcc.tar.gz
+            dist/teudogar-*-windows-386-gcc.zip
+            dist/teudogar-*-windows-amd64-gcc.zip
+            dist/teudogar-*-windows-386-watcom.zip
+          retention-days: 7
+          if-no-files-found: error
+
+  macos:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    env:
+      MAKEFLAGS: -j3 -k
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Install the tools
+        run: |
+          brew install go cmake p7zip flock
+          sudo softwareupdate --install-rosetta --agree-to-license
+      - name: Restore the downloads
+        id: dl
+        uses: actions/cache/restore@v6
+        with:
+          path: dl
+          key: macos-dl-${{ hashFiles('sum/sdl.sha256', 'sum/fluidsynth.sha256', 'sum/soundfont.sha256') }}
+          restore-keys: macos-dl-
+      - name: macos/arm64, clang
+        if: ${{ !cancelled() }}
+        run: make dist test OS=macos ARCH=arm64 CC=clang && bin/smoke dist/macos-arm64-clang
+      - name: macos/amd64, clang
+        if: ${{ !cancelled() }}
+        run: make dist test OS=macos ARCH=amd64 CC=clang && bin/smoke dist/macos-amd64-clang
+      - name: Save the downloads
+        if: ${{ !cancelled() && steps.dl.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v6
+        with:
+          path: dl
+          key: ${{ steps.dl.outputs.cache-primary-key }}
+      - name: Programs
+        run: |
+          cd build
+          find . -mindepth 2 -maxdepth 2 -type f \( -name teudogar -o -name '*.dylib' -o -name '*-license.txt' \) |
+            sed 's,^\./,,' | LC_ALL=C sort >../programs.txt
+          mkdir ../programs
+          while IFS= read -r f; do mkdir -p "../programs/${f%/*}" && cp "$f" "../programs/$f"; done <../programs.txt
+          cd ../programs
+          xargs shasum -a 256 <../programs.txt >sha256
+          { echo '```'; cat sha256; echo '```'; } >>"$GITHUB_STEP_SUMMARY"
+      - name: Keep the programs
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: programs-macos
+          path: programs
+          retention-days: 7
+          if-no-files-found: error
+      - name: Keep the packages
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v7
+        with:
+          name: packages-macos
+          path: dist/teudogar-*-macos-*-clang.zip
+          retention-days: 7
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build, macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: packages-*
+          merge-multiple: true
+          path: packages
+      - name: Draft the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          v=${GITHUB_REF_NAME#v}
+          v=${v%%-*}
+          cd packages
+          for f in *; do
+            case $f in
+            teudogar-"$v"-*) ;;
+            *) echo "release: $f: want version $v, as $GITHUB_REF_NAME names" >&2; exit 1 ;;
+            esac
+          done
+          sha256sum -- * >sha256sums.txt
+          gh release create "$GITHUB_REF_NAME" --draft --verify-tag --notes-from-tag \
+            --title "Teudogar ${GITHUB_REF_NAME#v}" -- *

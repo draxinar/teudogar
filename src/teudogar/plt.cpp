@@ -511,6 +511,12 @@ extern HACCEL accel;
 extern int quitting;
 extern int exitcode;
 extern POINT cursorpos;
+// PORT: the width that the polls saw, and the pointer's mode across a pause
+#ifdef PORT
+extern int surfslost;
+static int seenleft = 1;	/* the left edge that the last poll saw, or 1 before the first */
+static int pauseroam;	/* whether the pointer roamed as the pause began */
+#endif
 extern char initerr[3000];
 extern MSG pumpmsg;
 extern int signx;
@@ -2610,6 +2616,10 @@ wndproc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 		break;
 	case WM_SETCURSOR:
 		GetCursorPos(&cursorpos);
+		// PORT: the wide screen's point as the classic screen's
+#ifdef PORT
+		widepoint(&cursorpos);
+#endif
 		if (cursorpos.x >= clipx0) {
 			if (cursorpos.x > clipx1)
 				cursorpos.x = clipx1;
@@ -2633,15 +2643,28 @@ wndproc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 		rightclick = 0;
 		presslatch = 0;
 		GetCursorPos(&cursorpos);
+		// PORT: the wide screen's point as the classic screen's
+#ifdef PORT
+		widepoint(&cursorpos);
+#endif
 		if (mousex != cursorpos.x || mousey != cursorpos.y)
 			mousemoved = 1;
 		mousex = cursorpos.x;
 		mousey = cursorpos.y;
+		// PORT: a double click is one place on the wide screen, where a wing's clicks share a classic x
+#ifdef PORT
+		if (clicktime == 0
+		|| (clickdx = mousewx - clickx) < -3 || clickdx > 3
+		|| (clickdy = mousey - clicky) < -3 || clickdy > 3
+		|| (clickdx = since(clicktime)) < -1000 || clickdx > 1000) {
+			clickx = mousewx;
+#else
 		if (clicktime == 0
 		|| (clickdx = mousex - clickx) < -3 || clickdx > 3
 		|| (clickdy = mousey - clicky) < -3 || clickdy > 3
 		|| (clickdx = since(clicktime)) < -1000 || clickdx > 1000) {
 			clickx = mousex;
+#endif
 			clicky = mousey;
 			clicktime = ticks();
 		} else {
@@ -2798,6 +2821,16 @@ pollinput(void)
 		replaywait = 0;
 	}
 	GetCursorPos(&cursorpos);
+	// PORT: the wide screen's point as the classic screen's, and a new width calls for a new picture, which every loop of the game draws as after a loss of its surfaces
+#ifdef PORT
+	widepoint(&cursorpos);
+	if (seenleft == 1)
+		seenleft = sysscreen.left;
+	else if (seenleft != sysscreen.left) {
+		seenleft = sysscreen.left;
+		surfslost = 1;
+	}
+#endif
 	if (!(GetAsyncKeyState(lbutton) & 0x8000))
 		mouseleft = 0;
 	if (!(GetAsyncKeyState(rbutton) & 0x8000))
@@ -2853,6 +2886,10 @@ readinput(void)
 			}
 			mousemoved = 0;
 			hoverx = mousex;
+			// PORT: the true place beside the classic one
+#ifdef PORT
+			hoverwx = mousewx;
+#endif
 			hoverkind = 0;
 			movecursor = 0;
 			hovergear = 0;
@@ -2876,6 +2913,11 @@ readinput(void)
 				if (!menumode || !pagearrows)
 					for (hoveri = 0; hoveri < 16 && panelstack[hoveri] != 0xff; hoveri++) {
 						hoverpanel = &panels[panelstack[hoveri]];
+						// PORT: a map pointer can fall in the classic rectangle of a panel shown elsewhere
+#ifdef PORT
+						if (sysroam && panelstack[hoveri] != widepanel)
+							continue;
+#endif
 						if (hoverx >= hoverpanel->x && hoverx < hoverpanel->x + hoverpanel->w
 						&& hovery >= hoverpanel->y && hovery < hoverpanel->y + hoverpanel->h) {
 							hoverpx = hoverx - hoverpanel->x;
@@ -2980,13 +3022,28 @@ readinput(void)
 					} else
 						hoverkind = 0;
 				} else {
+					// PORT: a pointer in a wing walks, and its cell lies past the game's targets
+#ifdef PORT
+					hoverkind = sysroam && (hoverwx < 8 || hoverwx > 631) ? Wingkind : 1;
+#else
 					hoverkind = 1;
+#endif
 					hovercx -= 8;
 					hovercx /= 48;
 					hovercx += playerx - 6;
 					hovercy += 24;
 					hovercy /= 48;
 					hovercy += playery - 5;
+					// PORT: the direction comes from the true place
+#ifdef PORT
+					if (hoverwx < 0x140) {
+						ptrdistx = 0x13f - hoverwx;
+						ptrdx = -1;
+					} else {
+						ptrdx = 1;
+						ptrdistx = hoverwx - 0x140;
+					}
+#else
 					if (hoverx < 0x140) {
 						ptrdistx = 0x13f - hoverx;
 						ptrdx = -1;
@@ -2994,6 +3051,7 @@ readinput(void)
 						ptrdx = 1;
 						ptrdistx = hoverx - 0x140;
 					}
+#endif
 					if (hovery < 0xf0) {
 						ptrdisty = 0xef - hovery;
 						ptrdy = -1;
@@ -3222,12 +3280,20 @@ readinput(void)
 		if (presslatch == 0) {
 			presskind = hoverkind;
 			presscx = hovercx;
+			// PORT: the press's true place beside the classic one
+#ifdef PORT
+			presswx = hoverwx;
+#endif
 			presslatch = 1;
 			presscy = hovercy;
 		}
 		if (pausekey) {
 			pausekey = 0;
 			if (!palblack) {
+				// PORT: the pause keeps the pointer's mode, unless a redraw in its loop ends it and blacks the wings
+#ifdef PORT
+				pauseroam = sysroam;
+#endif
 				showsign(0x19, 0, 1);
 				pausescr = GlobalAlloc(0, 0x4b000);
 				if (pausescr)
@@ -3262,7 +3328,17 @@ readinput(void)
 				} while (keycode || mouseleft || mouseright);
 				if (pausescr) {
 					putscreen((char *)pausescr, 0);
+					// PORT: the wide view's wings keep the map, where a combat's loop keeps the last frame
+#ifdef PORT
+					drawkeepwings();
+					playflip = pauseroam && sysroam;
+#endif
 					flip();
+					// PORT: as above
+#ifdef PORT
+					if (pauseroam && !sysroam)
+						surfslost = 1;
+#endif
 				}
 				hidesign();
 				if (pausescr) {
@@ -3781,6 +3857,63 @@ HACCEL accel;
 int quitting;
 int exitcode;
 POINT cursorpos;
+// PORT: the pointer's true place on the wide screen
+#ifdef PORT
+int mousewx;
+int hoverwx;
+int presswx;
+int widepanel = 0xff;
+
+void redrawcursor(void);
+
+/*
+ * widepoint turns the true point p of the screen into the classic
+ * screen's, which the game's numbers hold. While the pointer roams, a
+ * point on a panel loses the panel's shift, and any other goes through
+ * the strips of the screen's edges or stops short of them. Otherwise the
+ * point lies in the frame at sysdrawx, and a replay's points hold as
+ * they are.
+ */
+void
+widepoint(POINT *p)
+{
+	Panel *q;
+	int i, id, s, x;
+
+	widepanel = 0xff;
+	if (!sysroam) {
+		if (!sysframepoints)
+			p->x -= sysdrawx;
+		if (p->x < 0)
+			p->x = 0;
+		else if (p->x >= 640)
+			p->x = 639;
+		mousewx = p->x;
+		return;
+	}
+	x = p->x;
+	if (x < sysscreen.left)
+		x = sysscreen.left;
+	else if (x >= sysscreen.right)
+		x = sysscreen.right - 1;
+	if (x != mousewx) {
+		mousewx = x;
+		mousemoved = 1;
+		redrawcursor();
+	}
+	for (i = 0; i < 16 && panelstack[i] != 0xff; i++) {
+		id = panelstack[i];
+		q = &panels[id];
+		s = panelshift(id);
+		if (x >= q->x + s && x < q->x + q->w + s && p->y >= q->y && p->y < q->y + q->h) {
+			widepanel = id;
+			p->x = x - s;
+			return;
+		}
+	}
+	p->x = stripx(x);
+}
+#endif
 char initerr[3000];
 MSG pumpmsg;
 int signx;

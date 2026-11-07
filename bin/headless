@@ -1,0 +1,28 @@
+#!/bin/sh
+# Usage: headless [name=value ...] command [arg ...]
+#
+# Headless runs a Linux program of the port with SDL's offscreen video and
+# dummy audio drivers, DISPLAY and WAYLAND_DISPLAY unset, or, when
+# WAYLAND_OWN names the socket of WAYLAND_DISPLAY too, which marks a
+# compositor that the caller started for the run, on that display with
+# SDL's wayland driver. asan's runs leave the leaks aside, since the
+# game, as the original, leaves its memory to the system at exit, and
+# print a stack with each report of UBSan. tsan's runs stop at the first
+# report, and pass over the races inside SDL3 and FluidSynth that
+# src/sys/test/tsan.supp names.
+
+set -eu
+
+if [ $# -eq 0 ]; then
+	echo 'usage: headless [name=value ...] command [arg ...]' >&2
+	exit 2
+fi
+root=$(cd -- "$(dirname -- "$0")/.." && pwd)
+if [ -n "${WAYLAND_OWN-}" ] && [ "${WAYLAND_DISPLAY-}" = "$WAYLAND_OWN" ]; then
+	exec env -u DISPLAY SDL_VIDEO_DRIVER=wayland SDL_AUDIO_DRIVER=dummy \
+		ASAN_OPTIONS=detect_leaks=0 UBSAN_OPTIONS=print_stacktrace=1 \
+		TSAN_OPTIONS="halt_on_error=1 exitcode=66 suppressions=$root/src/sys/test/tsan.supp" "$@"
+fi
+exec env -u DISPLAY -u WAYLAND_DISPLAY SDL_VIDEO_DRIVER=offscreen SDL_AUDIO_DRIVER=dummy \
+	ASAN_OPTIONS=detect_leaks=0 UBSAN_OPTIONS=print_stacktrace=1 \
+	TSAN_OPTIONS="halt_on_error=1 exitcode=66 suppressions=$root/src/sys/test/tsan.supp" "$@"

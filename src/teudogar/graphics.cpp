@@ -1753,6 +1753,11 @@ releasedc(LPDIRECTDRAWSURFACE s)
 	return 1;
 }
 
+// PORT: whether the next flip shows a play frame, in which the pointer roams the wide screen
+#ifdef PORT
+int playflip;
+#endif
+
 // FIXED: as in flip
 #ifdef FEATURE_PACE
 static DWORD lastflip;
@@ -1761,6 +1766,14 @@ static DWORD lastflip;
 int
 flip(void)
 {
+	// PORT: a play frame's flip lets the pointer roam, and any other flip ends that
+#ifdef PORT
+	int roamed;
+
+	roamed = sysroam;
+	syssetroam(playflip);
+	playflip = 0;
+#endif
 	// FIXED: a page turn and a talk's slide have only Flip's wait for the refresh to pace them, and Flip returns at once under Wine. Keep 15 ms between flips, under a frame of 60 Hz, which leaves the flips of a display of up to 66 Hz as they are.
 #ifdef FEATURE_PACE
 	while (ticks() - lastflip < 15)
@@ -1786,6 +1799,11 @@ flip(void)
 		lastx = 999;
 		drawcursor();
 	}
+	// PORT: drawcursor can restore a square in a wing of the back buffer, which the next page would show
+#ifdef PORT
+	if (roamed && !sysroam)
+		drawclearback();
+#endif
 	return 1;
 }
 
@@ -2530,6 +2548,11 @@ fillrect(int n, int l, int t, int r, int b, unsigned char color)
 void
 clrframe(void)
 {
+	// PORT: the frame's black border reaches the wide screen's edges
+#ifdef PORT
+	frameleft.left = sysscreen.left;
+	frameright.right = sysscreen.right;
+#endif
 	fillfx.dwFillColor = 0;
 	// PORT: DirectDraw through its C binding
 #ifdef PORT
@@ -2564,6 +2587,11 @@ clrframe(void)
 void
 clrsides(void)
 {
+	// PORT: the map of the wide view covers these strips
+#ifdef PORT
+	if (sysscreen.left < 0)
+		return;
+#endif
 	fillfx.dwFillColor = 0;
 	// PORT: DirectDraw through its C binding
 #ifdef PORT
@@ -3529,6 +3557,62 @@ savebmpf(char *name, int n, unsigned char *pal)
 	return bmfh.bfSize;
 }
 
+// PORT: Alt+P writes the whole screen, while savebmpf's face template stays 640 by 480
+#ifdef PORT
+/* saveshot writes the primary as the BMP file name, at the screen's width in the wide view */
+DWORD
+saveshot(char *name)
+{
+	int w, y, origin;
+
+	if (sysscreen.left == 0)
+		return savebmpf(name, 1, 0);
+	w = sysscreen.right - sysscreen.left;
+	if (!fopenw(&sbfh, name))
+		return 0;
+	memset(&bmfh, 0, sizeof bmfh);
+	memset(&bmih, 0, sizeof bmih);
+	((unsigned char *)&bmfh)[0] = 0x42;
+	((unsigned char *)&bmfh)[1] = 0x4d;
+	bmfh.bfSize = 0x436 + w * 480;
+	bmfh.bfOffBits = 0x436;
+	bmih.biSize = sizeof bmih;
+	bmih.biWidth = w;
+	bmih.biHeight = 480;
+	bmih.biPlanes = 1;
+	bmih.biBitCount = 8;
+	bmih.biSizeImage = w * 480;
+	bmih.biXPelsPerMeter = 0x1274;
+	bmih.biYPelsPerMeter = 0x1274;
+	if (!filewrite(&bmfh, sizeof bmfh, 1, sbfh)) {
+		fileclose(&sbfh);
+		return 0;
+	}
+	filewrite(&bmih, sizeof bmih, 1, sbfh);
+	getpal(sbpal);
+	for (y = 0; y < 256; y++) {
+		sbbyte = sbpal[y * 3 + 2] << 2;
+		filewrite(&sbbyte, 1, 1, sbfh);
+		sbbyte = sbpal[y * 3 + 1] << 2;
+		filewrite(&sbbyte, 1, 1, sbfh);
+		sbbyte = sbpal[y * 3] << 2;
+		filewrite(&sbbyte, 1, 1, sbfh);
+		sbbyte = 0;
+		filewrite(&sbbyte, 1, 1, sbfh);
+	}
+	origin = sysdrawx;
+	sysdrawx = 0;
+	if (lock(prim)) {
+		for (y = 479; y >= 0; y--)
+			filewrite((char *)sd.lpSurface + sysscreen.left + y * sd.lPitch, w, 1, sbfh);
+		unlock(prim);
+	}
+	sysdrawx = origin;
+	fileclose(&sbfh);
+	return bmfh.bfSize;
+}
+#endif
+
 /* mksurf creates an offscreen surface 640 wide for n 48x48 tiles, 13 to a row */
 LPDIRECTDRAWSURFACE
 mksurf(unsigned n)
@@ -3803,6 +3887,10 @@ fail:
 		goto fail;
 	if ((surf2 = mksurfwh(640, 480)) == NULL)
 		goto fail;
+	// PORT: surf2 holds copies of the screen, wings and all
+#ifdef PORT
+	screensurface(surf2);
+#endif
 	if (!setkey(surf2))
 		goto fail;
 	for (ddi = 0; ddi < 13; ddi++) {
@@ -5649,9 +5737,14 @@ mssave(void)
 void
 iprestore(int s)
 {
-	// PORT: DirectDraw through its C binding
+	// PORT: DirectDraw through its C binding, at the wide screen's left edge
 #ifdef PORT
+	int origin;
+
+	origin = sysdrawx;
+	sysdrawx = hudleft();
 	ddfailed("rst_ip_hgr", IDirectDrawSurface_BltFast(surfs[s], 8, 0x118, surfw[0], &ipbackrect, DDBLTFAST_WAIT));
+	sysdrawx = origin;
 #else
 	ddfailed("rst_ip_hgr", surfs[s]->BltFast(8, 0x118, surfw[0], &ipbackrect, DDBLTFAST_WAIT));
 #endif
@@ -5660,9 +5753,14 @@ iprestore(int s)
 void
 ipsave(int s)
 {
-	// PORT: DirectDraw through its C binding
+	// PORT: DirectDraw through its C binding, at the wide screen's left edge
 #ifdef PORT
+	int origin;
+
+	origin = sysdrawx;
+	sysdrawx = hudleft();
 	ddfailed("gt_ip_hgr", IDirectDrawSurface_BltFast(surfw[0], ipbackrect.left, ipbackrect.top, surfs[s], &iprect, DDBLTFAST_WAIT));
+	sysdrawx = origin;
 #else
 	ddfailed("gt_ip_hgr", surfw[0]->BltFast(ipbackrect.left, ipbackrect.top, surfs[s], &iprect, DDBLTFAST_WAIT));
 #endif
@@ -5713,6 +5811,20 @@ mousedraw(void)
 		msx = 0;
 	} else if (msx > 640 - 48)
 		msw -= msx - (640 - 48);
+	// PORT: the pointer roaming the wide screen stands at its true place, clipped to the screen
+#ifdef PORT
+	if (sysroam) {
+		mscx = 0;
+		msw = 48;
+		msx = mousewx - 16;
+		if (msx < sysscreen.left) {
+			mscx = sysscreen.left - msx;
+			msw -= mscx;
+			msx = sysscreen.left;
+		} else if (msx > sysscreen.right - 48)
+			msw -= msx - (sysscreen.right - 48);
+	}
+#endif
 	msy = lasty - 16;
 	if (msy < 0) {
 		mscy -= msy;
@@ -6498,6 +6610,32 @@ sqclip(int x, int y)
 	sqstate = 0;
 	sqcol = 0;
 	sqw = 48;
+	// PORT: the map of the wide view reaches the screen's edges, past the original's strips of 8 columns
+#ifdef PORT
+	{
+		int x0, x1;
+
+		x0 = sysscreen.left < 0 ? sysscreen.left - sysdrawx : 8;
+		x1 = sysscreen.left < 0 ? sysscreen.right - sysdrawx : 632;
+		if (x < x0) {
+			if (x <= x0 - 48) {
+				sqstate = 2;
+				return;
+			}
+			sqcol = x0 - x;
+			sqstate = 1;
+			x = x0;
+			sqw -= sqcol;
+		} else if (x > x1 - 48) {
+			if (x >= x1) {
+				sqstate = 2;
+				return;
+			}
+			sqstate = 1;
+			sqw -= x - (x1 - 48);
+		}
+	}
+#else
 	if (x < 8) {
 		if (x <= -40) {
 			sqstate = 2;
@@ -6515,6 +6653,7 @@ sqclip(int x, int y)
 		sqstate = 1;
 		sqw -= x - 584;
 	}
+#endif
 	sqrow = 0;
 	sqh = 48;
 	if (y < 0) {

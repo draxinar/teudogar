@@ -595,6 +595,10 @@ extern int menuframe;
 extern short screenposx;
 extern short screenposy;
 extern int ndecobufs;
+// PORT: whether light reaches the wide view's corners
+#ifdef PORT
+extern unsigned char widelit[4];
+#endif
 extern int ndecos;
 extern int decoat;
 extern short clearmsgi;
@@ -775,6 +779,10 @@ again:
 void
 placetip(int x, int y)
 {
+	// PORT: only a name, in showlabel, follows the pointer on the wide screen
+#ifdef PORT
+	tipshift = 0;
+#endif
 	tipx = x;
 	tipy = y;
 	tipend = 0;
@@ -1822,6 +1830,113 @@ openpanel(unsigned char id)
 	}
 }
 
+// PORT: where the wide screen shows the panels and the HUD
+#ifdef PORT
+int paneloff[16];
+int tipshift;
+extern int hoverx;
+
+/* hudon reports whether the HUD stands at the screen's edges now: talk and trade keep theirs in the frame. */
+static int
+hudon(void)
+{
+	return sysedges && !trademode && !talkactive;
+}
+
+int
+hudleft(void)
+{
+	return hudon() ? sysscreen.left : 0;
+}
+
+int
+hudright(void)
+{
+	return hudon() ? -sysscreen.left : 0;
+}
+
+/*
+ * panelside returns the shift of the edge that a panel of classic x and
+ * width w stands by. A panel whose classic x reaches the bands of the
+ * gestures stands by that edge, so a pointer on it reaches them only there.
+ */
+static int
+panelside(int id, int x, int w)
+{
+	if (x < Leftstrip)
+		return sysscreen.left;
+	if (x + w > 640 - Rightstrip)
+		return -sysscreen.left;
+	if (id == 1 || id == 3)
+		return -sysscreen.left;
+	if (id == 2 || id >= 4 && id <= 8)
+		return sysscreen.left;
+	return 0;
+}
+
+/* panelshift returns what the screen adds to panel id's classic x, which keeps it on the screen. */
+int
+panelshift(int id)
+{
+	int s, x, w;
+
+	if (!hudon() || sysscreen.left == 0)
+		return 0;
+	x = panels[id].x;
+	w = panels[id].w;
+	s = panelside(id, x, w) + paneloff[id];
+	if (x + s < sysscreen.left + 8)
+		s = sysscreen.left + 8 - x;
+	else if (x + w + s > sysscreen.right - 8)
+		s = sysscreen.right - 8 - w - x;
+	return s;
+}
+
+/*
+ * placepanel puts panel id at sx, y of the screen, with a classic x that
+ * reaches the bands of the gestures only at a true edge, and in the
+ * multiples of 4 that movepanel leaves.
+ */
+void
+placepanel(int id, int sx, int y)
+{
+	int x, w;
+
+	w = panels[id].w;
+	if (sx < sysscreen.left + 8)
+		sx = sysscreen.left + 8;
+	else if (sx + w > sysscreen.right - 8)
+		sx = sysscreen.right - 8 - w;
+	if (sx < sysscreen.left + Leftstrip)
+		x = sx - sysscreen.left;
+	else if (sx + w > sysscreen.right - Rightstrip)
+		x = sx + sysscreen.left;
+	else if (sx < 32)
+		x = 32;
+	else if (sx > 640 - Rightstrip - w)
+		x = 640 - Rightstrip - w;
+	else
+		x = sx;
+	x &= ~3;
+	if (y < 0)
+		y = 0;
+	else if (y > 480 - panels[id].h)
+		y = 480 - panels[id].h;
+	panels[id].x = x;
+	panels[id].y = y;
+	paneloff[id] = sx - x - panelside(id, x, w);
+}
+
+/* placeatpointer keeps panel id, which movepanel placed by hoverx, by the pointer's true place. */
+void
+placeatpointer(int id)
+{
+	paneloff[id] = 0;
+	if (sysroam)
+		placepanel(id, panels[id].x + hoverwx - hoverx, panels[id].y);
+}
+#endif
+
 /* moves window id to x, y inside the screen */
 void
 movepanel(unsigned char id, short x, short y)
@@ -1859,6 +1974,10 @@ sizepanel(int id, int w, int h, short type)
 void
 initpanels(void)
 {
+	// PORT: a load or a new game forgets the drags on the wide screen
+#ifdef PORT
+	memset(paneloff, 0, sizeof paneloff);
+#endif
 	sizepanel(0, 28, 12, 0);
 	sizepanel(1, 216, 200, 1);
 	sizepanel(2, 216, 200, 1);
@@ -2017,6 +2136,10 @@ openstore(unsigned long item, int a, int b)
 		break;
 	}
 	storeslot = newstore - 4;
+	// PORT: a new chest opens at the wide screen's left edge
+#ifdef PORT
+	paneloff[newstore] = 0;
+#endif
 	panels[newstore].x = storeslot * 30 + 8;
 	if (storeslot == 0)
 		panels[newstore].y = 480 - panels[newstore].h;
@@ -2248,7 +2371,17 @@ putstates(int surf, int x, int y, Unit *u, int mode)
 void
 msstates(int mode)
 {
+	// PORT: the hovered unit's states stand at the wide screen's left edge
+#ifdef PORT
+	int origin;
+
+	origin = sysdrawx;
+	sysdrawx = hudleft();
 	putstates(curshape, 8, 460, &units[ptrunit], mode);
+	sysdrawx = origin;
+#else
+	putstates(curshape, 8, 460, &units[ptrunit], mode);
+#endif
 }
 
 /* returns the states of u as putstates flags them */
@@ -3613,6 +3746,20 @@ void
 darkcorners(void)
 {
 	if (lightlvl <= 11 || ((unsigned char *)mapstate)[0x22] <= 15 || sunlight < 11) {
+		// PORT: the wide view's corners lie at the screen's, lit by what its own sight sees
+#ifdef PORT
+		if (sysscreen.left < 0 && !mapframed) {
+			if (!widelit[0])
+				putwint(sysscreen.left, 0, 0xd4);
+			if (!widelit[1])
+				putwint(sysscreen.right - 100, 0, 0xd5);
+			if (!widelit[2])
+				putwint(sysscreen.left, 0x140, 0xd6);
+			if (!widelit[3])
+				putwint(sysscreen.right - 100, 0x140, 0xd7);
+			return;
+		}
+#endif
 		if (!litnw)
 			putwint(8, 0, 0xd4);
 		if (!litne)

@@ -2,18 +2,30 @@
 # source and from teudogar.zip, the author's release of version 1.05.
 # Plain make lists the goals.
 
-# OS, ARCH, and CC name the target that all builds: linux or windows,
-# 386 or amd64, and gcc, clang, or watcom, the compiler of 2008, which
-# builds windows on 386.
-OS = linux
-ARCH = amd64
-CC = gcc
+# OS, ARCH, and CC name the target that all and dist build, and test for
+# a program on SDL3: linux, macos, or windows, 386, amd64, or arm64, and
+# gcc, clang, or watcom, the compiler of 2008, which builds windows on
+# 386. macos builds on amd64 and arm64 with clang alone. OS and ARCH
+# default to the host's, by uname's names in the tables below, and else
+# to linux and amd64, and CC to gcc, or to clang on macOS.
+# SANITIZE=asan or SANITIZE=tsan adds clang's sanitizers to a Linux
+# target.
+HOST := $(shell uname -sm)
+OS_Linux = linux
+OS_Darwin = macos
+ARCH_x86_64 = amd64
+ARCH_i686 = 386
+ARCH_arm64 = arm64
+ARCH_aarch64 = arm64
+OS = $(or $(OS_$(word 1,$(HOST))),linux)
+ARCH = $(or $(ARCH_$(word 2,$(HOST))),amd64)
+CC = $(if $(filter macos,$(OS)),clang,gcc)
+SANITIZE =
 
 # FEATURES lists the features of the game that all builds: faults, the
 # fixes of the code's faults, pace, the game's pace at any refresh, and
 # fixes, the fixes of the gameplay, which takes faults and pace with
-# it. A module compiled as C99 takes faults and pace whatever the list
-# holds.
+# it. A program on SDL3 takes faults and pace whatever the list holds.
 FEATURES = fixes
 
 # ZIP is the author's release, and PASSWORD the file whose first line is
@@ -34,33 +46,51 @@ BASE_MODULES = basio memio str
 GAME_MODULES = zpack map dialog datfile texts input actions demotext graphics trade system combat cursor menus mainmenu npc unittype snd unpack world plt keys lang sysinfo deco panel screen
 
 # TARGET names what all builds, O the directory of its program and its
-# objects, and D its distribution, whose archive is ARCHIVE. BIN holds
-# the Go commands, and RELEASE the release's files.
-TARGET = $(OS)-$(ARCH)-$(CC)
+# objects, and D its distribution, whose archive is ARCHIVE. A Windows
+# program ends in .exe. BIN holds the Go commands, and RELEASE the
+# release's files.
+TARGET = $(OS)-$(ARCH)-$(CC)$(SANITIZE:%=-%)
 O = build/$(TARGET)
 D = dist/$(TARGET)
-ARCHIVE = dist/teudogar-$(VERSION)-$(TARGET).zip
+EXE_windows = .exe
+EXE = $(EXE_$(OS))
+ARCHIVE_linux = .tar.gz
+ARCHIVE_macos = .zip
+ARCHIVE_windows = .zip
+ARCHIVE = dist/teudogar-$(VERSION)-$(TARGET)$(ARCHIVE_$(OS))
 BIN = build/bin
 RELEASE = build/zip/teudogar
 
+# The places of a distribution, below D: the program's, PROGDIR, its
+# libraries', LIBDIR, and the game's data's, DATADIR. Each is D itself
+# but on macOS, where D holds the app, BUNDLE. PROGRAM is the program of
+# the distribution.
+BUNDLE_macos = /Teudogar.app
+APP_macos = $(BUNDLE_macos)/Contents
+PROGDIR_macos = $(APP_macos)/MacOS
+LIBDIR_macos = $(APP_macos)/Frameworks
+DATADIR_macos = $(APP_macos)/Resources
+PROGRAM = $(D)$(PROGDIR_$(OS))/teudogar$(EXE)
+
 # make keeps the target's variables out of the recipes' environment,
 # where CC names the C compiler of go build.
-unexport OS ARCH CC
+unexport OS ARCH CC SANITIZE
 
 .DELETE_ON_ERROR:
-.PHONY: usage all dist original ddraw check lint fetch tools clean distclean FORCE
+.PHONY: usage all dist test original ddraw check lint fetch tools fmtref clean distclean FORCE
 
 # usage lists the goals.
 usage::
-	@echo 'usage: make goal ... [OS=linux|windows] [ARCH=386|amd64] [CC=gcc|clang|watcom]'
+	@echo 'usage: make goal ... [OS=linux|macos|windows] [ARCH=386|amd64|arm64] [CC=gcc|clang|watcom]'
 	@echo '                     [FEATURES=fixes]'
 	@echo ''
-	@echo 'the game, for the target that OS, ARCH, and CC name (linux, amd64, gcc):'
-	@echo '  all        compile the modules of the game as C99 into build/<os>-<arch>-<cc>,'
-	@echo '             or build the program there when CC is watcom'
-	@echo '  dist       when CC is watcom, build its distribution into'
-	@echo '             dist/windows-386-watcom, the program with the data of the game,'
-	@echo '             and the archive of that folder'
+	@echo "the game, for the target that OS, ARCH, and CC name (the host's, with gcc,"
+	@echo 'or clang on macOS):'
+	@echo '  all        build the program into build/<os>-<arch>-<cc>'
+	@echo '  dist       build its distribution into dist/<os>-<arch>-<cc>, the program'
+	@echo '             with the data of the game, and the archive of that folder'
+	@echo '  test       build the unit tests of the program, and run them on Linux and'
+	@echo '             macOS'
 	@echo ''
 	@echo 'the programs of 2008:'
 	@echo '  original   rebuild teudogar.exe and uninstal.exe with Watcom C/C++ and'
@@ -68,12 +98,13 @@ usage::
 	@echo '  ddraw      build ddraw.dll, which runs them on Windows 8 and later'
 	@echo ''
 	@echo 'checks:'
-	@echo '  check      run lint and original'
+	@echo '  check      run lint, original, and test'
 	@echo '  lint       run shellcheck, gofmt, and go vet'
 	@echo ''
 	@echo 'inputs and tools:'
 	@echo '  fetch      download what the builds need into dl/'
 	@echo '  tools      build the Go commands into build/bin'
+	@echo '  fmtref     build build/fmtref.exe, the reference of the fmt test'
 	@echo ''
 	@echo '  clean      remove build/ and dist/'
 	@echo '  distclean  remove the downloads too'
@@ -102,9 +133,10 @@ build/features: FORCE
 # folder until it ends.
 SWAP = bin/lock dist/.lock sh -c 'rm -rf $(D).old && { [ ! -d $(D) ] || mv $(D) $(D).old; } && mv $(D).new $(D) && rm -rf $(D).old'
 
-# cmd/pack writes the distribution as a zip file whose files take DATE,
-# so that the same folder gives the same bytes.
-$(ARCHIVE): $(D)/teudogar.exe $(BIN)/pack
+# cmd/pack writes the distribution as an archive whose files take DATE,
+# so that the same folder gives the same bytes: a gzipped tar file for
+# Linux and a zip file for macOS and Windows.
+$(ARCHIVE): $(PROGRAM) $(BIN)/pack
 	$(BIN)/pack -t $(DATE) $(D) $@
 
 # ddraw builds ddraw.dll, DirectDraw for the Watcom programs on Windows 8
@@ -129,9 +161,9 @@ lint:
 	test -z "$$(gofmt -l cmd internal)" || { gofmt -l cmd internal >&2; exit 1; }
 	go vet ./cmd/... ./internal/...
 
-# check runs the linters, and rebuilds the programs of 2008 to check
-# their bytes.
-check: lint original
+# check runs the linters, rebuilds the programs of 2008 to check their
+# bytes, and runs the unit tests of the target.
+check: lint original test
 
 # clean removes what make built, and keeps the downloads.
 clean:
@@ -141,10 +173,13 @@ clean:
 distclean: clean
 	rm -rf $(FETCHED) $(DL)/tmp
 
-# The other rules: the inputs, the builds with Watcom C/C++, and the
-# modules of the game as C99 with gcc and clang.
+# The other rules: the inputs, the builds with Watcom C/C++, what a
+# macOS target adds, and the builds on SDL3 with gcc and clang.
 include mk/fetch.mk
 include mk/watcom.mk
+ifeq ($(OS),macos)
+include mk/macos.mk
+endif
 ifneq ($(CC),watcom)
 include mk/port.mk
 endif

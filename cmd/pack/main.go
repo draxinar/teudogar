@@ -6,17 +6,20 @@
 //	pack -t time dir archive
 //
 // Pack writes the files of dir, and of the directories below it, into
-// archive, a zip file, whose name ends in .zip. Pack refuses any other
-// name. The archive holds the files under one directory, named as the
-// archive without its suffix, in the order of their names. Each takes
-// the time given, as RFC 3339 writes it (2008-05-20T08:23:29Z), and the
-// mode 0755 when its owner may run it and 0644 otherwise. Two runs on
-// the same files write the same bytes. Pack writes the archive under a
-// temporary name and renames it at the end.
+// archive: a zip file when the name ends in .zip, and a gzipped tar
+// file when it ends in .tar.gz or .tgz. Pack refuses any other name.
+// The archive holds the files under one directory, named as the archive
+// without its suffix, in the order of their names. Each takes the time
+// given, as RFC 3339 writes it (2008-05-20T08:23:29Z), the mode 0755
+// when its owner may run it and 0644 otherwise, and in a tar file the
+// owner 0. Two runs on the same files write the same bytes. Pack writes
+// the archive under a temporary name and renames it at the end.
 package main
 
 import (
+	"archive/tar"
 	"archive/zip"
+	"compress/gzip"
 	"flag"
 	"fmt"
 	"io"
@@ -108,10 +111,18 @@ func pack(dir, name string, t time.Time) (err error) {
 		return fmt.Errorf("%s: no file to pack", dir)
 	}
 	base := filepath.Base(name)
-	if !strings.HasSuffix(base, ".zip") {
-		return fmt.Errorf("%s: want a name that ends in .zip", name)
+	write := writeTar
+	switch {
+	case strings.HasSuffix(base, ".zip"):
+		base = strings.TrimSuffix(base, ".zip")
+		write = writeZip
+	case strings.HasSuffix(base, ".tar.gz"):
+		base = strings.TrimSuffix(base, ".tar.gz")
+	case strings.HasSuffix(base, ".tgz"):
+		base = strings.TrimSuffix(base, ".tgz")
+	default:
+		return fmt.Errorf("%s: want a name that ends in .zip, .tar.gz, or .tgz", name)
 	}
-	base = strings.TrimSuffix(base, ".zip")
 	tmp := name + ".tmp"
 	out, err := os.Create(tmp)
 	if err != nil {
@@ -123,13 +134,41 @@ func pack(dir, name string, t time.Time) (err error) {
 			os.Remove(tmp) // the error of the write is the one to report
 		}
 	}()
-	if err := writeZip(out, dir, base, fl, t); err != nil {
+	if err := write(out, dir, base, fl, t); err != nil {
 		return err
 	}
 	if err := out.Close(); err != nil {
 		return err
 	}
 	return os.Rename(tmp, name)
+}
+
+// writeTar writes the files as a gzipped tar file.
+func writeTar(w io.Writer, dir, base string, fl []file, t time.Time) error {
+	zw, err := gzip.NewWriterLevel(w, gzip.BestCompression)
+	if err != nil {
+		return err
+	}
+	tw := tar.NewWriter(zw)
+	for _, f := range fl {
+		err := copyFile(dir, f, func(size int64) (io.Writer, error) {
+			h := &tar.Header{
+				Typeflag: tar.TypeReg,
+				Name:     path.Join(base, f.name),
+				Mode:     int64(f.mode()),
+				Size:     size,
+				ModTime:  t,
+			}
+			return tw, tw.WriteHeader(h)
+		})
+		if err != nil {
+			return err
+		}
+	}
+	if err := tw.Close(); err != nil {
+		return err
+	}
+	return zw.Close()
 }
 
 // writeZip writes the files as a zip file.

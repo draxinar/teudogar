@@ -2766,6 +2766,10 @@ runcmds(char *p)
 				cmdn = evalvar(p + 2);
 				if (cmdn < 0xf0 && !getbit(game.known, cmdn)) {
 					hidecursor();
+					// PORT: the action menu stands at the wide screen's left edge
+#ifdef PORT
+					sysdrawx = hudleft();
+#endif
 					primto2();
 					s2toback();
 					setbit(game.known, cmdn, 0);
@@ -2783,6 +2787,10 @@ runcmds(char *p)
 					dissolvet();
 					waitinput(1500);
 					s2toprim();
+					// PORT: the action menu leaves the wide screen's left edge
+#ifdef PORT
+					sysdrawx = 0;
+#endif
 					drawcursor();
 					waitrelease(1);
 				}

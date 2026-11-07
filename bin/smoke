@@ -1,0 +1,68 @@
+#!/bin/sh
+# Usage: smoke dir
+#
+# Smoke runs the program of the distribution dir once, headless through
+# bin/headless, on a replay of a first run: a click that passes the help
+# page, two screenshots by Alt+P, and the window's close. It runs in a
+# per-user folder of its own, which it removes, and checks that the game
+# ends with status 0 and leaves its registry, its config.dat, and the
+# first shot there. The program is the teudogar of a Linux distribution
+# or the one of a macOS app.
+
+set -eu
+
+usage() {
+	echo 'usage: smoke dir' >&2
+	exit 2
+}
+
+[ $# -eq 1 ] || usage
+dir=$1
+root=$(cd -- "$(dirname -- "$0")/.." && pwd)
+prog=
+for p in "$dir/teudogar" "$dir/Teudogar.app/Contents/MacOS/teudogar"; do
+	if [ -f "$p" ] && [ -x "$p" ]; then
+		prog=$p
+	fi
+done
+if [ -z "$prog" ]; then
+	echo "smoke: $dir: no program of Linux or macOS" >&2
+	exit 1
+fi
+
+tmp=$(mktemp -d)
+trap 'rm -rf -- "$tmp"' EXIT
+trap 'exit 1' HUP INT TERM
+mkdir -- "$tmp/user"
+cat >"$tmp/replay.txt" <<'EOF'
+6000 move 322 363
+6000 button left down 322 363
+6150 button left up 322 363
+8000 key down Left_Alt
+8050 key down P
+8100 key up P
+8150 key up Left_Alt
+10000 key down Left_Alt
+10050 key down P
+10100 key up P
+10150 key up Left_Alt
+12000 close
+EOF
+
+if ! TEUDOGAR_HOME=$tmp/user TEUDOGAR_REPLAY=$tmp/replay.txt "$root/bin/headless" "$prog" >"$tmp/log" 2>&1; then
+	cat -- "$tmp/log" >&2
+	echo "smoke: $prog failed" >&2
+	exit 1
+fi
+status=0
+for f in registry.txt config.dat teudogar_0000.bmp; do
+	if [ ! -s "$tmp/user/$f" ]; then
+		echo "smoke: $prog left no $f" >&2
+		status=1
+	fi
+done
+if [ "$status" -eq 0 ] && [ "$(head -c 2 -- "$tmp/user/teudogar_0000.bmp")" != BM ]; then
+	echo "smoke: $prog wrote teudogar_0000.bmp, which is no bitmap" >&2
+	status=1
+fi
+exit "$status"

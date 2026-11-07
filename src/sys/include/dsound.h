@@ -1,7 +1,8 @@
 /*
  * The part of DirectSound that the game names, for the port: the
  * interfaces IDirectSound and IDirectSoundBuffer with the methods the
- * game calls, in the C binding of the DirectX headers.
+ * game calls, in the C binding of the DirectX headers, and
+ * src/sys/sound.c behind them.
  */
 
 #ifndef SYS_DSOUND_H

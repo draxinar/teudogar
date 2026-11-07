@@ -119,6 +119,16 @@ movesprite(int shape, int x, int y)
 	else if (y > 432)
 		y = 432;
 	spriteshape = shape;
+	// PORT: the pointer roaming the wide screen stands at its true place, whose square stays on the screen
+#ifdef PORT
+	if (sysroam) {
+		x = mousewx - 16;
+		if (x < sysscreen.left)
+			x = sysscreen.left;
+		else if (x > sysscreen.right - 48)
+			x = sysscreen.right - 48;
+	}
+#endif
 	spritex = x;
 	spritey = y;
 }

@@ -2,8 +2,12 @@
 #include <string.h>
 #include "base.h"
 
-// PORT: the game's prototypes of its calls of zlib, in C, with its 32-bit lengths
+// PORT: zlib through the wrappers of src/sys/zlib.c, which take the game's 32-bit lengths
 #ifdef PORT
+#define compress zcompress
+#define uncompress zuncompress
+#define crc32 zcrc32
+#define zError zerror
 int compress(unsigned char *dst, DWORD *dstlen, const unsigned char *src, DWORD srclen);
 int uncompress(unsigned char *dst, DWORD *dstlen, const unsigned char *src, DWORD srclen);
 DWORD crc32(DWORD crc, const unsigned char *buf, unsigned int len);

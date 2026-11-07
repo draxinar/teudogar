@@ -127,6 +127,10 @@ void buttonon(int x, int y, int w, int h, char *s);
 void buttonoff(int x, int y, int w, int h, char *s);
 int text3w(char *s);
 DWORD savebmpf(char *name, int n, unsigned char *pal);
+// PORT: Alt+P writes the whole screen
+#ifdef PORT
+DWORD saveshot(char *name);
+#endif
 int drawtext(int n, int x, int y, char *s);
 void setcursor1(int kind, int img);
 void redrawcursor(void);
@@ -1040,7 +1044,12 @@ screenshot(void)
 	if (savesready == 0 || shotno > 999)
 		return;
 	wsprintf(shotname, texts + 0xa4b1, shotno);
+	// PORT: Alt+P writes the whole screen
+#ifdef PORT
+	saveshot(shotname);
+#else
 	savebmpf(shotname, 1, 0);
+#endif
 	drawtext(1, 8, 0x1cc, shotname);
 	shotno++;
 }
@@ -2310,6 +2319,10 @@ actionmenu(short flag)
 		drawscreen();
 	}
 	hidecursor();
+	// PORT: the menu runs at the wide screen's left edge, its numbers and the pointer's as they are
+#ifdef PORT
+	sysholdpointer(hudleft());
+#endif
 	primtoback();
 	setcursor1(3, 3);
 	drawcursor();
@@ -2335,6 +2348,11 @@ actionmenu(short flag)
 		(short (*)(unsigned char, unsigned char))bindaction, 0);
 	if (actsel >= 0xf0)
 		actsel = 0;
+	// PORT: as above
+#ifdef PORT
+	hidecursor();
+	sysholdpointer(0);
+#endif
 	leavemenu(0);
 }
 
@@ -2702,6 +2720,10 @@ asknum(unsigned short *val, unsigned short min, unsigned short max)
 	panels[14].arg = max;
 	numval = &panels[14].id;
 	movepanel(14, hoverx - 170, hovery - 38);
+	// PORT: the box opens by the pointer on the wide screen
+#ifdef PORT
+	placeatpointer(14);
+#endif
 top:
 	numx = panels[14].x;
 	numy = panels[14].y;

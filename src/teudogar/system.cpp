@@ -536,6 +536,11 @@ checkfiles(short all)
 	for (i = 0; *files[i].name && i < 30; i++) {
 		if (files[i].kind == 2)
 			continue;
+		// PORT: the port's folder holds the data files alone: skip Teudogar.Exe and UnInstal.Exe
+#ifdef PORT
+		if (files[i].name == T(0x9b28) || files[i].name == T(0x9d64))
+			continue;
+#endif
 		if (!exists(files[i].name)) {
 		missing:
 			files[i].state = 1;
@@ -2765,7 +2770,10 @@ inisys2(char *err)
 		wsprintf(err, printbuf, printbuf + 0x7d0);
 		return 0;
 	}
+	// PORT: the sum of the exe comes from the copy word, below
+#ifndef PORT
 	execrc = crcname(exepathbuf, 0, 0) ^ 0x9f3ff2ff;
+#endif
 	checkmem();
 	if (dsready && !loadsounds()) {
 		freesound();
@@ -2839,6 +2847,10 @@ inisys2(char *err)
 		fileread(packbuf, 12, 1, datfh);
 		fileread(&crcword, 4, 1, datfh);
 	}
+	// PORT: the sum of the sold Teudogar.Exe, which the copy word holds
+#ifdef PORT
+	execrc = crcword ^ 0xffcff3f ^ 0x9f3ff2ff;
+#endif
 	for (i2i = 0; i2i < 57; i2i++) {
 		if (!minmem && !lowmem && seekentry(i2i + 0x209c)) {
 			i2len = storedn;

@@ -1435,7 +1435,7 @@ draw:
 	decooff = decobase - ((char *)tilecache);
 	if (decooff < 0 || (unsigned)decooff > (setpics - 1) * 0x900)
 		decooff = -1;
-	// FIXED: the pictures of a unit's grass mask and gear come from scrbuf past the screen, which holds 120 of them, and 61 units on grass with gear take the 121st past scrbuf. Draw a unit without its mask once they run out.
+	// FIXED: the pictures of a unit's grass mask and gear come from scrbuf past the screen, which holds 120 of them, and 61 units on grass with gear in the classic view take the 121st past scrbuf. Draw a unit without its mask once they run out, as widedecos stops at 120.
 #ifdef FEATURE_FAULTS
 	if (cellflag40(map[decocell]) && partof(decounit)->grassmask && decooff != -1 && ndecobufs < 120) {
 #else

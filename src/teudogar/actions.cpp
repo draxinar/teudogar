@@ -851,6 +851,10 @@ placeitem(void)
 		targetitem = randlook(targetitem);
 		placek = panels[targetkind - 0x28].id;
 		if (targetx == 0xff && targety == 0xff
+		// PORT: a map pointer can fall in the classic rectangle of a panel shown elsewhere
+#ifdef PORT
+		|| sysroam && widepanel != targetkind - 0x28
+#endif
 		|| hoverx < panels[targetkind - 0x28].x || hoverx >= panels[targetkind - 0x28].x + panels[targetkind - 0x28].w
 		|| hovery < panels[targetkind - 0x28].y || hovery >= panels[targetkind - 0x28].y + panels[targetkind - 0x28].h) {
 			placex = 0xff;
@@ -1103,6 +1107,10 @@ showlabel(void)
 	if (!lbltext[0])
 		return 0;
 	showtip(lblx, lbly, lbltext);
+	// PORT: a name's tip stands by the pointer on the wide screen
+#ifdef PORT
+	tipshift = sysroam ? hoverwx - hoverx : 0;
+#endif
 	lbltext[0] = 0;
 	return 1;
 }
@@ -1151,6 +1159,10 @@ showinfo(unsigned char show)
 	openpanel(12);
 	describe(targetitem, targetowner);
 	movepanel(12, hoverx - panels[12].w / 2, hovery - panels[12].h / 2);
+	// PORT: the box opens by the pointer on the wide screen
+#ifdef PORT
+	placeatpointer(12);
+#endif
 	panels[12].item = targetitem;
 	infopanel = 12;
 	cleartexts();
@@ -1224,6 +1236,16 @@ fail:
 		if (tryalt)
 			return 0;
 		tryalt = 1;
+		// PORT: the direction comes from the true place
+#ifdef PORT
+		if (hoverwx < 0x140) {
+			dx = -1;
+			trywt[0] = 0x13f - hoverwx;
+		} else {
+			dx = 1;
+			trywt[0] = hoverwx - 0x140;
+		}
+#else
 		if (hoverx < 0x140) {
 			dx = -1;
 			trywt[0] = 0x13f - hoverx;
@@ -1231,6 +1253,7 @@ fail:
 			dx = 1;
 			trywt[0] = hoverx - 0x140;
 		}
+#endif
 		trywt[0] *= 2;
 		trywt[0] /= 3;
 		if (hovery < 0xf0) {
@@ -1391,6 +1414,16 @@ advance(int dx, int dy)
 			if (advalt)
 				goto stop;
 			advalt = 1;
+			// PORT: the direction comes from the true place
+#ifdef PORT
+			if (hoverwx < 0x140) {
+				dx = -1;
+				advwx = 0x13f - hoverwx;
+			} else {
+				dx = 1;
+				advwx = hoverwx - 0x140;
+			}
+#else
 			if (hoverx < 0x140) {
 				dx = -1;
 				advwx = 0x13f - hoverx;
@@ -1398,6 +1431,7 @@ advance(int dx, int dy)
 				dx = 1;
 				advwx = hoverx - 0x140;
 			}
+#endif
 			advwx *= 2;
 			advwx /= 3;
 			if (hovery < 0xf0) {
@@ -2022,7 +2056,12 @@ shown:
 talked:
 	talkstate = 2;
 	setcursor1(3, 3);
+	// PORT: the speech's dismissal measures the pointer's true place
+#ifdef PORT
+	talkmx = hoverwx;
+#else
 	talkmx = hoverx;
+#endif
 	talkmy = hovery;
 	markunits();
 	if (cmbautooff)
@@ -2054,6 +2093,10 @@ talked:
 	if (talknew && getbit(game.flags, 0x44c)) {
 		waitinput(500);
 		hidecursor();
+		// PORT: the action menu stands at the wide screen's left edge
+#ifdef PORT
+		sysdrawx = hudleft();
+#endif
 		primto2();
 		s2toback();
 		memcpy(tmpbuf, game.known, 30);
@@ -2067,6 +2110,10 @@ talked:
 		dissolvet();
 		waitinput(1500);
 		s2toprim();
+		// PORT: as above
+#ifdef PORT
+		sysdrawx = 0;
+#endif
 		drawcursor();
 	}
 	if (talkcode == 0xff6 || talkcode == 0xff5 || talkcode == 0xff4)
@@ -2118,7 +2165,12 @@ talked:
 	for (;;) {
 		if (mouseleft || mouseright || leftclick || rightclick || keycode || esckey
 		|| keys[VK_CONTROL] & 0x80 || playerout()
+		// PORT: as above
+#ifdef PORT
+		|| abs(hoverwx - talkmx) >= 90 || abs(hovery - talkmy) >= 90
+#else
 		|| abs(hoverx - talkmx) >= 90 || abs(hovery - talkmy) >= 90
+#endif
 		|| talkcode != 0xffd && talkcode != 0xffe && talkcode != 0xff5
 		&& !cansee(units[n].x, units[n].y))
 			break;

@@ -1,7 +1,9 @@
 /*
  * The part of the shell that the game's setup code names: special
  * folders, the folder browser, the shell's allocator, and shell links,
- * in the C binding of the SDK.
+ * in the C binding of the SDK. The port presets the registry, so the
+ * game skips its setup, and src/sys answers each call with an error or
+ * an empty result.
  */
 
 #ifndef SYS_SHLOBJ_H

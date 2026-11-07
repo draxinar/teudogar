@@ -5900,6 +5900,63 @@ addavenger(short x, short y, short v)
 	return avunit;
 }
 
+// PORT: the setup events of a replay (src/sys/replay.c), which put the hero in states that play reaches rarely: an item cursed or blessed, wounds, hunger, fear, avengers beside him, the speaker of a scene brought to him, and a door that the replay puts on a cell and opens as a lever does
+#ifdef PORT
+unsigned long *unitslot(char c, Unit *u);
+extern int doors[2][16];	/* world.cpp: two rows of four doors, each its closed1, open1, closed2, and open2 */
+
+/* replaysetup takes a replay's setup event: what names it, and a and b hold its arguments */
+void
+replaysetup(int what, int a, int b)
+{
+	unsigned long *slot;
+	short x, y;
+	int k, pos;
+
+	switch (what) {
+	case 'b':
+		slot = unitslot((char)a, units);
+		if (slot != NULL && *slot != 0)
+			setbless(slot, b);
+		break;
+	case 'h':
+		units[0].health = a;
+		break;
+	case 'u':
+		game.hungercount = a;
+		break;
+	case 'f':
+		units[0].fleeing = a;
+		break;
+	case 'a':
+		for (k = 0; k < b; k++)
+			addavenger(playerx, playery, a);
+		break;
+	case 's':
+		for (k = 1; k < nunits; k++)
+			if (units[k].scene == a && freenear(playerx, playery - 1, &x, &y)) {
+				units[k].x = x;
+				units[k].y = y;
+				units[k].nextx = x;
+				units[k].nexty = y;
+				setunitmode(&units[k], 1);
+				turnto(&units[k], playerx, playery);
+				break;
+			}
+		break;
+	case 'd':
+		/* the first door of the row whose halves lie side by side, closed1 left of closed2 */
+		pos = b * 150 + a;
+		additem(pos - 1, doors[0][0]);
+		additem(pos, doors[0][2]);
+		updatecell(pos - 1);
+		updatecell(pos);
+		opendoor(pos, 1);
+		break;
+	}
+}
+#endif
+
 short
 addrefugee(short x, short y, short kind, short v)
 {

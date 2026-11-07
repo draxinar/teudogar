@@ -424,6 +424,10 @@ extern short litsw;
 extern short litse;
 extern int tracesite;
 extern int waitforup;
+// PORT: dragpanel holds the pointer in the rectangle of setclip
+#ifdef PORT
+void clampmouse(void);
+#endif
 
 extern int mouseleft;
 extern int mouseright;
@@ -2967,6 +2971,272 @@ roofwest(void)
 			*spreadp = 8;
 }
 
+// PORT: the wide view's sight, for the drawing alone: lookaround's passes over a grid wider than viewgrid, off the map too, writing wideview and widelit alone
+#ifdef PORT
+unsigned char wideview[17][2 * Widehalf + 1];
+unsigned char widelit[4];	/* whether light reaches the corners: nw, ne, sw, se */
+
+/* gridcell returns the cell of column c and row r of a grid of half columns each side, or -1 off the map. */
+static int
+gridcell(int half, int c, int r)
+{
+	int x, y;
+
+	x = playerx + c - half;
+	y = playery + r - 8;
+	if (x < 0 || x >= 150 || y < 0 || y >= 150)
+		return -1;
+	return y * 150 + x;
+}
+
+/* gridsee marks the cell p of column c and row r as seen, 1 if light passes it, else 2. */
+static void
+gridsee(unsigned char *p, int half, int c, int r)
+{
+	int cell;
+
+	cell = gridcell(half, c, r);
+	if (cell >= 0)
+		*p = map[cell] & 0x8000 ? 1 : 2;
+}
+
+/* gridspread does what spreadup does on row r for dir 1, and spreaddown for -1. */
+static void
+gridspread(unsigned char *g, int half, int r, int dir)
+{
+	unsigned char *p;
+	int cols, k, i, c;
+
+	cols = 2 * half + 1;
+	for (k = 0; k <= half - 2; k++)
+		for (i = -1; i <= 1; i += 2) {
+			c = half + i * k;
+			p = g + r * cols + c;
+			if (p[-1] == 1 || p[1] == 1 || p[dir * cols] == 1)
+				gridsee(p, half, c, r);
+		}
+}
+
+/* gridflood does what spreadeast does on row r for dir 1, and spreadwest for -1. */
+static void
+gridflood(unsigned char *g, int half, int r, int dir)
+{
+	unsigned char *p;
+	int cols, c;
+
+	cols = 2 * half + 1;
+	for (c = dir > 0 ? 1 : cols - 2; c >= 1 && c <= cols - 2; c += dir) {
+		p = g + r * cols + c;
+		if (p[-1] == 1 || p[1] == 1 || p[cols] == 1 || p[-cols] == 1
+		    || p[-cols - 1] == 1 || p[-cols + 1] == 1 || p[cols - 1] == 1 || p[cols + 1] == 1)
+			gridsee(p, half, c, r);
+	}
+}
+
+/* gridroof does what roofeast does on row r for dir 1, and roofwest for -1. */
+static void
+gridroof(unsigned char *g, int half, int r, int dir)
+{
+	unsigned char *p;
+	int cols, c, cell;
+
+	cols = 2 * half + 1;
+	for (c = dir > 0 ? 1 : cols - 2; c >= 1 && c <= cols - 2; c += dir) {
+		p = g + r * cols + c;
+		cell = gridcell(half, c, r);
+		if (*p == 0 && cell >= 0 && map[cell] & 0x2000
+		    && (p[-1] == 8 || p[-1] == 0x40 || p[1] == 8 || p[1] == 0x40
+		    || p[-cols] == 8 || p[-cols] == 0x40 || p[cols] == 8 || p[cols] == 0x40))
+			*p = 8;
+	}
+}
+
+/* gridpasses fills g, of 17 rows and half columns each side of the hero, with the passes of lookaround. */
+static void
+gridpasses(unsigned char *g, int half)
+{
+	unsigned char *p;
+	int cols, r, c, cell, x, y;
+
+	cols = 2 * half + 1;
+	memset(g, 0, 17 * cols);
+	g[8 * cols + half] = 1;
+	for (r = 0; r < 7; r++) {
+		gridspread(g, half, 8 - r, 1);
+		gridspread(g, half, r + 8, -1);
+	}
+	for (r = 1; r <= 15; r++)
+		for (c = 1; c <= cols - 2; c++) {
+			p = g + r * cols + c;
+			if (*p == 2 && p[1] != 1 && p[cols] != 1)
+				*p = 0;
+		}
+	for (r = 1; r <= 15; r++)
+		gridflood(g, half, r, 1);
+	for (r = 15; r >= 1; r--)
+		gridflood(g, half, r, -1);
+	for (r = 1; r <= 15; r++)
+		gridflood(g, half, r, 1);
+	for (r = 15; r >= 1; r--)
+		// FIXED: the last pass runs west, as lookaround's
+#if defined(FEATURE_FIXES)
+		gridflood(g, half, r, -1);
+#else
+		gridflood(g, half, r, 1);
+#endif
+	for (r = 1; r <= 15; r++)
+		for (c = 1; c <= cols - 2; c++) {
+			p = g + r * cols + c;
+			if (*p == 2 && (p[1] == 1 || p[cols] == 1))
+				*p = 4;
+		}
+	for (r = 1; r <= 15; r++)
+		for (c = 1; c <= cols - 2; c++) {
+			p = g + r * cols + c;
+			if (*p != 2)
+				continue;
+			if (p[cols] == 0 && p[-1] == 0)
+				*p = 0x20;
+			else if (p[-cols] == 0 && p[1] == 0)
+				*p = 0x20;
+			else if (p[cols + 1] != 0)
+				if (p[cols + 1] == 1)
+					*p = 4;
+				else if (p[cols] == 1 && p[-1] == 1)
+					*p = 4;
+				else if (p[-cols] == 1 && p[1] == 1)
+					*p = 4;
+				else if (p[cols] == 4 && p[1] == 4)
+					*p = 4;
+				else if (p[-cols] == 1 && p[-1] == 1)
+					*p = 4;
+				else if (p[-cols] == 4 && p[-1] == 4)
+					*p = 4;
+				else if (p[cols] == 1 && p[1] == 1)
+					*p = 4;
+		}
+	for (r = 1; r <= 15; r++)
+		for (c = 1; c <= cols - 2; c++) {
+			p = g + r * cols + c;
+			cell = gridcell(half, c, r);
+			if (cell < 0 || *p == 0)
+				continue;
+			x = cell % 150;
+			y = cell / 150;
+			if (!(x >= regions[curregion].x0 && y >= regions[curregion].y0
+			    && x <= regions[curregion].x1 && y <= regions[curregion].y1)
+			    && map[cell] & 0x2000)
+				*p = *p == 2 ? 8 : 0x40;
+		}
+	for (r = 1; r <= 15; r++)
+		gridroof(g, half, r, 1);
+	for (r = 15; r >= 1; r--)
+		gridroof(g, half, r, -1);
+	for (r = 1; r <= 15; r++)
+		for (c = 1; c <= cols - 2; c++) {
+			p = g + r * cols + c;
+			if (*p == 0x40 && p[1] & 0x48 && p[cols] & 0x48 && p[cols + 1] & 0x48)
+				*p = 8;
+		}
+}
+
+/* widelight sets widelit from the fires that wideview sees, by lookaround's quadrants. */
+static void
+widelight(void)
+{
+	unsigned char v;
+	int r, c, cell, type, dx, dy;
+
+	memset(widelit, 0, sizeof widelit);
+	for (r = 1; r <= 15; r++)
+		for (c = 1; c < 2 * Widehalf; c++) {
+			cell = gridcell(Widehalf, c, r);
+			v = wideview[r][c];
+			if (cell < 0 || !(mapflags[cell] & 0x100) || !(v == 1 || v == 4 || v == 0x40))
+				continue;
+			type = map[cell] & 0xfff;
+			if ((type == 0x289 || type == 0x296) && (gamehour <= 4 || gamehour >= 23)
+			    && !findclass2(cell, 0x56, 0x5a))
+				continue;
+			dx = c - Widehalf;
+			dy = r - 8;
+			if (dx < -1) {
+				if (dy <= 1)
+					widelit[0] = 1;
+				if (dy >= -1)
+					widelit[2] = 1;
+			} else if (dx > 1) {
+				if (dy <= 1)
+					widelit[1] = 1;
+				if (dy >= -1)
+					widelit[3] = 1;
+			} else if (dy < -1)
+				widelit[0] = widelit[1] = 1;
+			else if (dy > 1)
+				widelit[2] = widelit[3] = 1;
+		}
+}
+
+/* widesee answers as cansee over wideview. */
+int
+widesee(int x, int y)
+{
+	int c, r, item, cls;
+
+	c = x - playerx + Widehalf;
+	r = y - playery + 8;
+	if (c < 0 || c > 2 * Widehalf || r < 0 || r >= 17)
+		return 0;
+	if (showall)
+		return 1;
+	switch (wideview[r][c]) {
+	case 1:
+	case 4:
+	case 0x40:
+		return 1;
+	case 2:
+		item = topitem(y * 150 + x);
+		if (item == 0)
+			return 0;
+		cls = classof(mapitems[item] & 0xfff);
+		return cls == 1 || cls == 2 || cls == 3 || cls == 4;
+	default:
+		return 0;
+	}
+}
+
+#ifdef LOOKCHECK
+/*
+ * lookcheck runs the passes at viewgrid's width and stops the game on a
+ * difference, where the grid lies inside the map and lookaround's walks
+ * stay on their rows. A fix of lookaround that gridpasses misses stops
+ * here in a build with SANITIZE=asan, which defines LOOKCHECK.
+ */
+static void
+lookcheck(void)
+{
+	static unsigned char g[17][19];
+
+	if (playerx < 9 || playerx > 140 || playery < 8 || playery > 141)
+		return;
+	gridpasses((unsigned char *)g, 9);
+	if (memcmp(g, viewgrid, sizeof g) != 0)
+		abort();
+}
+#endif
+
+/* lookwide fills what the wide view draws from, in the classic view too, which can turn wide at any time. */
+static void
+lookwide(void)
+{
+#ifdef LOOKCHECK
+	lookcheck();
+#endif
+	gridpasses((unsigned char *)wideview, Widehalf);
+	widelight();
+}
+#endif
+
 void
 lookaround(void)
 {
@@ -3063,7 +3333,13 @@ lookaround(void)
 		lookp = &viewgrid[0][k];
 #endif
 		spreadmap = &map[looky * 150 + lookx];
+		// PORT: UndefinedBehaviorSanitizer stops at the index of &mapflags[i] for a row off the map, and mapflags + i is the same pointer. The port takes a mark before or past mapflags by its index, which markcell sets and the guard of fixes drops.
+#ifdef PORT
+		lookflags = mapflags;
+		lookflags += lookx + looky * 150;
+#else
 		lookflags = &mapflags[lookx + looky * 150];
+#endif
 		for (lookcol = 1; lookcol <= 17; lookx++, lookcol++, lookp++, spreadmap++, lookflags++) {
 			// FIXED: a mark off the map's top or bottom goes, where the original's lands before or past mapflags on its neighbors
 			// FIXED: a mark past mapflags lands, through markcell, on the neighbor that holds it in the original's layout
@@ -3177,6 +3453,10 @@ lookaround(void)
 			}
 		}
 	}
+	// PORT: the wide view's own sight, for the drawing alone
+#ifdef PORT
+	lookwide();
+#endif
 	calctorch();
 	scanblocks();
 }
@@ -3245,6 +3525,22 @@ dragpanel(unsigned char n)
 		if (esckey || quitting)
 			break;
 		pollinput();
+		// PORT: the pointer takes a panel across the wide screen, and otherwise stays in the rectangle of setclip, which ClipCursor held the original's pointer in and a window leaves open, and the panel loses its shift
+#ifdef PORT
+		if (sysroam) {
+			dpx = mousewx - dpoffx;
+			dpy = mousey - dpoffy;
+			if (dpx != dplastx || dpy != dplasty) {
+				dplastx = dpx;
+				dplasty = dpy;
+				placepanel(n, dpx, dpy);
+				drawscreen();
+			}
+			continue;
+		}
+		clampmouse();
+		paneloff[n] = 0;
+#endif
 		dpx = mousex - dpoffx;
 		dpy = mousey - dpoffy;
 		panels[n].x = dpx;
@@ -3272,6 +3568,10 @@ closehover(unsigned char c)
 	switch (c) {
 	case 1:
 	case 0xe6:
+	// PORT: a right click on a wing closes the panels, as on the map
+#ifdef PORT
+	case Wingkind:
+#endif
 		closepanels();
 		break;
 	case 0x31:
@@ -3542,6 +3842,15 @@ picktarget(void)
 		return 1;
 	case 0xe6:
 		goto setplace;
+	// PORT: a click on a wing takes the map's kind with an empty item, the form that the game saves
+#ifdef PORT
+	case Wingkind:
+		targetkind = 1;
+		targetx = hovercx;
+		targety = hovercy;
+		targetitem = 0;
+		return 0;
+#endif
 	}
 	return 0;
 }

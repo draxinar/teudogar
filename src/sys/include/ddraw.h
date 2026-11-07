@@ -2,8 +2,8 @@
  * The part of DirectDraw that the game names, for the port: the
  * interfaces IDirectDraw, IDirectDrawSurface, and IDirectDrawPalette
  * with the methods the game calls, in the C binding of the DirectX
- * headers. The anonymous unions of the SDK's structs keep the one
- * member the game names.
+ * headers, and src/sys/draw.c behind them. The anonymous unions of
+ * the SDK's structs keep the one member the game names.
  */
 
 #ifndef SYS_DDRAW_H
