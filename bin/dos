@@ -1,0 +1,162 @@
+#!/bin/sh
+# Usage: dos [-d dir] [-e name=value ...] command [arg ...]
+#
+# Dos runs one DOS command line in DOSBox Staging, without a window or
+# sound, with build/dos as drive C:. It prints what the command writes to
+# standard output, with CRLF turned into LF. When the command sets
+# errorlevel 1 or more, or DOS finds no such command, dos prints the
+# output to standard error instead, so that its errors show where a
+# caller discards the output, and exits 1. The command runs in the DOS
+# directory dir, C:\ by default, with each -e setting set in its
+# environment, such as -e 'INCLUDE=C:\WATCOM\H'. DOS limits a command
+# line to 127 characters: a caller passes longer options through the
+# environment, as the WPP386 that make sets with -e, and dos stops on a
+# command line past 126 characters.
+#
+# DOSBox gives the files a DOS program creates uppercase names, so dos
+# lowercases the files the command creates in dir. DOS dates what it
+# writes by its own clock, which runs ahead of the host's while DOSBox
+# runs at full speed, by 18 s after a compile of 6 s, and which
+# bin/wlink sets. So dos gives the files the command wrote in dir the
+# host's time, which make compares.
+#
+# DOSBox runs in English, in the US country, and with a US keyboard,
+# whatever the host's locale: DATE then reads MM/DD/YYYY, as bin/wlink
+# writes it, and dos reads DOSBox's messages in English.
+#
+# Dos reads DOSBOX, the DOSBox Staging binary (default dosbox), and
+# DOSPATH, the DOS search path (default C:\WATCOM\BINW). It keeps
+# DOSBox's own files in build/dos/xdg, so the user's DOSBox setup stays
+# untouched. Runs may go in parallel: each gets its own directory below
+# build/dos/tmp, and runs in one DOS directory take turns.
+
+# The braces make sh read the whole script before it runs a line of it,
+# so that an edit during a run leaves the run as it began.
+{
+set -eu
+
+usage() {
+	echo 'usage: dos [-d dir] [-e name=value ...] command [arg ...]' >&2
+	exit 2
+}
+
+dir="C:\\"
+sets=
+cr=$(printf '\r')
+nl='
+'
+while [ $# -gt 0 ]; do
+	case $1 in
+	-d)
+		[ $# -ge 2 ] || usage
+		dir=$2
+		shift 2
+		;;
+	-e)
+		[ $# -ge 2 ] || usage
+		case $2 in
+		[A-Za-z_]*=*) ;;
+		*) usage ;;
+		esac
+		sets="${sets}set $2$cr$nl"
+		shift 2
+		;;
+	--)
+		shift
+		break
+		;;
+	-*)
+		usage
+		;;
+	*)
+		break
+		;;
+	esac
+done
+[ $# -ge 1 ] || usage
+# DOS gives a program the tail of its command line, the blank after the
+# program's name and the arguments, in 126 characters.
+line=$*
+tail=${line#"$1"}
+if [ ${#tail} -gt 126 ]; then
+	echo "dos: the arguments of $1 pass DOS's 126 characters: $line" >&2
+	exit 1
+fi
+
+case $dir in
+[Cc]:\\*) ;;
+*)
+	echo "dos: $dir: not a directory on drive C:" >&2
+	exit 1
+	;;
+esac
+
+root=$(cd -- "$(dirname -- "$0")/.." && pwd)
+dosdir=$root/build/dos
+if [ ! -d "$dosdir" ]; then
+	echo 'dos: build/dos missing: run make original' >&2
+	exit 1
+fi
+hostdir=$dosdir/$(printf '%s\n' "${dir#??}" | tr '\134' / | tr '[:upper:]' '[:lower:]')
+if [ ! -d "$hostdir" ]; then
+	echo "dos: $dir: no such directory" >&2
+	exit 1
+fi
+# Runs in one directory take turns, since each lowercases the files that
+# its command created there.
+exec 8<"$hostdir"
+if ! flock -n 8; then
+	echo "dos: waiting for another run in $dir" >&2
+	flock 8
+fi
+dosbox=${DOSBOX:-dosbox}
+if ! command -v "$dosbox" >/dev/null; then
+	echo "dos: $dosbox: command not found" >&2
+	exit 1
+fi
+
+# DOS names hold eight characters, and a pid at most seven digits.
+run=r$$
+tmp=$dosdir/tmp/$run
+rm -rf -- "${tmp:?}"
+trap 'rm -rf -- "${tmp:?}"' EXIT
+trap 'exit 1' HUP INT TERM
+mkdir -p -- "$tmp"
+touch -- "$tmp/start"
+
+# The shell opens a redirection before it tests an if, so the batch file
+# writes the FAILED marker only after a goto.
+printf '@echo off\r\nset PATH=%s\r\n%sc:\r\ncd %s\r\n%s > C:\\TMP\\%s\\OUT.TXT\r\nif errorlevel 1 goto failed\r\ngoto end\r\n:failed\r\necho failed > C:\\TMP\\%s\\FAILED\r\n:end\r\n' \
+	"${DOSPATH:-C:\\WATCOM\\BINW}" "$sets" "$dir" "$*" "$run" "$run" >"$tmp/run.bat"
+
+if ! LANG=C LC_ALL=C XDG_CONFIG_HOME=$dosdir/xdg SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy \
+	"$dosbox" --noprimaryconf --nolocalconf \
+	--set nosound=true --set memsize=64 --set cpu_cycles=max --set cpu_cycles_protected=max \
+	--set country=1 --set keyboardlayout=us \
+	--set mouse_capture=nomouse --set dos_mouse_driver=false \
+	-c "mount c \"$dosdir\"" -c 'c:' -c "call C:\\TMP\\$run\\RUN.BAT" --exit \
+	>"$tmp/dosbox.log" 2>&1; then
+	echo 'dos: dosbox failed, its log follows' >&2
+	cat -- "$tmp/dosbox.log" >&2
+	exit 1
+fi
+
+find "$hostdir" -maxdepth 1 -type f -cnewer "$tmp/start" -exec touch -- {} +
+find "$hostdir" -maxdepth 1 -type f -cnewer "$tmp/start" -name '*[A-Z]*' | while IFS= read -r f; do
+	mv -- "$f" "$(dirname -- "$f")/$(basename -- "$f" | tr '[:upper:]' '[:lower:]')"
+done
+# DOSBox's shell reports a command it cannot find on standard output and
+# leaves errorlevel as it was.
+if [ -f "$tmp/OUT.TXT" ] && head -n 1 -- "$tmp/OUT.TXT" | grep -q '^Illegal command:'; then
+	: >"$tmp/FAILED"
+fi
+if [ -f "$tmp/FAILED" ]; then
+	if [ -f "$tmp/OUT.TXT" ]; then
+		tr -d '\r' <"$tmp/OUT.TXT" >&2
+	fi
+	exit 1
+fi
+if [ -f "$tmp/OUT.TXT" ]; then
+	tr -d '\r' <"$tmp/OUT.TXT"
+fi
+}

@@ -1,0 +1,64 @@
+#!/bin/sh
+# Usage: unpack [-p passfile] archive dir [path ...]
+#
+# Unpack extracts archive, or only the given paths inside it, into the new
+# directory dir, with every name in lowercase. It reads what 7z reads:
+# teudogar.zip and the Watcom media. With -p it decrypts the archive with
+# the password on the first line of passfile. Windows folds case when it
+# opens a file, so the programs find each file under its lowercase name.
+#
+# Unpack needs 7z. It extracts into dir.tmp and renames that to dir at the
+# end, so dir appears only after a complete extraction.
+
+set -eu
+
+usage() {
+	echo 'usage: unpack [-p passfile] archive dir [path ...]' >&2
+	exit 2
+}
+
+pass=
+if [ "${1-}" = -p ]; then
+	[ $# -ge 2 ] || usage
+	if [ ! -f "$2" ]; then
+		echo "unpack: $2: no such file" >&2
+		exit 1
+	fi
+	pass=$(head -n 1 -- "$2")
+	shift 2
+fi
+[ $# -ge 2 ] || usage
+archive=$1
+dir=$2
+shift 2
+
+if ! command -v 7z >/dev/null; then
+	echo 'unpack: 7z: command not found' >&2
+	exit 1
+fi
+if [ ! -f "$archive" ]; then
+	echo "unpack: $archive: no such file" >&2
+	exit 1
+fi
+if [ -e "$dir" ]; then
+	echo "unpack: $dir: already exists" >&2
+	exit 1
+fi
+
+tmp=$dir.tmp
+rm -rf -- "${tmp:?}"
+trap 'rm -rf -- "${tmp:?}"' EXIT
+trap 'exit 1' HUP INT TERM
+
+mkdir -p -- "$tmp"
+# -p with an empty password keeps 7z from prompting for one.
+7z x -bd -bso0 -bsp0 -p"$pass" -o"$tmp" -- "$archive" "$@"
+
+# Rename depth first, so a directory's entries move before the directory.
+find "$tmp" -depth -mindepth 1 -name '*[A-Z]*' | while IFS= read -r f; do
+	lower=$(basename -- "$f" | tr '[:upper:]' '[:lower:]')
+	mv -- "$f" "$(dirname -- "$f")/$lower"
+done
+
+mv -- "$tmp" "$dir"
+trap - EXIT

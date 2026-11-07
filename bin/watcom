@@ -1,0 +1,67 @@
+#!/bin/sh
+# Usage: watcom dir out [release ...]
+#
+# Watcom extracts the CD of each Watcom C/C++ release named, or of all
+# five, into out/<release>, from dir, which holds the CD's image as
+# watcom-<release>.iso or WinWorld's archive of it as
+# watcom-<release>.7z: it checks the file against sum/watcom.sha256,
+# bin/unpack opens an archive, and build/bin/iso extracts the image,
+# with every name in lowercase. The image inside an archive goes away
+# once extracted. The images are archive.org's and the archives
+# WinWorld's, under plain names.
+
+set -eu
+
+if [ $# -lt 2 ]; then
+	echo 'usage: watcom dir out [release ...]' >&2
+	exit 2
+fi
+dir=$1
+out=$2
+shift 2
+root=$(cd -- "$(dirname -- "$0")/.." && pwd)
+
+if [ ! -x "$root/build/bin/iso" ]; then
+	echo 'watcom: build/bin/iso missing: run make tools' >&2
+	exit 1
+fi
+if [ $# -eq 0 ]; then
+	set -- 10.5 10.6 11.0 11.0a 11.0b
+fi
+
+mkdir -p -- "$out"
+for release; do
+	case $release in
+	10.5 | 10.6 | 11.0 | 11.0a | 11.0b) ;;
+	*)
+		echo "watcom: $release: want 10.5, 10.6, 11.0, 11.0a, or 11.0b" >&2
+		exit 2
+		;;
+	esac
+	if [ -e "$out/$release" ]; then
+		echo "watcom: $out/$release: already exists" >&2
+		exit 1
+	fi
+	iso=watcom-$release.iso
+	if [ -f "$dir/$iso" ]; then
+		grep -F "  $iso" "$root/sum/watcom.sha256" | (cd -- "$dir" && sha256sum --quiet -c)
+		"$root/build/bin/iso" "$dir/$iso" "$out/$release"
+		continue
+	fi
+	archive=watcom-$release.7z
+	grep -F "  $archive" "$root/sum/watcom.sha256" | (cd -- "$dir" && sha256sum --quiet -c)
+	rm -rf -- "${out:?}/$release.7z"
+	"$root/bin/unpack" "$dir/$archive" "$out/$release.7z"
+	image=
+	for f in "$out/$release.7z"/*.iso "$out/$release.7z"/*/*.iso; do
+		if [ -f "$f" ]; then
+			image=$f
+		fi
+	done
+	if [ -z "$image" ]; then
+		echo "watcom: $archive: no CD image inside" >&2
+		exit 1
+	fi
+	"$root/build/bin/iso" "$image" "$out/$release"
+	rm -rf -- "${out:?}/$release.7z"
+done

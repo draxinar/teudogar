@@ -1,0 +1,74 @@
+# ci builds every target on the latest Fedora: the programs of 2008,
+# with Watcom C/C++. Each step runs whatever the others do, so that a
+# run reports every target, and make runs four jobs at a time, with the
+# output of each rule in one piece.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: quay.io/fedora/fedora:latest
+    timeout-minutes: 90
+    env:
+      MAKEFLAGS: -j4 --output-sync=target
+    steps:
+      - name: Install the tools
+        run: >-
+          dnf -y install --setopt=install_weak_deps=False
+          git make gawk sed grep coreutils diffutils findutils tar gzip bzip2 zstd curl 7zip
+          golang dosbox-staging ShellCheck
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Restore the downloads
+        id: dl
+        uses: actions/cache/restore@v6
+        with:
+          path: dl
+          key: dl-${{ hashFiles('sum/watcom.sha256', 'sum/zlib.sha256') }}
+          restore-keys: dl-
+      - name: Downloads
+        run: make fetch
+      - name: Save the downloads
+        if: steps.dl.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: dl
+          key: ${{ steps.dl.outputs.cache-primary-key }}
+      - name: Linters
+        if: ${{ !cancelled() }}
+        run: make lint
+      - name: Programs of 2008
+        if: ${{ !cancelled() }}
+        run: make original
+      - name: Programs
+        run: |
+          cd build
+          find . -mindepth 2 -maxdepth 2 -type f -name '*.exe' |
+            sed 's,^\./,,' | LC_ALL=C sort >../programs.txt
+          mkdir ../programs
+          xargs -d '\n' cp --parents -t ../programs <../programs.txt
+          cd ../programs
+          xargs -d '\n' sha256sum <../programs.txt >sha256
+          { echo '```'; cat sha256; echo '```'; } >>"$GITHUB_STEP_SUMMARY"
+      - name: Keep the programs
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: programs
+          path: programs
+          retention-days: 7
+          if-no-files-found: error

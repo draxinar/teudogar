@@ -1,0 +1,8 @@
+004c3520 2 8 unsigned char soldmark1[]
+004c3858 73 0 char licensee[]
+004c5890 4 8 struct Seal seal
+004c589c 14 20 struct Seal seal
+004c5e5c 2 20 unsigned char lic[]
+004c6d58 5 8 char udtablob[]
+004c6d62 68 18 char udtablob[]
+004f9bb0 2 8 unsigned char soldmark2[]

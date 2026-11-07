@@ -1,0 +1,8 @@
+system nt_win
+name uninstal.exe
+file uninstal.obj
+option stack=64k
+option eliminate
+option resource=uninstal.res
+option map
+option statics

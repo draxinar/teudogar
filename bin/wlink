@@ -1,0 +1,75 @@
+#!/bin/sh
+# Usage: wlink dir directives exe time
+#
+# Wlink links a program with Watcom's wlink under bin/dos, in the DOS
+# directory dir, from the directive file directives, so that the PE file
+# exe it writes (a path on this side) carries the link time time, a UTC
+# time as date -d reads it, such as '2005-09-13 17:32:29', in its header
+# and in each table of its resource tree. WLINK stamps the clock it reads
+# when it writes the file, which has run on since the batch set it: a
+# second on a fast machine, and more on a slow one. So wlink sets the
+# clock to time, and after a miss of the header sets it back by as far
+# as the stamp ran past, until the stamp that build/bin/pe reads equals
+# time. WLINK reads the clock again for the resource tables, so a link
+# whose reads straddle a second stamps them a second late: wlink then
+# links again at the same setting. Wlink exits 1 when 12 runs miss, or
+# when the clock would have to start outside the minute before time, as
+# when DOS refuses the date.
+
+# The braces make sh read the whole script before it runs a line of it,
+# so that an edit during a run leaves the run as it began.
+{
+set -eu
+
+usage() {
+	echo 'usage: wlink dir directives exe time' >&2
+	exit 2
+}
+
+[ $# -eq 4 ] || usage
+dir=$1
+directives=$2
+exe=$3
+time=$4
+
+root=$(cd -- "$(dirname -- "$0")/.." && pwd)
+if [ ! -x "$root/build/bin/pe" ]; then
+	echo 'wlink: build/bin/pe missing: run make tools' >&2
+	exit 1
+fi
+if ! secs=$(date -u -d "$time" +%s); then
+	echo "wlink: $time: want a time as date -d reads it" >&2
+	exit 2
+fi
+want=$(date -u -d "@$secs" +%Y-%m-%dT%H:%M:%SZ)
+bat=$(dirname -- "$exe")/link.bat
+back=0
+tries=0
+late=0
+while [ "$tries" -lt 12 ]; do
+	tries=$((tries + 1))
+	set=$(date -u -d "@$((secs - back))" '+%m/%d/%Y %H:%M:%S')
+	printf '@echo off\r\ndate %s\r\ntime %s\r\nwlink @%s\r\n' "${set% *}" "${set#* }" "$directives" >"$bat"
+	"$root/bin/dos" -d "$dir" -e 'WATCOM=C:\WATCOM' -e 'TZ=GMT0' call link.bat >/dev/null
+	tables=$("$root/build/bin/pe" "$exe")
+	got=$(printf '%s\n' "$tables" | awk -F'\t' '$1 == "pe" { print $5 }')
+	if [ "$got" = "$want" ]; then
+		late=$(printf '%s\n' "$tables" | awk -F'\t' -v want="$want" '$1 == "resdir" && $4 != want { n++ } END { print n + 0 }')
+		if [ "$late" -eq 0 ]; then
+			exit 0
+		fi
+		continue
+	fi
+	late=0
+	back=$((back + $(date -u -d "$got" +%s) - secs))
+	if [ "$back" -lt 0 ] || [ "$back" -gt 60 ]; then
+		break
+	fi
+done
+if [ "$late" -gt 0 ]; then
+	echo "wlink: $exe: stamped $got, but $late resource tables at another time, want $want" >&2
+else
+	echo "wlink: $exe: stamped $got, want $want" >&2
+fi
+exit 1
+}
